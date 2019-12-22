@@ -1,0 +1,19 @@
+# Linux命令
+
+- [find](find.md)
+- [gdb](gdb.md)
+- [strace](strace.md)
+- [ltrace](ltramd)
+- [pstack](pstack.md)
+- [valgrind](valgrind.md)
+- [tcpdump](tcpdump.md)
+- [grep](grep.md)
+- [tar](tar.md)
+- [lsof](lsof.md)
+- [sed](sed.md)
+- [awk](awk.md)
+- [scp](scp.md)
+- [ssh](ssh.md)
+- [telnet](telnet.md)
+- [gcc](gcc.md)
+

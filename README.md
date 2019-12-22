@@ -1,48 +1,40 @@
-### 编程语言
+## 编程语言
 
-- [C++](docs/language/cplus/ ':ignore')
+- C++
 
-  - [C++基础](docs/language/cplus/cplus/ ':ignore')
+  - [C++基础](cplus_base/README.md)
 
-  - [《Effective C++》学习总结](docs/language/cplus/effective_cplus/ ':ignore')
+  - [《Effective C++》学习总结](effective_cplus/README.md)
 
-  - [《设计模式GOF》学习总结](docs/language/cplus/design_pattern/ ':ignore')
+  - [《设计模式GOF》学习总结](design_pattern/README.md)
 
-  - [《深度探索C++对象模型》学习总结](docs/language/cplus/inside_cplus_mode/  ':ignore')
+  - [《深度探索C++对象模型》学习总结](inside_cplus_mode/README.md)
 
-  - [《STL源码剖析》](docs/language/cplus/stl/ ':ignore')
-
-
--  [Go](docs/language/go/ ':ignore')
-
--  [Python](docs/language/python/ ':ignore')
-
-### 算法和数据结构
-
-- [LeetCode](docs/algorithms/leetcode/ ':ignore')
-
-  - [LeetCode题型分类](docs/algorithms/leetcode/leetcode_chongci/ ':ignore')
-
-  - [LeetCode刷题总结](docs/algorithms/leetcode/ ':ignore')
-
-- [《剑指offer》题解](docs/algorithms/jianzhi_offer/ ':ignore')
-
-- [算法和数据结构总结](docs/algorithms/algorithms/ ':ignore')
+  - [《STL源码剖析》](stl/README.md)
 
 
-### Linux
+-  [Go](go/README.md)
 
-- [Linux基础](docs/linux/ ':ignore')
+-  [Python](python/README.md)
 
-- [Linux命令学习]()
+## Linux
 
-### 开发工具
+- [Linux基础](linux_base/README.md)
 
-- [Vim(Nvim)](./tools/nvim.md)
-- [Git]()
-- [Makefile]()
+- [Linux命令](linux_command/README.md)
+
+- [Linux后台开发](linux_server_dev/README.md)
 
 
-### 其他
+## 其他
 
-- [记录](./log/README.md)
+- [记录](logs/README.md)
+- [网络资源](net.md)
+
+## 思维导图
+
+- [Markdown语法](http://naotu.baidu.com/file/dbb270c5616139e091f0d8b5c383a7ce?token=fa1cde6c866337c4)
+
+- [Leetcode题目总结](http://naotu.baidu.com/file/d856118e7d4a6e96b8ed393663c891bb?token=b398a9ca9f04d545)
+
+

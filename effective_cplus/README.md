@@ -1,3 +1,5 @@
+## 《Effective C++》学习总结
+
 - 让自己习惯C++
 
   * [条款01：视c++为一个语言联邦](content/terms01.md)
