@@ -43,9 +43,9 @@
     
 * [Go 切片：用法和本质](https://blog.go-zh.org/go-slices-usage-and-internals)
 
-* [Go开发环境构建](content/go_dev_enviroment.md)
+* [Go开发环境构建](go_dev_enviroment.md)
 
-* [Go包管理工具Module](content/go_modules.md)
+* [Go包管理工具Module](go_modules.md)
 
 进度：
     基础：--------菜鸟教程------GO语言之旅----《Go语言圣经》

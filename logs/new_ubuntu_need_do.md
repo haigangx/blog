@@ -163,7 +163,7 @@ sudo apt-get remove --purge libreoffice*
 [ubuntu安装stardict并导入词典](http://blog.163.com/green_pool/blog/static/101915526201231211343824/)
 
 ```
-将离线词典下载下来放到~/.stardict/下
+将离线词典下载下来解压后得到的.dict.dz, .idx, .info文件放到~/.stardict/dic下
 ```
 ### 14.ubuntu安装monaco字体
 

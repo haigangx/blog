@@ -2,7 +2,7 @@
 
   - 容器
   
-    - [优先队列prioriryqueue](base/priority_queue.md)
+    - [优先队列prioriryqueue](priority_queue.md)
 
   - 算法
 
@@ -14,4 +14,4 @@
 
 - 总结
 
-  - [STL容器迭代器失效总结](content/stl_iterator_failure.md)
+  - [STL容器迭代器失效总结](stl_iterator_failure.md)
