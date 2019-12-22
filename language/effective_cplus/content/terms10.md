@@ -1,0 +1,17 @@
+# 条款10：令operator=返回一个reference to *this
+
+- 令赋值(assignment)操作符返回一个reference to *this以实现连锁赋值：x = y = z = 15
+
+- 赋值操作符包括但不限于：operator=、operator+=、operator-=、...
+
+```
+class Widget {
+public:
+    ...
+    Widget& operator=(const Widget& rhs) {
+        ...
+        return *this;
+    }
+    ...
+};
+```

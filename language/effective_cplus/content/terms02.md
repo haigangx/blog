@@ -1,0 +1,39 @@
+# 条款02：尽量以const、enum、inline替换#define
+
+  或者说“尽量以编译器替换预处理器”
+  
+## 为什么不使用#define？
+  * 首先，#define不被视为语言的一部分，当你定义`#define ASPECT_RATIO 1.653`时，ASPECT_RATIO不会被编译器看见，所以也不会进入记号表中，因此当因为此常量得到一个便宜错误时，错误信息中会提及1.653而不是ASPECT_RATIO，在调试时追踪它将会浪费时间
+  * 而且，使用#define定义宏时，宏的简单替换原则会导致无法预计的错误
+
+## 怎么做？
+
+1. 以const代替#define常量
+    * #define PI 3.14  => const double Pi = 3.14;
+    * #define NAME "Scott Metyers" => const char* name = "Scott Metyers";
+    * ```
+       class GamePlayer {
+        private:
+            static const double n;  //声明式
+       }
+       const double GamePlayer::n = 1.35;   //定义式
+       ```
+
+2. 以enum代替#define
+
+    enum的行为某方面来说更像#define而不像const
+    ```
+    class GamePlayer {
+    private:
+        enum{ NumTurns = 5 };
+        int scores[NumTurns];  //数组的大小必须在编译时确定
+    }
+    ```
+
+3. 以inline代替#define宏
+
+    * 宏：
+       - 优点：看起来像函数，但不会招致函数调用带来的额外开销
+       - 缺点：宏的简单替换原则会导致无法预计的错误
+      
+    * 以inline函数代替宏更加安全

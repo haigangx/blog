@@ -1,0 +1,16 @@
+# 可变参数函数
+
+可变参数函数是指一个函数拥有不定引数，即是它接受一个可变数目的参数
+
+## 可变参函数编写
+
+在C语言中，C标准函式库的`stdarg.h`标头档定义了提供可变参数函数使用的宏。在C++，应该使用标头档`cstdarg`。
+
+要创建一个可变参数函数，必须把省略号（...）放到参数列表后面。函数内部必须定义一个`va_list`变量。然后使用宏`va_start`、`va_arg`和`va_end`来读取
+
+- va_list，用来接受"..."代表的全部参数。
+- va_start(va_list, type)：初始化va_list声明的变量。type可以是int，也可以是char等类型。
+- va_arg(va_list, returnType)：参数1是va_list声明的变量，参数2是从参数1中获取到的类型，即是"..."传入的类型。并且是指针指向va_list的下一个数据。
+- va_end(va_list)：清空va_list变量，使得指针不可用，和va_start配对使用。
+
+[参考教程](https://blog.csdn.net/qq_16628781/article/details/72717008)
