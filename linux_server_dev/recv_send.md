@@ -1,5 +1,17 @@
 # 数据读写
 
+<!-- vim-markdown-toc Marked -->
+
+* [1. TCP数据读写](#1.-tcp数据读写)
+  * [1.2. 主要参数和返回值](#1.2.-主要参数和返回值)
+  * [1.3. 使用](#1.3.-使用)
+* [2. UDP数据读写](#2.-udp数据读写)
+* [3. 通用数据读写](#3.-通用数据读写)
+  * [3.1 参数和返回值](#3.1-参数和返回值)
+  * [3.2 使用](#3.2-使用)
+
+<!-- vim-markdown-toc -->
+
 ## 1. TCP数据读写
 
 对文件的读写操作`read`和`write`同样适用于socket，但是socket编程接口中提供了专门用于socket数据读写的系统调用，它们增加了对数据读写的控制，用于TCP流数据读写的系统调用是：
@@ -80,7 +92,7 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-接收代外数据：
+接收带外数据：
 
 ```
 #include <sys/socket.h>
@@ -160,50 +172,71 @@ socket编程接口中用于UDP数据报读写的系统调用是：
 ```
 #include <sys/types.h>
 #include <sys/socket.h>
-ssize_t recvfrom( int sockfd, void *buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addrlen );
-ssize_t sendto( int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen );
+
+ssize_t recvfrom( int sockfd, void *buf, size_t len, 
+                  int flags, struct sockaddr* src_addr, socklen_t* addrlen );
+
+ssize_t sendto( int sockfd, const void *buf, size_t len, 
+                  int flags, const struct sockaddr *dest_addr, socklen_t addrlen );
 ```
 
 recvfrom/sendto和recv/send的前四个参数意义相同，当recvfrom/sendto的后两个参数为NULL时等价于recv/send。
 
 ## 3. 通用数据读写
 
-
+socket编程接口提供的`recvmsg`和`sendmsg`通用数据读写系统调用，既可以用于TCP流数据，也可以用于UDP数据报
 
 ```
 #include <sys/socket.h>
-ssize_t recvmsg( int sockfd, struct msghdr *msg, int flags );
-ssize_t sendmsg( int sockfd, struct msghdr *msg, int flags );
+ssize_t recvmsg( int sockfd, struct msghdr* msg, int flags );
+ssize_t sendmsg( int sockfd, struct msghdr* msg, int flags );
+```
+
+### 3.1 参数和返回值
+
+- **sockfd**：被操作的目标socket
+- **msg**：msghdr结构体类型的指针
+
+  ```
+  struct msghdr
+  {
+      void* msg_name;    //socket地址
+      socklen_t msg_namelen;    //socket地址的长度
+      struct iovec* msg_iov;    //分散的内存块
+      int msg_iovlen;    //分散内存块的数量
+      void* msg_control;    //指向辅助数据的起始位置
+      socklen_t msg_controllen;    //辅助数据的大小
+      int msg_flags;    //复制函数中的flags参数，并在调用过程中更新
+  };
+  ```
+
+  - msg_name:指向socket结构体变量，指定通信对方的socket地址，对于面向连接的tcp协议，该值设为NULL
+  - msg_iov：iovec结构体类型的指针
+  ```
+  struct iovec* msg_iov:
+  struct iovec
+  {
+      void *iov_base;    //内存起始位置
+      size_t iov_len;    //该内存的长度
+  }
+  ```
+  - msg_iovlen：iovec块的个数
+
+- **flags**：recv/send的flag参数相同
+
+- **返回值**：recvmsg/sendmsg的返回值和recv/send的返回值相同
+
+### 3.2 使用
+
+recvmsg/sendmsg读写数据的形式分别为`分散读`和`集中写`：
+
+- **分散读(scatter read)：**
+  recvmsg将数据读取并存放在msg_iovlen块分散的内存中，这些内存的位置和长度由msg_iov指向的数据指定
+
+- **集中写(gather write)：**
+  sendmsg将msg_iovlen块分散内存中的数据一并发送
+
+例：
 ```
 
 ```
-struct msghdr
-{
-    void *msg_name;    //socket地址
-    socklen_t msg_namelen;    //socket地址的长度
-    struct iovec* msg_iov;    //分散的内存块
-    int msg_iovlen;    //分散内存块的数量
-    void *msg_control;    //指向辅助数据的起始位置
-    socklen_t msg_controllen;    //辅助数据的大小
-    int msg_flags;    //复制函数中的flags参数，并在调用过程中更新
-};
-```
-
-msg_name:指向socket结构体变量，指定通信对方的socket地址，对于面向连接的tcp协议，该值设为NULL
-
-```
-struct iovec* msg_iov:
-struct iovec
-{
-    void *iov_base;    //内存起始位置
-    size_t iov_len;    //该内存的长度
-}
-```
-
-msg_iovlen：iovec块的个数
-- 分散读(scatter read)：recvmsg将数据读取并存放在msg_iovlen块分散的内存中，这些内存的位置和长度由msg_iov指向的数据指定
-
-- 集中写(gather write)：sendmsg将msg_iovlen块分散内存中的数据一并发送
-
-`recvmsg/sendmsg`的flag参数以及返回值的含义均与`recv/send`的flag参数及返回值相同
-

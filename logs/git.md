@@ -226,5 +226,5 @@ git clone有两种形式：
 ## 网络资源
 
 - [git奇技淫巧](https://github.com/521xueweihan/git-tips)
+- [优雅的提交你的Git Commit Message](https://juejin.im/post/5afc5242f265da0b7f44bee4)
 
-  
