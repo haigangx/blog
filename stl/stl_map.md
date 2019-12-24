@@ -267,3 +267,14 @@ map将键值对(key/value pair)当作元素管理，它可根据key将元素自�
 
 `unordered_multimap`是multimap的无序版本，底层使用哈希表实现，
 
+### hash_map
+
+头文件：`#include <hash_map>`
+
+hash_map本质上与unordered_map相同，C++标准中并未纳入hash_map，而是加入了unordered_map，hash_map是标准的不同实现者提供的非标准散列表，hash_map和unordered_map底层实现和使用完全相同，由于hash_map未纳入标准，效率和功能可能会有微妙的差异
+
+### hash_multimap
+
+头文件：`#include <hash_map>`
+
+hash_multimap和unordered_multimap的关系同hash_map与unordered_map的关系相同
