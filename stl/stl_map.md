@@ -4,7 +4,7 @@
 
 迭代器：双向迭代器
 
-map将键值对(key/value pair)当作元素管理，它可根据key将元素自动排序，map不允许重复元素，[multimaps]()可允许重复元素，标准STL map底层使用平衡二叉树——红黑树实现
+map将键值对(key/value pair)当作元素管理，它可根据key将元素自动排序，map不允许重复元素，[multimaps](https://github.com/haigangx/learning/blob/master/stl/stl_map.md#multimap)可允许重复元素，标准STL map底层使用平衡二叉树——红黑树实现
 
 
 
