@@ -23,6 +23,7 @@
   - [使用using进行别名声明](cplus11/using_to_alias_declaration.md)
   - [范围for语句](cplus11/new_for_range.md)
   - [尾置返回类型](cplus11/trailing_return_type.md)
+  - [random获取随机值](cplus11/random.md)
 
 
 - 常用API
