@@ -16,4 +16,4 @@
 - [ssh](ssh.md)
 - [telnet](telnet.md)
 - [gcc](gcc.md)
-
+- [wc](wc.md)
