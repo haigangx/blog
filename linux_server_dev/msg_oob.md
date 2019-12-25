@@ -9,4 +9,16 @@
 int sockatmark(int sockfd);
 ```
 
+sockatmark函数的一个常见实现：
+```
+int sockatmark(int fd) {
+    int flag;
+    if (ioctl(fd, SIOCATMARK, &flag) < 0)
+        return -1;
+    return (flag != 0);
+}
+```
+
+
+
 [参考文章](https://blog.csdn.net/ctthuangcheng/article/details/9569011)
