@@ -2,5 +2,4 @@
 
 ## vector
 
-vector在insert新元素时，会先使用备用空间，如果备用空间大小不足够插入所有新元素，则vector会先将长度扩大并重新分配空间，
-意味着vector所占用的连续地址空间将会改变，此时之前在vector上进行操作的迭代器将失效
+[参考](https://github.com/haigangx/learning/blob/master/stl/vector.md#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98)
