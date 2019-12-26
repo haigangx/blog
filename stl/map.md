@@ -1,8 +1,18 @@
 # STL容器——Map
 
-头文件：`#include <map>`
-
-迭代器：双向迭代器
+- 头文件：`#include <map>`
+- 定义：
+  ```
+  namespace std {
+      template <class Key, class T,
+                class Compare = less<Key>,
+                class Allocator = allocator<pair<const Key,T> > >
+      class map;
+  }
+  ```
+- 迭代器：双向迭代器
+- 底层：红黑树
+- 特征：键值对、自动排序、不可重复
 
 map将键值对(key/value pair)当作元素管理，它可根据key将元素自动排序，map不允许重复元素，[multimaps](https://github.com/haigangx/learning/blob/master/stl/stl_map.md#multimap)可允许重复元素，标准STL map底层使用平衡二叉树——红黑树实现
 
