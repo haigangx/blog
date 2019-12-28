@@ -15,5 +15,3 @@ getpeername获取sockfd对应的远端的socket地址
 
 ## 使用：
 
-
-
