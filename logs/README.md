@@ -30,10 +30,7 @@
 
 - 工具使用
 
-  - [Git](git.md)
-  - [vim](vim.md)
   - [zsh](zsh.md)
-  - [tmux](tmux.md)
   - [正则表达式](regular_expression.md)
 
 - [配置备份](https://github.com/lhgaaa/awesome_me)

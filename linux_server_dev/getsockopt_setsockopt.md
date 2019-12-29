@@ -105,5 +105,4 @@ int setsockopt(int sockfd, int level, int option_name,
     l_linger=0：close()立即返回，丢弃被关闭socket发送缓冲区残留的数据，同时向对方发送一个复位报文段
 
   - 3. l_onoff!=0， l_linger>0：
-
     如果socket是阻塞的，close将等待l_linger的时间再返回，如果close返回时TCP模块中还没有发送完残留数据并得到对方的确认，close系统调用将返回-1并设置errno为EWOULDBLOCK；如果socket非阻塞，close立即返回，然后根据返回值和errno判断残留数据是否发送完毕
