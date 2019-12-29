@@ -35,6 +35,10 @@
 
 - 《The Linux Command Line》  
 
+## Git：
+
+- 《progit》
+
 ## Linux服务器编程：  
 
 - 《APUE》  
