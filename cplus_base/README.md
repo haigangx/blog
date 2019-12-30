@@ -5,6 +5,7 @@
   - [可变参函数](base/variadic_function.md)
   - [C的预处理](base/c_preprocessor.md)
   - [C语言switch case语句中定义变量问题](base/c_switch_case_define_var.md)
+  - [宏中使用do{}while(0)的好处](base/do_while_0.md)
 
 
 - C++
