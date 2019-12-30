@@ -25,6 +25,7 @@
   - [范围for语句](cplus11/new_for_range.md)
   - [尾置返回类型](cplus11/trailing_return_type.md)
   - [random获取随机值](cplus11/random.md)
+  - [std::move()](cplus11/std_move.md)
 
 
 - 常用API
