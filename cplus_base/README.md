@@ -26,6 +26,9 @@
   - [尾置返回类型](cplus11/trailing_return_type.md)
   - [random获取随机值](cplus11/random.md)
   - [std::move()](cplus11/std_move.md)
+  - [std::mutex](cplus11/std_mutex.md)
+  - [std::unique_lock](cplus11/std_unique_lock.md)
+  - [std::lock_guard](cplus11/std_lock_guard.md)
 
 
 - 常用API
