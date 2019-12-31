@@ -27,8 +27,7 @@
   - [random获取随机值](cplus11/random.md)
   - [std::move()](cplus11/std_move.md)
   - [std::mutex](cplus11/std_mutex.md)
-  - [std::unique_lock](cplus11/std_unique_lock.md)
-  - [std::lock_guard](cplus11/std_lock_guard.md)
+  - [使用std::unique_lock和std::lock_guard管理std::mutex](cplus11/std_unique_lock_and_std_lock_guard.md)
 
 
 - 常用API
