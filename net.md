@@ -26,6 +26,8 @@
   - [数字签名是什么？](http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
   - [容错，高可用和灾备](http://www.ruanyifeng.com/blog/2019/11/fault-tolerance.html)
   - [信息论入门教程](http://www.ruanyifeng.com/blog/2019/08/information-theory.html)
+  
+- [守望的个人博客：公众号编程珠玑](https://www.yanbinghu.com/)
 
 - Linux内核
 
