@@ -15,6 +15,7 @@
   - [函数返回数组指针类型](base/function_return_array_pointer.md)
   - [extern关键字](base/extern.md)
   - [移植C/C++](base/port_c.md)
+  - [nullptr和NULL](nullptr_NULL.md)
 
 
 - C++11
