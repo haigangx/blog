@@ -26,11 +26,11 @@
 
 - 算法
 
-  - [sort](sort.md)
-  
+  - [sort](content/sort.md)
+
 - 辅助工具
 
-  - [pair](pair.md)
+  - [pair](content/pair.md)
 
 - 总结
 

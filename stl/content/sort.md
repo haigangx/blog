@@ -1,5 +1,19 @@
 # sort
 
+
+<!-- vim-markdown-toc Marked -->
+
+* [一、sort用法：](#一、sort用法：)
+  * [1. 容器成员是基本类型](#1.-容器成员是基本类型)
+  * [2. 容器成员是自定义类时，根据类中某成员变量排序](#2.-容器成员是自定义类时，根据类中某成员变量排序)
+* [二、sort解析：](#二、sort解析：)
+* [三、其他排序算法](#三、其他排序算法)
+  * [1. stable_sort](#1.-stable_sort)
+  * [2. 局部排序partial_sort](#2.-局部排序partial_sort)
+  * [3. nth_element](#3.-nth_element)
+
+<!-- vim-markdown-toc -->
+
 - 头文件：`#include <algorithms>`
 
 - 定义

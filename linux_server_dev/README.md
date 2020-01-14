@@ -155,8 +155,8 @@
 | int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout) | | |
 | void perror(const char* s) | | |
 | char* strerror(int errnum) | | |
-| int utime(const char* name, const struct utimebuf* t) | | |
-| int getrusage(int who, struct rusage* usage) | | |
+| int utime(const char* name, const struct utimebuf* t) | 获取文件访问时间 | |
+| int getrusage(int who, struct rusage* usage) | 获取CPU使用时间 | |
 | 
 
 - Linux网络基础API
