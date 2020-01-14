@@ -27,6 +27,10 @@
 - 算法
 
   - [sort](sort.md)
+  
+- 辅助工具
+
+  - [pair](pair.md)
 
 - 总结
 
