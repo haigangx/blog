@@ -43,11 +43,9 @@ map将键值对(key/value pair)当作元素管理，它可根据key将元素自�
 
 
 
-## Map的简单用法
+## 一、Map的简单用法
 
-### 操作函数
-
-#### 构造map
+### 1. 构造map
 
 | 操作 | 效果 |
 | --- | --- |
@@ -118,7 +116,7 @@ int main() {
 coll和coll2的比较准则不同，coll使用RuntimeStringCmp的缺省仿函数，coll2使用型别为RuntimeStringCmp的仿函数，但为其指定nocase为初始值，使其排序时忽略大小写，两者在填充同样的值时输出顺序不同
 
 
-#### 赋值操作
+### 2. 赋值操作
 
 | 操作 | 效果 |
 | --- | --- |
@@ -128,7 +126,7 @@ coll和coll2的比较准则不同，coll使用RuntimeStringCmp的缺省仿函数
 赋值操作两端的容器必须具备相同型别，尽管"比较准则"本身可能不同，但其型别必须相同
   
 
-#### 增加元素
+### 3. 增加元素
 
 | 操作 | 效果 |
 | --- | --- |
@@ -164,7 +162,7 @@ coll和coll2的比较准则不同，coll使用RuntimeStringCmp的缺省仿函数
   coll.insert({"otto", 22.3});
   ```
 
-#### 删除元素
+### 4. 删除元素
 
 | 操作 | 效果 |
 | --- | --- |
@@ -192,7 +190,7 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 }
 ```
 
-#### 元素查找
+### 5. 元素查找
 
 | 操作 | 效果 |
 | --- | --- |
@@ -203,7 +201,7 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 | c.equal_range(key) | 返回"键值为key"的元素的第一个和最后一个可插入位置区间，即"键值==key"的元素区间 |
   
 
-#### 元素比较
+### 6. 元素比较
 
 | 操作 | 效果 |
 | --- | --- |
@@ -216,7 +214,7 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 - 正常下比较只能进行于相同型别(排序规则相同)的容器，不同型别容器间比较需采用equal算法
 - 比较的步骤基于[字典顺序]()
 
-#### 迭代器
+### 7. 迭代器
 
 | 操作 | 效果 |
 | --- | --- |
@@ -239,7 +237,7 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 
 无法通过map迭代器修改map元素的key，因为key关系着map元素的正确次序，任意改变key将导致map结构被破坏，但是可以通过迭代器修改元素value值，要修改元素的key，要先移除该key的元素，然后插入一个"value相同"的新元素
   
-#### 使用下标存取map
+### 8. 使用下标存取map
 
 | 操作 | 效果 |
 | --- | --- |
@@ -255,7 +253,7 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 
   注意：这种元素插入方法相比一般的插入方法慢，因为这种方法下，新元素必须先使用默认构造函数将value初始化，然后再被赋值的真正value值覆盖
 
-#### 其他操作
+### 9. 其他操作
   
 | 操作 | 效果 |
 | --- | --- |
@@ -264,51 +262,40 @@ for (pos = coll.begin(); pos != coll.end(); ++pos) {
 | c.max_size() | 返回可容纳的最大元素数量 |
 
 
-## Map详细解析
+## 二、Map详细解析
 
-### Map的元素——pair
+### 1. Map的元素——[pair](pair.md)
+
   
-  ```
-  template<class T1, class T2>
-  struct pair {
-      typedef T1 first_type;
-      typedef T2 second_type;
-      T1 first;
-      T2 second;
-      pair() : first(T1()), second(T2()) {}
-      pair(const T1& a, const T2& b) : first(a), second(b) {}
-  };
-  ```
-  
-## 性能分析
+## 三、性能分析
 
-## 其他Map
+## 四、其他Map
 
-### multimap
+### 1. multimap
 
 头文件：`#include <map>`
 
 `multimap`的特性及用法与map完全相同，底层也使用红黑树实现，唯一的差别在于它允许键值重复，因为它的插入操作采用红黑树的`insert_equal()`而非`insert_unique()`
 
-### unordered_map
+### 2. unordered_map
 
 头文件：`#include <unordered_map>`
 
 `unordered_map`是map的无序版本，底层使用哈希表实现，
 
-### unordered_multimap
+### 3. unordered_multimap
 
 头文件：`#include <unordered_map>`
 
 `unordered_multimap`是multimap的无序版本，底层使用哈希表实现，
 
-### hash_map
+### 4. hash_map
 
 头文件：`#include <hash_map>`
 
 hash_map本质上与unordered_map相同，C++标准中并未纳入hash_map，而是加入了unordered_map，hash_map是标准的不同实现者提供的非标准散列表，hash_map和unordered_map底层实现和使用完全相同，由于hash_map未纳入标准，效率和功能可能会有微妙的差异
 
-### hash_multimap
+### 5. hash_multimap
 
 头文件：`#include <hash_map>`
 
