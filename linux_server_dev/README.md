@@ -1,6 +1,7 @@
 # Linux服务器开发
 
-基础知识 | [cheatsheet](cheatsheet.md) | [开源项目剖析](project)
+| 基础知识 | [cheatsheet](cheatsheet.md) | [开源项目剖析](project) |
+| --- | --- | --- |
 
 - Linux网络基础API
 
