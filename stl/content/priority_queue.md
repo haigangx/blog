@@ -76,6 +76,3 @@ priority_queue定义中第二个模板参数定义了其使用的底层容器，
 ```
 priority_queue<int, std::deque<int> > deque_heap;
 ```
-
-
-[参考](https://blog.csdn.net/xiaoquantouer/article/details/52015928)
