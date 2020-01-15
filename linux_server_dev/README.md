@@ -1,6 +1,6 @@
 # Linux服务器开发
 
-[cheatsheet](cheatsheet) | 
+[cheatsheet](cheatsheet.md) | 
 
 - Linux网络基础API
 
