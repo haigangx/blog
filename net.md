@@ -43,6 +43,8 @@
 - 算法和数据结构
 
   - [算法可视化VISUALGO](https://visualgo.net/zh)
+  - [Data Structure Visualizations](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
+  - [Algorithms Visualizer](https://algorithm-visualizer.org/)
 
 - 开发学习经验
 
