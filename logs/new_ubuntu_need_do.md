@@ -78,8 +78,8 @@ Note:
 
 ```
 启动shadowsocks： sslocal -c /etc/shadowsocks/config.json
-下载SwitchOmega插件：https://github.com/FelisCatus/SwitchyOmega/releases
-SwitchOmega安装教程：https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList
+下载SwitchyOmega插件：https://github.com/FelisCatus/SwitchyOmega/releases
+SwitchyOmega安装教程：https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList
 ```
 
 2.proxychains:代理工具
