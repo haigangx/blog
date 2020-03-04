@@ -1,0 +1,5 @@
+# STL容器迭代器失效问题总结
+
+## vector
+
+[参考](https://github.com/haigangx/learning/blob/master/stl/vector.md#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98)

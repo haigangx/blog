@@ -1,0 +1,63 @@
+# 线程属性
+
+pthread_attr_t结构体定义了一套完整的线程属性，如下所示：
+#include <bits/pthreadtypes.h>
+#define __SIZEOF_PTHREAD_ATTR_T 36
+typedef union
+{
+    char __size[__SIZEOF_PTHREAD_ATTR_T];
+    long int __align;
+}pthread_attr_t;
+线程各种属性都包含在一个字符数组中，线程库定义了一系列函数来操作pthread_attr_t类型的变量，以方便我们获取和设置线程属性：
+#include <pthread.h>
+//初始化线程属性对象
+int pthread_attr_init( pthread_attr_t* attr );
+//销毁线程属性对象，被销毁的线程属性对象只有再次初始化之后才能继续使用
+int pthread_attr_destroy( pthread_attr_t* attr );
+//下面这些函数用于获取和设置线程属性对象的某个属性
+int pthread_attr_getdetachstate( const pthread_attr_t* attr, int *detachstate );
+int pthread_attr_setdetachstate( pthread_attr_t* attr, int detachstate );
+
+int pthread_attr_getstackaddr( const pthread_attr_t* attr, void** stackaddr  );
+int pthread_attr_setstackaddr( pthread_attr_t* attr, void* stackaddr );
+
+int pthread_attr_getstacksize( const pthread_attr_t* attr, size_t* stacksize );
+int pthread_attr_setstacksize( pthread_attr_t* attr, size_t stacksize );
+
+int pthread_attr_getstack( const pthread_attr_t* attr, void** stackaddr, size_t* stacksize );
+int pthread_attr_setstack( pthread_attr_t* attr, void* stackaddr, size_t stacksize );
+
+int pthread_attr_getguardsize( const pthread_attr_t* __attr, size_t* guardsize );
+int pthread_attr_setguardsize( pthread_attr_t* attr, size_t guardsize );
+
+int pthread_attr_getschedparam( const pthread_addr_t* attr, struct sched_param* param );
+int pthread_attr_setschedparm( pthread_attr_t* attr, const struct sched_param* param );
+
+int pthread_attr_getschedpolicy( const pthread_attr_t* attr, int *policy );
+int pthread_attr_setschedpolicy( pthread_attr_t* attr, int policy );
+
+int pthread_attr_getinheritsched( const pthread_attr_t* attr, int* inherit );
+int pthread_attr_setinheritsched( pthread_attr_t* attr, int inherit );
+
+int pthread_attr_getscope( const pthread_attr_t* attr, int* scope );
+int pthread_attr_setscope( pthread_attr_t* attr, int scope );
+下面将详细介绍每个线程属性的含义：
+* detachstate：线程的脱离状态，有PTHREAD_CREATE_JOINABLE和PTHREAD_CREATE_DETACH两个可选值，前者指定线程可以被回收，后者使调用线程脱离与进程中其他线程的同步。脱离了与其他线程同步的线程称为"脱离线程"。脱离线程在退出时将自行释放其占用的系统资源，线程创建时该属性的默认值是PTHREAD_CREATE_JOINABLE。此外也可以使用pthread_detach函数直接将线程设置为脱离线程
+* stackaddr和stacksize：线程堆栈的起始地址和大小，一般来说，不需要自己来管理线程堆栈，因为Linux默认为每个线程分配了足够的堆栈空间(一般为8M)。我们可以使用ulimt -s命令开查看或修改这个默认值
+* guardsize：保护区域大小
+    ** 如果guardsize大于0，则系统创建线程的时候会在其堆栈的尾部额外分配guardsize字节的空间，作为保护堆栈不被错误地覆盖的区域
+    ** 如果guardsize等于0，则系统不为新创建的线程设置堆栈保护区。如果使用者通过pthread_attr_setstackaddr或pthread_attr_setstack函数手动设置线程的堆栈，则guardsize属性将被忽略
+* schedparam：线程调度参数，其类型是sched_param结构体。该结构体目前还只有一个整型类型的成员——sched_priority，该成员表示线程的运行优先级
+* schedpolicy：线程调度策略，该属性有三个可选值：
+    ** SCHED_OTHER：默认值
+    ** SCHED_RR：表示采用轮转算法调度
+    ** SCHED_FIFO：表示使用先进先出的方法调度
+    SCHED_RR和SCHED_FIFO这两种调度方式都具备实时调度功能，但只能用于以超级用户身份运行的进程
+* inheritsche：是否继承调用线程的调度属性，该属性有两个可选值：
+    ** PTHREAD_INHERIT_SCHED：表示新线程沿用其创建者的线程调度参数，这种情况下再设置新线程的调度参数属性将没有任何效果
+    ** PTHREAD_EXPLICIT_SCHED：表示调用者要明确地指定新线程的调度参数
+* scope：线程间竞争CPU的范围，即线程优先级的有效范围。该属性有两个可选值：
+    ** PTHREAD_SCOPE_SYSTEM：表示目标线程与系统中所有线程一起竞争CPU的使用
+    ** PTHREAD_SCOPE_PROCESS：表示目标线程仅与其他隶属于同一进程的线程竞争CPU的使用
+    目前Linux只支持PTHREAD_SCOPE_SYSTEM这一种取值
+
