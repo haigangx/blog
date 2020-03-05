@@ -16,7 +16,7 @@ curl -sL install-node.now.sh | sh
 curl --compressed -o- -L https://yarnpkg.com/install.sh | sh
 ```
 
-注：国内下载可能要使用代理，curl如何设置代理查看[这篇文章]()
+注：国内下载可能要使用代理，curl如何设置代理查看[这篇文章](../../../learning-linux/linux_command/content/curl.md)
 
 Ubuntu下预先安装以下软件：
 
