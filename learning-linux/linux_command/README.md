@@ -1,5 +1,8 @@
 # Linux命令
 
+<details>
+<summary>常用命令</summary>
+
 | 命令 | 效果 |
 | --- | --- |
 | `ssh -D 7001 -fTNnC root@129.226.69.149` | sock5代理：本地端口7001的数据转发到远程服务器129.226.69.149转发出去 |
@@ -7,11 +10,11 @@
 | `ssh -CqTnN -R 0.0.0.0:8443:192.168.1.2:443  user@202.115.8.1` | 反向代理：将外网主机（202.115.8.1）端口（8443）转发到内网主机 192.168.1.2:443 |
 | `python -m SimpleHTTPServer 8000` | 利用python启动一个简单的本地服务器,root为命令启动目录 |
 | <code>history \| awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' \| sort -rn \| head</code> | 列出最常使用的十个命令 |
-| `netstat -n | awk '/^tcp/ {++tt[$NF]} END {for (a in tt) print a, tt[a]}'` | 列出所有网络状态：ESTABLISHED/TIME_WAIT/FIN_WAIT1/FIN_WAIT2 |
+| <code>netstat -n \| awk '/^tcp/ {++tt[$NF]} END {for (a in tt) print a, tt[a]}'</code> | 列出所有网络状态：ESTABLISHED/TIME_WAIT/FIN_WAIT1/FIN_WAIT2 |
 | `sshfs name@server:/path/to/folder /path/to/mount/point` | 使用ssh挂载远程文件目录到本地 |
 | <code>ps aux \| sort -nk +4 \| tail</code> | 显示前十个运行的进程并按内存使用量排序 |
 | `while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-29));date;tput rc;done&` | 终端右上角显示时钟 |
-| `wget -qO - "http://www.tarball.com/tarball.gz" | tar zxvf -` | 从网络上的压缩文件中解出一个文件夹，并避免保存中间文件 |
+| <code>wget -qO - "http://www.tarball.com/tarball.gz" \| tar zxvf -</code> | 从网络上的压缩文件中解出一个文件夹，并避免保存中间文件 |
 | `python -c "import test.pystone;print(test.pystone.pystones())"` | 性能测试：测量处理器性能 |
 | `dd if=/dev/zero of=/dev/null bs=1M count=32768` | 性能测试：测试内存带宽 |
 | `mount /path/to/file.iso /mnt/cdrom -oloop` | Linux下挂载一个iso文件 |
@@ -51,6 +54,8 @@
 | <code>objdump -x xxx.so \| grep NEEDED</code> | linux查看依赖的库 |
 | <code>objdump -x 可执行程序名 \| grep NEEDED</code> | 查看可执行程序依赖的库 |
 | `ldd xxx.so` | 查看缺少的库 |
+
+</details>
 
 - [find](content/find.md)
 - [gdb](content/gdb.md)
