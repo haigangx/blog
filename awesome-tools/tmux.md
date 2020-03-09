@@ -1,4 +1,36 @@
-## linux下打开终端时运行tmux
+# tmux
+
+<details>
+<summary>cheatsheet</summary>
+
+| 操作 | 说明 |
+| --- | --- |
+| `prefix %` | 左右分屏 |
+| `prefix "` | 上下分屏 |
+
+</details>
+
+<details>
+<summary>tmux下复制粘贴</summary>
+
+tmux下有两套复制粘贴方法：
+- 快捷键单窗口复制
+  ```
+  鼠标选中后ctrl+shift+c、ctrl+shift+v进行复制粘贴
+  ```
+
+- 全屏幕复制
+  ```
+  1.prefix [ 进入复制模式
+  2.移动鼠标到复制起点，按空格键开始复制，移动鼠标使用vim键位
+  3.移动鼠标选择复制区域，复制完成按回车键结束复制
+  4.prefix ] 粘贴
+  ```
+
+</details>
+
+<details>
+<summary>linux下打开终端时自动运行tmux</summary>
 
 在`~/.bashrc`或`~/.zshrc`中添加如下配置，需要添加到所有alias语句之前：
 
@@ -47,3 +79,5 @@
       fi
   fi
   ```
+
+</details>
