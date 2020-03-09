@@ -16,6 +16,11 @@ Powerlevel9k使用一段时间之后发现当工作路径较长时，打印需�
 git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
 ```
 
+安装powerlevel10k:
+```
+git clone https://github.com/romkatv/powerlevel10k ~/.oh-my-zsh/custom/themes/powerlevel10k
+```
+
 设置zsh主题，在`~/.zshrc`中写入：
 
 ```

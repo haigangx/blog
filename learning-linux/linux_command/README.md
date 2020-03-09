@@ -6,10 +6,10 @@
 | `ssh -CqTnN -L 0.0.0.0:8443:192.168.1.2:443  user@192.168.1.3` | 正向代理：将本地主机的8443端口，通过192.168.1.3转发到192.168.1.2:443 |
 | `ssh -CqTnN -R 0.0.0.0:8443:192.168.1.2:443  user@202.115.8.1` | 反向代理：将外网主机（202.115.8.1）端口（8443）转发到内网主机 192.168.1.2:443 |
 | `python -m SimpleHTTPServer 8000` | 利用python启动一个简单的本地服务器,root为命令启动目录 |
-| `history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head` | 列出最常使用的命令 |
+| <code>history \| awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' \| sort -rn \| head</code> | 列出最常使用的十个命令 |
 | `netstat -n | awk '/^tcp/ {++tt[$NF]} END {for (a in tt) print a, tt[a]}'` | 列出所有网络状态：ESTABLISHED/TIME_WAIT/FIN_WAIT1/FIN_WAIT2 |
 | `sshfs name@server:/path/to/folder /path/to/mount/point` | 使用ssh挂载远程文件目录到本地 |
-| `ps aux | sort -nk +4 | tail` | 显示前十个运行的进程并按内存使用量排序 |
+| <code>ps aux \| sort -nk +4 \| tail</code> | 显示前十个运行的进程并按内存使用量排序 |
 | `while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-29));date;tput rc;done&` | 终端右上角显示时钟 |
 | `wget -qO - "http://www.tarball.com/tarball.gz" | tar zxvf -` | 从网络上的压缩文件中解出一个文件夹，并避免保存中间文件 |
 | `python -c "import test.pystone;print(test.pystone.pystones())"` | 性能测试：测量处理器性能 |
@@ -17,7 +17,7 @@
 | `mount /path/to/file.iso /mnt/cdrom -oloop` | Linux下挂载一个iso文件 |
 | `ssh -t hostA ssh hostB` | 通过主机A直接ssh到主机B |
 | `wget -r -l1 --no-parent -nH -nd -P/tmp -A".gif,.jpg" http://example.com/images` | 下载一个网站的所有图片 |
-| `lsof -P -i -n | cut -f 1 -d " "| uniq | tail -n +2` | 显示当前正在使用网络的进程 |
+| <code>lsof -P -i -n \| cut -f 1 -d " " \| uniq \| tail -n +2</code> | 显示当前正在使用网络的进程 |
 | `:w !sudo tee > /dev/null %` | vim中保存一个没有权限的文件 |
 | **grep** |  |
 | `grep -i "the" demo_file` | 文件中查找字符串 |
@@ -26,7 +26,7 @@
 | **文件查找** |  |
 | `find . -inname *.c` | 查找当前目录下以.c结尾的文件，忽略大小写 |
 | `find . -type f -newermt "2010-01-01" ! -newermt "2010-06-01"` | 按照日期范围查找文件 |
-| `find / -size +500M -print0 | xargs -0 du -m|sort -nr` | 查找500M以上的大文件，按文件大小排序输出 |
+| <code>find / -size +500M -print0 \| xargs -0 du -m \| sort -nr</code> | 查找500M以上的大文件，按文件大小排序输出 |
 | `find -iname "MyProgram.c" -exec md5sum {} \` | 对找到的文件执行某个命令 |
 | `find ~ -empty` | 查找家目录下的空文件 |
 | **软件管理** |  |
@@ -48,8 +48,8 @@
 | `tar zxvf test.tar.gz -C dir/` | 解压*.tar.gz文件到指定文件夹 |
 | `bzip2 test.txt` | 创建*.bz2压缩文件 |
 | `bzip2 -d test.txt.gz` | 解压*.bz2文件 |
-| `objdump -x xxx.so | grep NEEDED` | linux查看依赖的库 |
-| `objdump -x 可执行程序名 | grep NEEDED` | 查看可执行程序依赖的库 |
+| <code>objdump -x xxx.so \| grep NEEDED</code> | linux查看依赖的库 |
+| <code>objdump -x 可执行程序名 \| grep NEEDED</code> | 查看可执行程序依赖的库 |
 | `ldd xxx.so` | 查看缺少的库 |
 
 - [find](content/find.md)
