@@ -1,3 +1,8 @@
+## 创建型模式
+
+<details>
+<summary>Singleton(单件)</summary>
+
 # 单件模式
 
 保证一个类仅有一个实例，并提供一个访问它的全局访问点
@@ -153,3 +158,76 @@ Singleton* Singleton::Instance() {
       return &instance;
   }
   ```
+</details>
+<details>
+<summary>FactoryMethod(工厂方法)</summary>
+</details>
+<details>
+<summary>AbstractFactory(抽象工厂)</summary>
+</details>
+<details>
+<summary>Builder(生成器)</summary>
+</details>
+<details>
+<summary>Prototype(原型)</summary>
+</details>
+
+## 结构型模式
+
+<details>
+<summary>Adapter(适配器)</summary>
+</details>
+<details>
+<summary>Bridge(桥接)</summary>
+</details>
+<details>
+<summary>Composite(组合)</summary>
+</details>
+<details>
+<summary>Decorator(装饰)</summary>
+</details>
+<details>
+<summary>Facade(外观)</summary>
+</details>
+<details>
+<summary>FlyWeight(享元)</summary>
+</details>
+<details>
+<summary>Proxy(代理)</summary>
+</details>
+
+## 行为模式
+
+<details>
+<summary>ChainOfResponsibility(责任链)</summary>
+</details>
+<details>
+<summary>Command(命令)</summary>
+</details>
+<details>
+<summary>Interpreter(解释器)</summary>
+</details>
+<details>
+<summary>Iterator(迭代器)</summary>
+</details>
+<details>
+<summary>Mediator(中介者)</summary>
+</details>
+<details>
+<summary>Memento(备忘录)</summary>
+</details>
+<details>
+<summary>Observer(观察者)</summary>
+</details>
+<details>
+<summary>State(状态)</summary>
+</details>
+<details>
+<summary>Strategy(策略)</summary>
+</details>
+<details>
+<summary>TemplateMethod(模板方法)</summary>
+</details>
+<details>
+<summary>Visitor(访问者)</summary>
+</details>

@@ -1,1 +1,0 @@
-- [正确编写operator=](content/write_operator_equal_correctly.md)

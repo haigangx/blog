@@ -6,3 +6,6 @@
 - [bash](bash.md)
 - [docker](docker.md)
 - [Markdown](Markdown.md)
+- [regular_expression](regular_expression.md)
+- [vscode](vscode.md)
+- [zsh](zsh.md)

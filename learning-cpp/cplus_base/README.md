@@ -1,43 +1,112 @@
 # C++基础
 
-- C
+## C
 
-  - [可变参函数](base/variadic_function.md)
-  - [C的预处理](base/c_preprocessor.md)
-  - [C语言switch case语句中定义变量问题](base/c_switch_case_define_var.md)
-  - [宏中使用do{}while(0)的好处](base/do_while_0.md)
+<details>
+<summary>可变参函数</summary>
+</details>
+  - [](base/variadic_function.md)
+  <details>
+  <summary>C的预处理</summary>
+  </details>
+  - [](base/c_preprocessor.md)
+  <details>
+  <summary>C语言switch case语句中定义变量问题</summary>
+  </details>
+  - [](base/c_switch_case_define_var.md)
+  <details>
+  <summary>宏中使用do{}while(0)的好处</summary>
+  </details>
+  - [](base/do_while_0.md)
 
 
-- C++
+## C++
 
-  - [智能指针](base/smartpointer.md)
+<details>
+<summary>智能指针</summary>
+</details>
+  - [](base/smartpointer.md)
   - [operator new、operator new[]、operator delete、operator delete[]、placement new](base/new_and_delete.md)
-  - [函数返回数组指针类型](base/function_return_array_pointer.md)
-  - [extern关键字](base/extern.md)
-  - [移植C/C++](base/port_c.md)
-  - [nullptr和NULL](nullptr_NULL.md)
+  <details>
+  <summary>函数返回数组指针类型</summary>
+  </details>
+  - [](base/function_return_array_pointer.md)
+  <details>
+  <summary>extern关键字</summary>
+  </details>
+  - [](base/extern.md)
+  <details>
+  <summary>移植C/C++</summary>
+  </details>
+  - [](base/port_c.md)
+  <details>
+  <summary>nullptr和NULL</summary>
+  </details>
+  - [](nullptr_NULL.md)
 
 
-- C++11
+## C++11
 
-  - [auto类型说明符](cplus11/auto.md)
-  - [lamdba表达式](cplus11/lambda.md)
-  - [使用using进行别名声明](cplus11/using_to_alias_declaration.md)
-  - [范围for语句](cplus11/new_for_range.md)
-  - [尾置返回类型](cplus11/trailing_return_type.md)
-  - [random获取随机值](cplus11/random.md)
-  - [std::move()](cplus11/std_move.md)
-  - [std::mutex](cplus11/std_mutex.md)
-  - [使用std::unique_lock和std::lock_guard管理std::mutex](cplus11/std_unique_lock_and_std_lock_guard.md)
-  - [std::thread](cplus11/std_thread.md)
+<details>
+<summary>auto类型说明符</summary>
+</details>
+  - [](cplus11/auto.md)
+  <details>
+  <summary>lamdba表达式</summary>
+  </details>
+  - [](cplus11/lambda.md)
+  <details>
+  <summary>使用using进行别名声明</summary>
+  </details>
+  - [](cplus11/using_to_alias_declaration.md)
+  <details>
+  <summary>范围for语句</summary>
+  </details>
+  - [](cplus11/new_for_range.md)
+  <details>
+  <summary>尾置返回类型</summary>
+  </details>
+  - [](cplus11/trailing_return_type.md)
+  <details>
+  <summary>random获取随机值</summary>
+  </details>
+  - [](cplus11/random.md)
+  <details>
+  <summary>std::move()</summary>
+  </details>
+  - [](cplus11/std_move.md)
+  <details>
+  <summary>std::mutex</summary>
+  </details>
+  - [](cplus11/std_mutex.md)
+  <details>
+  <summary>使用std::unique_lock和std::lock_guard管理std::mutex</summary>
+  </details>
+  - [](cplus11/std_unique_lock_and_std_lock_guard.md)
+  <details>
+  <summary>std::thread</summary>
+  </details>
+  - [](cplus11/std_thread.md)
   
-- C++20(可能有的特性)
+## C++20(可能有的特性)
 
-  - [反射]()
+<details>
+<summary>反射</summary>
+</details>
+  - []()
 
 
-- 常用API
+## 常用API
 
-  - [C++ to_string函数](api/c++_to_string.md)
-  - [向上取整floor和向下取整ceil](api/math_floor_ceil.md)
-  - [C sprintf和snprint](api/io_sprintf_snprintf.md)
+<details>
+<summary>C++ to_string函数</summary>
+</details>
+  - [](api/c++_to_string.md)
+  <details>
+  <summary>向上取整floor和向下取整ceil</summary>
+  </details>
+  - [](api/math_floor_ceil.md)
+  <details>
+  <summary>C sprintf和snprint</summary>
+  </details>
+  - [](api/io_sprintf_snprintf.md)
