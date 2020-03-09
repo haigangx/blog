@@ -1,5 +1,8 @@
 ## Learn Go
 
+<details>
+<summary>学习方法</summary>
+
 ### HOW
 
 * [官方文档，墙裂推荐，超级强大！！](https://go-zh.org/doc/)
@@ -62,3 +65,67 @@
 * [今日头条用Go建千亿级微服务 分析详细,适合新手理解概念](https://studygolang.com/topics/6178#commentForm)
 
 ### 项目
+
+</details>
+
+## 总结
+
+<details>
+<summary>Go+Vim开发环境搭建</summary>
+
+# Go+Vim开发环境构建
+
+## Go插件安装
+
+```
+1、在%GOPATH%\src\ 目录下，建立golang.org 文件夹，并再新建x文件夹。  目录为 "%GOPATH\src\golang.org\x\"
+2、进入%GOPATH\src\golang.org\x\目录
+3、完成目录切换后，开始下载插件包：git clone https://github.com/golang/tools.git tools
+4、进入“%GOPATH”目录,执行：
+
+go install github.com/ramya-rao-a/go-outline
+go install github.com/acroca/go-symbols
+go install golang.org/x/tools/cmd/guru
+go install golang.org/x/tools/cmd/gorename
+go install github.com/josharian/impl
+go install github.com/rogpeppe/godef
+go install github.com/sqs/goreturns
+go install github.com/golang/lint/golint
+go install github.com/cweill/gotests/gotests
+```
+
+Note:
+
+```
+如果执行go install安装过程中提示找不到对应的安装包，可以手动安装，将上面安装包对应的github地址拼成https://github.com/xxx/xxx.git,使用git clone到$GOPATH/github.com/下，然后进入插件目录执行go install即可
+```
+
+## 用Vim开发Go
+
+### [插件](https://github.com/lhgaaa/learning_log/blob/master/tools/nvim.md#go)
+
+
+### [go module加速](https://goproxy.io/)
+
+```
+export GOPROXY=https://goproxy.io
+```
+
+</details>
+
+<details>
+<summary>Go包管理</summary>
+
+# Go包管理
+
+## GOPATH
+
+
+## Go Module
+
+## 参考文章
+[GO包管理的前世今生](https://strconv.com/posts/go-modules/?utm_source=tuicool&utm_medium=referral)
+[十分钟学会go module](https://blog.csdn.net/e421083458/article/details/89762113)
+[]()
+
+</details>
