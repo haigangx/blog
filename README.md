@@ -1,27 +1,28 @@
 ## 工具
 
-- [vim](awesome-tools/vim)
-- [git](awesome-tools/git)
-- [tmux](awesome-tools/tmux)
-- [bash](awesome-tools/bash)
-- [vscode](awesome-tools/vscode)
-- [docker](awesome-tools/docker)
-- [zsh](awesome-tools/zsh)
-- [正则表达式](awesome-tools/regular_expression)
+- [vim](tools/vim.md)
+- [git](tools/git.md)
+- [tmux](tools/tmux.md)
+- [bash](tools/bash.md)
+- [docker](tools/docker.md)
+- [Markdown](tools/Markdown.md)
+- [regular_expression](tools/regular_expression.md)
+- [vscode](tools/vscode.md)
+- [zsh](tools/zsh.md)
 
 ## C++
 
-- [C++基础](learning-cpp/cplus_base)
+- [C++基础](cpp/cpp_base.md)
 
-- [《Effective C++》学习总结](learning-cpp/effective_cplus/)
+- [《Effective C++》学习总结](cpp/effective_cpp.md)
 
-- [《设计模式GOF》学习总结](learning-cpp/design_pattern/)
+- [《设计模式GOF》学习总结](cpp/design_pattern.md)
 
-- [《深度探索C++对象模型》学习总结](learning-cpp/inside_cplus_mode/)
+- [《深度探索C++对象模型》学习总结](cpp/inside_cpp_mode.md)
 
-- [《STL源码剖析》](learning-cpp/stl/)
+- [《STL源码剖析》](cpp/stl.md)
 
-- [总结](learning-cpp/cplus_summary/)
+- [总结](cpp/cplus_summary.md)
 
 ## linux
 
