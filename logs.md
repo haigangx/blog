@@ -354,15 +354,118 @@ csr-active-config 0x67 = SIP Disabled completely
 <details>
 <summary>书单</summary>
 
-# Vim
+## Vim
 
-  * [Vim实用技巧](https://book.douban.com/subject/26967597/)
-  * [Hacking Vim](https://github.com/wuzhouhui/hacking_vim)
-  * [笨方法学Vimscript](http://learnvimscriptthehardway.onefloweroneworld.com/)
+- [Vim实用技巧](https://book.douban.com/subject/26967597/)
+- [Hacking Vim](https://github.com/wuzhouhui/hacking_vim)
+- [笨方法学Vimscript](http://learnvimscriptthehardway.onefloweroneworld.com/)
   
-# Go
+## Go
 
- * [Go语言圣经](https://github.com/golang-china/gopl-zh)
+- [Go语言圣经](https://github.com/golang-china/gopl-zh)
+
+## 算法和数据结构：    
+
+- 《算法导论》
+- 《算法》第四版
+- 《编程珠玑》
+
+
+## 计算机系统：  
+
+- 《深入理解计算机系统》  
+- 《程序员的自我修养-编译、链接、库》
+
+## 数据库：  
+
+- 《MySQL必知必会》  
+- 《高性能MySQL》  
+- 《MySQL技术内幕》  
+- 《redis设计与实现》  
+- 《redis实战》  
+
+## 计算机网络：  
+
+- 《TCP/IP详解》  
+- 《计算机网络》  
+- 《图解TCP/IP》  
+- 《图解HTTP》  
+-   [网络基本功系列](https://wizardforcel.gitbooks.io/network-basic/index.html)
+
+## 分布式：  
+
+- 《大规模分布式存储系统》  
+- 《分布式系统原理介绍》  
+
+## Linux：  
+
+- 《The Linux Command Line》  
+
+## Git：
+
+- 《progit》
+
+## Linux服务器编程：  
+
+- 《APUE》  
+- 《Linux高性能服务器编程》  
+- 《Linux多线程服务端编程》  
+- 《Lievent源码深度剖析》  
+  
+## C/C++:  
+
+- 《c++ primer》  
+- 《c++ 标准程序库》  
+- 《effective c++》   
+- 《STL源码剖析》  
+- 《Boost库》  
+- 《深度探索C++对象模型》
+- 《大规模C++程序设计》
+- 《泛型程序设计与STL》
+
+## Python：  
+
+- 《Python学习手册》  
+- 《Python Cookbook》  
+
+## Go: 
+
+## Lisp：  
+
+- 《计算机程序的构造与解释》  
+
+## 设计模式与软件工程：  
+
+- 《设计模式-可复用面向对象软件的基础》
+- 《敏捷软件开发-原则、模式与实践》
+- 《重构》
+- 《人月神话》
+
+## 编程规范： 
+
+- 《Google编程规范》
+ 
+## 正则表达式：
+
+- 《正则表达式必知必会》
+
+## 安全：  
+
+## 程序员数学：  
+
+- 《计算机程序设计艺术1234》  
+- 《具体数学》
+ 
+## other:  
+
+- 《编译原理》
+  
+## 算法题修炼：  
+
+- 《编程之美》  
+- 《LeetCode》  
+- 《剑指offer》  
+- 《计算机程序设计艺术》
 
 </details>
 
@@ -959,7 +1062,62 @@ brew cask install cakebrew
 <details>
 <summary>网络资源</summary>
 
-- [数据结构和算法动态可视化VisuAlgo](https://visualgo.net/zh)
+- Github
+
+  - [github中文榜](https://github.com/kon9chunkit/GitHub-Chinese-Top-Charts) 
+  - [程序员的英语学习指南](https://github.com/yujiangshui/A-Programmers-Guide-to-English)
+
+- [孟岩的博客](https://blog.csdn.net/myan)
+
+  - [技术路线的选择重要但不具有决定性](https://blog.csdn.net/myan/article/details/3247071)
+
+- [张云龙的个人博客](https://github.com/fouber/blog)
+  - [一个程序员的成长之路](https://github.com/fouber/blog/issues/41)
+
+- [酷壳-陈皓的博客](https://coolshell.cn/)
+
+  - [打造高效的工作环境-SHELL篇](https://coolshell.cn/articles/19219.html?utm_source=tuicool&utm_medium=referral)
+  - [应该知道的Linux技巧](https://coolshell.cn/articles/8883.html)
+  - [awk简明教程](https://coolshell.cn/articles/9070.html?utm_source=tuicool&utm_medium=referral)
+  - [sed简明教程](https://coolshell.cn/articles/9104.html?utm_source=tuicool&utm_medium=referral)
+  - [你可能不知道的shell](https://coolshell.cn/articles/8619.html)
+  - [28个UNIX/LINUX的命令行神器](https://coolshell.cn/articles/7829.html)
+
+- [阮一峰的网络日志]()
+
+  - [ssh原理与运用一](https://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html)
+  - [ssh原理与运用二](http://www.ruanyifeng.com/blog/2011/12/ssh_port_forwarding.html)
+  - [数字签名是什么？](http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
+  - [容错，高可用和灾备](http://www.ruanyifeng.com/blog/2019/11/fault-tolerance.html)
+  - [信息论入门教程](http://www.ruanyifeng.com/blog/2019/08/information-theory.html)
+
+- [守望的个人博客：公众号编程珠玑](https://www.yanbinghu.com/)
+
+- Linux内核
+
+  - Linux内核设计与实现
+  - 深入理解Linux内核
+  - 鸟哥的Linux私房菜[网页版](http://cn.linux.vbird.org/) | [gitbook第四版](https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/content/index.html)
+  - [网络基本功]( )
+
+- C++
+
+  - [怎样才是一个基本水平的c++程序员？ - 一定要瘦啊的回答 - 知乎](https://www.zhihu.com/question/51907924/answer/128509092)
+
+- 算法和数据结构
+
+  - [算法可视化VISUALGO](https://visualgo.net/zh)
+  - [Data Structure Visualizations](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
+  - [Algorithms Visualizer](https://algorithm-visualizer.org/)
+
+- 开发学习经验
+
+  - [C++后台开发学习路线(已签腾讯sp，附学习资料)](https://zhuanlan.zhihu.com/p/61457047)
+  - [Linux C/C++学习路线(已拿腾讯，百度offer)](https://www.itcodemonkey.com/article/14737.html)
+  - [C++后台开发/云计算方向，offer收割机的学习路线](https://zhuanlan.zhihu.com/p/65432202)
+  - [谷歌面试自学手册(中文)](https://github.com/jwasham/coding-interview-university/blob/master/translations/README-cn.md)
+  - [后端架构师技术图谱](https://github.com/xingshaocheng/architect-awesome)
+
 
 </details>
 
