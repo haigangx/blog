@@ -286,7 +286,7 @@ export PS1='[\u@\h \W]\$'
 | `grep -r "ramesh" *` | 在一个文件夹下递归查找包含字符串"ramesh"的文件 |
 | `grep -A 3 -i "the" demo_file` | 输出成功匹配的行以及之后的三行 |
 | **文件查找** |  |
-| `find . -inname *.c` | 查找当前目录下以.c结尾的文件，忽略大小写 |
+| `find . -iname *.c` | 查找当前目录下以.c结尾的文件，忽略大小写 |
 | `find . -type f -newermt "2010-01-01" ! -newermt "2010-06-01"` | 按照日期范围查找文件 |
 | <code>find / -size +500M -print0 \| xargs -0 du -m \| sort -nr</code> | 查找500M以上的大文件，按文件大小排序输出 |
 | `find -iname "MyProgram.c" -exec md5sum {} \` | 对找到的文件执行某个命令 |
