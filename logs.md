@@ -1117,6 +1117,8 @@ brew cask install cakebrew
   - [C++后台开发/云计算方向，offer收割机的学习路线](https://zhuanlan.zhihu.com/p/65432202)
   - [谷歌面试自学手册(中文)](https://github.com/jwasham/coding-interview-university/blob/master/translations/README-cn.md)
   - [后端架构师技术图谱](https://github.com/xingshaocheng/architect-awesome)
+  - [vscode插件开发攻略](https://www.cnblogs.com/liuxianan/p/vscode-plugin-overview.html)
+  - [chrome插件开发攻略](http://blog.haoji.me/chrome-plugin-develop.html)
 
 
 </details>
