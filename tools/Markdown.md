@@ -3,9 +3,8 @@
 [Markdown语法](http://naotu.baidu.com/file/dbb270c5616139e091f0d8b5c383a7ce?token=fa1cde6c866337c4)
 
 
-<details>
+<details open>
 <summary>实现内容折叠</summary>
-
 
 ```
 <details>
@@ -86,7 +85,18 @@ Markdown内容
 </details>
 
 <details>
-<summary></summary>
+<summary>Github Markdow 设置锚点</summary>
+
+```
+# 标题1
+
+[锚点](#标题1)
+```
+
+设置锚点的技巧：
+- 英文全小写，空格转为`-`
+- 中文标点符号全省略
+- 可以通过查看github效果页面设置锚点信息
 
 </details>
 

@@ -3,6 +3,7 @@
 <details>
 <summary>Singleton(单件)</summary>
 
+
 # 单件模式
 
 保证一个类仅有一个实例，并提供一个访问它的全局访问点
@@ -158,9 +159,15 @@ Singleton* Singleton::Instance() {
       return &instance;
   }
   ```
+
+[跳转文首](#单件模式)
+
 </details>
 <details>
 <summary>FactoryMethod(工厂方法)</summary>
+
+
+
 </details>
 <details>
 <summary>AbstractFactory(抽象工厂)</summary>
