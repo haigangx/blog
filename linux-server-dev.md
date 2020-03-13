@@ -168,7 +168,7 @@
 ### Linux网络基础API
 
 <details>
-<summary>主机字节序和网络字节序</summary>
+<summary>主机字节序和网络字节序——htonl、htons、ntohl、ntohs</summary>
 
 # 主机字节序和网络字节序
 
@@ -196,7 +196,7 @@ unsigned short ntohs( unsigned short netshor
 </details>
 
 <details>
-<summary>sock地址结构体</summary>
+<summary>sock地址结构体——sockaddr、sockaddr_un、sockaddr_in、sockaddr_in6</summary>
 
 # socket地址结构体
 
@@ -287,7 +287,7 @@ struct in6_addr
 </details>
 
 <details>
-<summary>ip地址转换函数</summary>
+<summary>ip地址转换函数——inet_addr、inet_aton、inet_ntoa、inet_pton、inet_ntop</summary>
 
 # IP地址转换函数
 
@@ -334,7 +334,7 @@ inet_ntop成功时返回目标存储单元的地址，失败返回NULL并设置e
 </details>
 
 <details>
-<summary>创建socket</summary>
+<summary>创建socket——socket</summary>
 
 # 创建socket
 
@@ -388,7 +388,7 @@ if ( ( sockfd = socket(AF_INET, SOCK_STREAM & SOCK_NONBLOCK, 0) ) == -1)
 </details>
 
 <details>
-<summary>命名socket</summary>
+<summary>命名socket——bind</summary>
 
 # 命令socket
 
@@ -437,7 +437,7 @@ int main()
 </details>
 
 <details>
-<summary>监听socket</summary>
+<summary>监听socket——listen</summary>
 
 # 监听socket
 
@@ -540,7 +540,7 @@ netstat -nt | grep 6677
 </details>
 
 <details>
-<summary>接受连接</summary>
+<summary>接受连接——accept</summary>
 
 # 接受连接accept
 
@@ -635,7 +635,7 @@ accept函数只是从监听队列中取出连接，而不论连接处于何种�
 </details>
 
 <details>
-<summary>发起连接</summary>
+<summary>发起连接——connect</summary>
 
 # 发起连接connect
 
@@ -772,7 +772,7 @@ int main(int argc, char* argv[]) {
 </details>
 
 <details>
-<summary>关闭连接</summary>
+<summary>关闭连接——close、shutdown</summary>
 
 # 关闭连接
 
@@ -822,21 +822,9 @@ shutdown成功返回0，失败返回-1并设置errno
 </details>
 
 <details>
-<summary>数据读写</summary>
+<summary>数据读写——recv、send、recvfrom、sendto、recvmsg、sendmsg</summary>
 
 # 数据读写
-
-<!-- vim-markdown-toc Marked -->
-
-* [1. TCP数据读写](#1.-tcp数据读写)
-  * [1.2. 主要参数和返回值](#1.2.-主要参数和返回值)
-  * [1.3. 使用](#1.3.-使用)
-* [2. UDP数据读写](#2.-udp数据读写)
-* [3. 通用数据读写](#3.-通用数据读写)
-  * [3.1 参数和返回值](#3.1-参数和返回值)
-  * [3.2 使用](#3.2-使用)
-
-<!-- vim-markdown-toc -->
 
 ## 1. TCP数据读写
 
