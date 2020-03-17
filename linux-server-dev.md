@@ -1024,7 +1024,7 @@ ssize_t sendmsg( int sockfd, struct msghdr* msg, int flags );
   };
   ```
 
-  - msg_name:指向socket结构体变量，指定通信对方的socket地址，对于面向连接的tcp协议，该值设为NULL
+  - msg_name:指向socket结构 体变量，指定通信对方的socket地址，对于面向连接的tcp协议，该值设为NULL
   - msg_iov：iovec结构体类型的指针
   ```
   struct iovec* msg_iov:
@@ -1058,7 +1058,7 @@ recvmsg/sendmsg读写数据的形式分别为`分散读`和`集中写`：
 </details>
 
 <details>
-<summary>带外标记</summary>
+<summary>带外标记——sockatmark</summary>
 
 # 带外标记
 
@@ -1086,7 +1086,7 @@ int sockatmark(int fd) {
 </details>
 
 <details>
-<summary>地址信息函数</summary>
+<summary>地址信息函数——getsockname、getpeername</summary>
 
 # 地址信息函数
 
@@ -1180,7 +1180,7 @@ int main(int argc, char* argv[]) {
 </details>
 
 <details>
-<summary>socket选项</summary>
+<summary>socket选项——getsockopt、setsockopt</summary>
 
 # socket选项
 
@@ -1294,7 +1294,7 @@ int setsockopt(int sockfd, int level, int option_name,
 </details>
 
 <details>
-<summary>网络信息API</summary>
+<summary>网络信息API——gethostbyname、gethostbyaddr、getservbyname、getservbyport</summary>
 
 # 网络信息API
 
@@ -3295,7 +3295,7 @@ exec函数不会关闭原程序打开的文件描述符，除非该文件描述�
 子进程进入僵尸态的两种情况：
 1、在子进程结束运行之后，父进程读取其退出状态之前，称该子进程处于僵尸态
 2、父进程结束或者异常终止，而子进程继续运行。此时子进程的PPID将被操作系统设置为1，即init进程。init进程接管了该子进程并等待它结束。在父进程退出之后，子进程退出之前，该子进程处于僵尸态
-僵尸态的子进程将一直占据着内核资源导致资源浪费，所以应该父进程结束前调用wait或者waitpid函数来等待子进程结束并获取子进程的返回信息来避免僵尸进程的产生或者使处于僵尸态的子进程立即结束
+僵尸态的子进程将一直占据着内核资源导致资源浪费，所以应该父进程结束前调用wait或者waitpid函数来等待子进程结束并获取子进程的返回信息来避免僵尸进程的产生或者使处于僵��态的子进程立即结束
 #include <sys/types.h>
 #include <sys/wait.h>
 pid_t wait( int* stat_loc );
@@ -4530,7 +4530,7 @@ pthread_kill成功时返回0，失败时返回错误码
 * 动态创建的子进程是当前进程的完整映像。当前进程必须谨慎地管理其分配的文件描述符和堆内存等系统资源，否则子进程可能复制这些资源，从而使系统的可用资源急剧下降，进而影响服务器的性能
 使用进程池和线程池可以避免上述缺点
 
-## 进程池和线程池概述
+## 进程池和���程池概述
 
 进程池中所有子进程运行着相同的代码，并具有相同的属性，比如优先级、PGID等。因为进程池在服务器启动之初就创建好了，所以每个子进程都相对干净：即它们没有打开不必要的文件描述符(从父进程继承而来)，也不会错误地使用大块的堆内存(从父进程复制得到)
 进程池的一般模型：
