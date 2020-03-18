@@ -1294,7 +1294,7 @@ int setsockopt(int sockfd, int level, int option_name,
 </details>
 
 <details>
-<summary>网络信息API——gethostbyname、gethostbyaddr、getservbyname、getservbyport</summary>
+<summary>网络信息API——gethostbyname、gethostbyaddr、getservbyname、getservbyport、getaddrinfo、getnameinfo</summary>
 
 # 网络信息API
 
@@ -1444,7 +1444,7 @@ int getnameinfo(const struct sockaddr* sockaddr, socklen_t addrlen, char* host,
 ### 高级IO函数
 
 <details>
-<summary>pipe函数</summary>
+<summary>pipe函数——pipe、socketpair</summary>
 
 # pipe函数
 
@@ -1504,7 +1504,7 @@ socketpair：
 </details>
 
 <details>
-<summary>dup和dup2</summary>
+<summary>dup和dup2——dup、dup2</summary>
 
 # dup和dup2
 
@@ -1581,7 +1581,7 @@ int main(int argc, char* argv[]) {
 </details>
 
 <details>
-<summary>readv和writev</summary>
+<summary>readv和writev——readv、writev</summary>
 
 # readv和writev
 
@@ -1593,15 +1593,17 @@ writev：将数据从多块分散的内存数据一并写入文件描述符中�
 #include <sys/uio.h>
 ssize_t readv(int fd, const struct iovec* vector, int count);
 ssize_t writev(int fd, const struct iovec* vector, int count);
-
-struct iovec
-{
-    void *iov_base;    //内存起始地址
-    size_t iov_len;     //这块内存的长度
-};
 ```
-
-vector：iovec描述一块内存区，count表示vector数组中内存区iovec的数量
+- fd：被操作的目标文件描述符
+- vector：iovec描述一块内存区
+    ```
+    struct iovec
+    {
+        void *iov_base;    //内存起始地址
+        size_t iov_len;     //这块内存的长度
+    };
+    ```
+- count：表示vector数组的长度
 
 readv和writev在成功时返回读入/写入fd的字节数，失败返回-1并设置errno
 
@@ -1623,9 +1625,11 @@ readv和writev在成功时返回读入/写入fd的字节数，失败返回-1并�
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <sys/uio.h>
 
 #define BUFFER_SIZE 1024
 
+//定义两种HTTP状态码和状态信息
 static const char* status_line[2] = {"200 OK", "500 Internal server error"};
 
 int main(int argc, char* argv[]) {
@@ -1636,6 +1640,8 @@ int main(int argc, char* argv[]) {
 
     const char* ip = argv[1];
     int port = atoi(argv[2]);
+
+    //将目标文件作为程序的第三个参数传入
     const char* file_name = argv[3];
 
     struct sockaddr_in address;
@@ -1660,19 +1666,29 @@ int main(int argc, char* argv[]) {
     if (connfd < 0) {
         printf("errno is : %d\n", errno);
     } else {
+        //用于保存HTTP应答的状态行、头部字段和一个空行的缓存区
         char header_buf[BUFFER_SIZE];
         memset(header_buf, '\0', BUFFER_SIZE);
+        //用于存放目标文件内容的应用程序缓存
         char* file_buf;
+        //用于获取目标文件的属性，比如是否为目录，文件大小等
         struct stat file_stat;
+        //记录目标文件是否为有效文件
         bool valid = true;
+        //缓存区header_buf目前已经使用了多少字节的空间
         int len = 0;
         if (stat(file_name, &file_stat) < 0) {
+            //目标文件不存在
             valid = false;
         } else {
             if (S_ISDIR(file_stat.st_mode)) {
+                //目标文件是一个目录
                 valid = false;
             } 
             else if (file_stat.st_mode & S_IROTH) {
+                //当前用户有读取目标文件的权限
+
+                //动态分配缓存区file_buf，并指定其大小为目标文件的大小file_stat.st_size加1，然后将目标文件读入缓存区file_buf中
                 int fd = open(file_name, O_RDONLY);
                 file_buf = new char[file_stat.st_size+1];
                 memset(file_buf, '\0', file_stat.st_size+1);
@@ -1685,11 +1701,15 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        //如果目标文件有效，则发送正常的HTTP应答
         if (valid) {
+            //下面这部分内容将HTTP应答的状态行、"Content-Length"头部字段和一个空行依次加入header_buf中
             ret = snprintf(header_buf, BUFFER_SIZE-1, "%s %s\r\n", "HTTP/1.1", status_line[0]);
             len += ret;
-            ret = snprintf(header_buf+len, BUFFER_SIZE-1-len, "Content-Length: %d\r\n", file_stat.st.size);
+            ret = snprintf(header_buf+len, BUFFER_SIZE-1-len, "Content-Length: %d\r\n", file_stat.st_size);
             len += ret;
+            ret = snprintf(header_buf+len, BUFFER_SIZE-1-len, "%s", "\r\n");
+            //利用writev将header_buf和file_buf的内容一并写出
             struct iovec iv[2];
             iv[0].iov_base = header_buf;
             iv[0].iov_len = strlen(header_buf);
@@ -1698,6 +1718,7 @@ int main(int argc, char* argv[]) {
             ret = writev(connfd, iv, 2);
         }
         else {
+            //如果目标文件无效，则通知客户端服务器发生了“内部错误”
             ret = snprintf(header_buf, BUFFER_SIZE-1, "%s %s\r\n", "HTTP/1.1", status_line[1]);
             len += ret;
             ret = snprintf(header_buf+len, BUFFER_SIZE-1-len, "%s", "\r\n");
@@ -1706,9 +1727,18 @@ int main(int argc, char* argv[]) {
         close(connfd);
         delete [] file_buf;
     }
-    close(sock);
+    close(sockfd);
     return 0;
 }
+```
+
+```
+g++ test_writev_serv.c -o test_writev_serv.o
+
+# 同一台机器上可以这样测试
+./test_writev_serv.o 127.0.0.1 1234 test_write_serv.c
+
+telnet 127.0.0.1 1234
 ```
 
 </details>
@@ -1725,18 +1755,22 @@ sendfile函数在两个文件描述符之间直接传递数据(完全在内核�
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count);
 ```
 
-- out_fd：等待写入内容的fd，可理解为发送给网络上的socket
-- in_fd：待读出内容的fd，可理解为本地需要发送的文件
+- out_fd：等待写入内容的fd，可理解为发送给网络上的socket，out_fd则必须为socket
+- in_fd：待读出内容的fd，可理解为本地需要发送的文件，in_fd必须为支持mmap函数的文件描述符，必须指向真实的文件，不能是socket或者管道
 - offset：指定读入文件的读取偏移量，如果为空，则从默认读取位置读取
 - count：指定传输字节数
 
 函数成功返回传输的字节数，失败返回-1并设置errno
 
-in_fd必须为支持mmap函数的文件描述符，必须指向真实的文件，不能是socket或者管道
-
-out_fd则必须为socket
-
 由此可见，sendfile是专门为在网络上传输文件设计的
+
+## 用法
+
+用sendfile函数传输文件
+
+```
+#include 
+```
 
 </details>
 
