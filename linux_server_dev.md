@@ -1911,23 +1911,40 @@ ssize_t splice(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out,
 - len：指定移动数据的长度
 - flags：控制数据如何移动，可以是以下值的按位或：
   
-  常用值	含义
-  - SPLICE_F_MOVE	按整页移动数据(只是给内核的提示)
-  - SPLICE_F_NONBLOCK	非阻塞splice，实际效果受文件描述符本身阻塞状态的影响
-  - SPLICE_F_MORE	后续的splice调用将读取更多数据(给内核提示)
-  - SPLICE_F_GIFT	对splice无效果
+  | 常用值 | 含义 |
+  | --- | --- |
+  | SPLICE_F_MOVE | 按整页移动数据(只是给内核的提示) |
+  | SPLICE_F_NONBLOCK | 非阻塞splice，实际效果受文件描述符本身阻塞状态的影响 |
+  | SPLICE_F_MORE | 后续的splice调用将读取更多数据(给内核提示) |
+  | SPLICE_F_GIFT | 对splice无效果 |
   
 使用splice函数时，fd_in和fd_out必须至少有一个是管道文件描述符。
+
+## 返回值
 
 splice函数成功返回移动字节个数，返回0表示没有数据移动(从管道读取数据，而管道无数据写入时发生)
 
 失败返回-1并设置errno，常见错误表如下：
 
-errno	含义
-- EBADF	参数所指fd有误
-- EINVAL	目标系统不支持splice，或目标文件以追加方式打开，或两个文件描述符都不是管道文件描述符，或某个offset参数被用于不支持随机访问的设备(如字符设备)
-- ENOMEM	内存不够
-- ESPIPE	fd_in(off_in)为管道文件描述符，但off_in(off_out)不为NULL
+| errno | 含义 |
+| --- | --- |
+| EBADF | 参数所指fd有误 |
+| EINVAL | 目标系统不支持splice，或目标文件以追加方式打开，或两个文件描述符都不是管道文件描述符，或某个offset参数被用于不支持随机访问的设备(如字符设备) |
+| ENOMEM | 内存不够 |
+| ESPIPE | fd_in(off_in)为管道文件描述符，但off_in(off_out)不为NULL |
+
+## 用法
+
+使用splice函数实现一个零拷贝的回射服务器
+
+```
+```
+
+测试：
+
+```
+
+```
 
 </details>
 
