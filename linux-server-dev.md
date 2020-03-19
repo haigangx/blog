@@ -1744,7 +1744,7 @@ telnet 127.0.0.1 1234
 </details>
 
 <details>
-<summary>sendfile函数</summary>
+<summary>sendfile函数——sendfile</summary>
 
 # sendfile函数
 
@@ -1769,17 +1769,80 @@ ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count);
 用sendfile函数传输文件
 
 ```
-#include 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/sendfile.h>
+
+int main( int argc, char* argv[]) {
+    if (argc <= 3) {
+        printf("usage: %s ip_address port_number filename\n", basename(argv[0]));
+    }
+
+    const char* ip = argv[1];
+    int port = atoi(argv[2]);
+    const char* file_name = argv[3];
+
+    int filefd = open(file_name, O_RDONLY);
+    assert(filefd > 0);
+    struct stat stat_buf;
+    fstat(filefd, &stat_buf);
+
+    struct sockaddr_in address;
+    bzero(&address, sizeof(address));
+    address.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &address.sin_addr);
+    address.sin_port = htons(port);
+
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    assert(sock >= 0);
+
+    int ret = bind(sock, (struct sockaddr*)&address, sizeof(address));
+    assert(ret != -1);
+
+    ret = listen(sock, 5);
+    assert(ret != -1);
+
+    struct sockaddr_in client;
+    socklen_t client_addrlength = sizeof(client);
+    int connfd = accept(sock, (struct sockaddr*)&client, &client_addrlength);
+    if (connfd < 0) {
+        printf("errno is : %d\n", errno);
+    } else {
+        sendfile(connfd, filefd, NULL, stat_buf.st_size);
+        close(connfd);
+    }
+    close(sock);
+    return 0;
+}
+```
+
+测试：
+```
+g++ -o test_sendfile.o test_sendfile.cpp
+
+./test_senfile.o 127.0.0.1 1234 test_sendfile.cpp
+
+telnet 127.0.0.1 1234
 ```
 
 </details>
 
 <details>
-<summary>mmap和munmap</summary>
+<summary>mmap和munmap——mmap、munmap</summary>
 
 # mmap和munmap
 
-mmap函数用于申请一段内存空间。可以将这段内存作为进程间通信的共享内存，也可以讲文件直接映射到其中
+mmap函数用于申请一段内存空间。可以将这段内存作为进程间通信的共享内存，也可以将文件直接映射到其中
 
 munmap函数用于释放mmap创建的内存空间
 
@@ -1789,28 +1852,42 @@ void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset
 int munmap(void *start, size_t length);
 ```
 
+## 参数
+
 - start：用户指定某个特定地址作为这段内存的起始地址，如果为NULL，系统自动分配一个地址
 - length：内存段的长度
 - prot：内存段的访问权限：PROT_READ(可读),PROT_WRITE(可写),PROT_EXEC(可执行),PROT_NONE(不能被访问)
 - flags：控制内存段内容被修改后程序的行为
 
-  常用值	含义
-  - MAP_SHARED	内存段的修改同步到文件
-  - MAP_PRIVATE	内存段为进程私有，修改不会同步到文件
-  - MAP_ANONYMOUS	内存段并非文件映射而来，内容初始化为0，mmap函数后两个参数被忽略
-  - MAP_FIXED	内存段必须位于start参数指定的地址处，start必须是内存页面大小(4096字节)的整数倍
-  - MAP_HUGETLB	“大内存页面”分配内存空间，“大内存页面”大小通过/proc/meminfo查看
+  | 常用值 | 含义 |
+  | --- | --- |
+  | MAP_SHARED | 内存段的修改同步到文件 |
+  | MAP_PRIVATE | 内存段为进程私有，修改不会同步到文件 |
+  | MAP_ANONYMOUS | 内存段并非文件映射而来，内容初始化为0，mmap函数后两个参数被忽略 |
+  | MAP_FIXED | 内存段必须位于start参数指定的地址处，start必须是内存页面大小(4096字节)的整数倍 |
+  | MAP_HUGETLB | “大内存页面”分配内存空间，“大内存页面”大小通过/proc/meminfo查看 |
 - fd：要映射的文件
 - offset：从文件的偏移量offset开始映射
+
+## 返回值
 
 mmap函数成功返回指向目标内存区域的指针，失败返回MAP_FAILED((void*)-1)并设置errno
 
 munmap函数成功返回0，失败返回-1并设置errno
 
+## 使用
+
+TODO: 利用mmap函数实现进程间共享内存
+
+可以利用mmap函数实现进程间共享内存：
+```
+
+```
+
 </details>
 
 <details>
-<summary>splice函数</summary>
+<summary>splice函数——splice</summary>
 
 # splice函数
 
@@ -1821,6 +1898,8 @@ splice函数用于在两个文件描述符之间移动数据，也是零拷贝�
 ssize_t splice(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, 
             size_t len, unsigned int flags);
 ```
+
+## 参数
 
 - fd_in：待输入数据的文件描述符
 
