@@ -1,12 +1,28 @@
 # vscode
 
 <details><summary>插件推荐</summary>
+
+- Chinese : 提供vscode的汉化
+- Python: 提供python代码分析、高亮、规范化等基本功能
+- filesize: 左下角显示文件大小
+- vim: vscode下的vim模式
+- Bracket Pair Colorizer: 成对的彩色括号
+- Settings Sync: 备份vscode配置到Github
+- Indent-Rainbow: 带颜色的缩进
+- TODO Highlight: 高亮TODO，搭配TODO Tree使用
+- TODO Tree: 显示TODO List
+- Polacode: 代码生成图片
+- Guides：比vscode自带的更好的参考线
+- Regex Previewer：正则结果预览
+
 </details>
 
 
 <details><summary>使用vscode远程开发</summary>
 
 # 使用vscode远程开发
+
+# TODO: 总结使用vscode远程开发遇到的问题
 
 [我最终还是选择了vscode](https://zhuanlan.zhihu.com/p/93239107)
 
