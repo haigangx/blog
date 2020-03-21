@@ -1,10 +1,6 @@
 ## linux基础
 
 <details>
-<summary></summary>
-</details>
-
-<details>
 <summary>linux文件系统</summary>
 
 # Linux文件系统详解

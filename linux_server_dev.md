@@ -1938,18 +1938,83 @@ splice函数成功返回移动字节个数，返回0表示没有数据移动(从
 使用splice函数实现一个零拷贝的回射服务器
 
 ```
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+#include <string.h>
+
+int main(int argc, char* argv[])
+{
+    if (argc <= 2)
+    {
+        printf("usage: %s ip_address port_number\n", basename(argv[0]));
+        return 1;
+    }
+
+    const char* ip = argv[1];
+    int port = atoi(argv[2]);
+
+    struct sockaddr_in address;
+    bzero(&address, sizeof(address));
+    address.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &address.sin_addr);
+    address.sin_port = htons(port);
+
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    assert(sock >= 0);
+
+    int ret = bind(sock, (struct sockaddr*)&address, sizeof(address));
+    assert(ret != -1);
+
+    ret = listen(sock, 5);
+    assert(ret != -1);
+
+    struct sockaddr_in client;
+    socklen_t client_addrlength = sizeof(client);
+    int connfd = accept(sock, (struct sockaddr*)&client, &client_addrlength);
+    if (connfd < 0)
+    {
+        printf("errno is : %s\n", strerror(errno));
+    }
+    else
+    {
+        int pipefd[2];
+        assert(ret != -1);
+        ret = pipe(pipefd);  //创建管道
+        //将connfd上流入的客户数据定向到管道中
+        ret = splice(connfd, NULL, pipefd[1], NULL, 32768, SPLICE_F_MORE | SPLICE_F_MOVE);
+        assert(ret != -1);
+        //将管道的输出定向到connfd客户连接文件描述符
+        ret = splice(pipefd[0], NULL, connfd, NULL, 32768, SPLICE_F_MORE | SPLICE_F_MOVE);
+        assert(ret != -1);
+        close(connfd);
+    }
+    close(sock);
+    return 0;
+}
 ```
 
 测试：
 
 ```
+g++ -o test_splice.o test_splice.cpp
+./test_splice.o 127.0.0.1 1234
 
+telnet 127.0.0.1 1234
+# 输入字符服务器会返回相同字符
 ```
 
 </details>
 
 <details>
-<summary>tee函数</summary>
+<summary>tee函数——tee</summary>
 
 # tee函数
 
@@ -1960,18 +2025,81 @@ tee函数用于在两个管道文件描述符之间复制数据，也是零拷�
 ssize_t tee(int fd_in, int fd_out, size_t len, unsigned int flags);
 ```
 
+## 参数
+
 fd_in和fd_out必须都是管道文件描述符
 
 len,flags参数含义和splice函数相同
+
+## 返回值
 
 tee函数成功返回两个文件描述符之间复制的字节数，0表示没有复制任何数据
 
 失败返回-1并设置errno
 
+## 用法
+
+利用tee函数和splice函数，实现Linux下tee程序(同时输出数据到终端和文件的程序)
+
+```
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+
+int main(int argc, char* argv[])
+{
+    if (argc != 2)
+    {
+        printf("usage: %s <file>\n", argv[0]);
+        return 1;
+    }
+    int filefd = open(argv[1], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    assert(filefd > 0);
+
+    int pipefd_stdout[2];
+    int ret = pipe(pipefd_stdout);
+    assert(ret != -1);
+
+    int pipefd_file[2];
+    ret = pipe(pipefd_file);
+    assert(ret != -1);
+
+    //将标准输入内容输入管道pipefd_stdout输入端
+    ret = splice(STDIN_FILENO, NULL, pipefd_stdout[1], NULL, 32768, SPLICE_F_MORE | SPLICE_F_MOVE);
+    assert(ret != -1);
+
+    //将管道pipefd_stdout的输出复制到管道pipefd_file的输入端
+    ret = tee(pipefd_stdout[0], pipefd_file[1], 32768, SPLICE_F_NONBLOCK);
+    assert(ret != -1);
+
+    //将管道pipefd_file的输出定向到文件描述符filefd上，从而将标准输入的内容写入文件
+    ret = splice(pipefd_file[0], NULL, filefd, NULL, 32768, SPLICE_F_MOVE | SPLICE_F_MORE);
+    assert(ret != -1);
+
+    close(filefd);
+    close(pipefd_stdout[0]);
+    close(pipefd_stdout[1]);
+    close(pipefd_file[0]);
+    close(pipefd_file[1]);
+    return 0;
+}
+```
+
+测试：
+
+```
+g++ -o test_tee.o test_tee.cpp
+
+./test_tee.o test_tee.txt
+```
+
 </details>
 
 <details>
-<summary>fcntl函数</summary>
+<summary>fcntl函数——fcntl</summary>
 
 # fcntl函数
 
@@ -1982,107 +2110,81 @@ fcntl函数(file control)提供了对文件描述符的各种控制操作
 int fcntl(int fd, int cmd, ...);
 ```
 
+## 参数
+
 - fd：要操作的文件描述符
 - cmd：执行的操作类型，根据不同的操作类型，该函数可能需要第三个可选参数arg
 
-表格，需要重新写
-
 | 操作分类 | 操作 | 含义 | 第三个参数的类型 | 成功时的返回值 |
-| :--- | :--- | :--- | :--- | :--- |
-复制文件描述符	
-F_DUPFD
-F_DUPFD_CLOEXEC
-创建一个值大于或等于arg的新文件描述符
-与F_DUPFD类似，不过新的文件描述符被设置了close-on-exec标志
-long
-long
-新创建的文件描述符
-新创建的文件描述符
-获取和设置文件描述符标志	
-F_GETFD
-F_SETFD
-获取fd的标志(比如close-on-exec)
-设置fd的标志
-无
-long
-fd标志
-0
-获取和设置文件描述符的状态标志	
-F_GETFL
-F_SETFL
-状态标志包括:O_APPEND,O_CREAT,O_RDONLY,O_WRONLY,O_RDWR
-设置状态标志，但部分标志不能被修改(如访问模式标志)
-void
-long
-fd的状态标志
-0
-管理信号	
-F_GETOWN
-F_SETOWN
-F_GETSIG
-F_SETSIG
-获得SIGIO和SIGURG的宿主进程PID或进程组的组ID
-设置SIGIO和SIGURG的宿主进程PID或进程组的组ID
-获取应用程序被通知fd可读或可写的是哪个信号
-设置通知应用程序fd可读或可写的是哪个信号
-无
-long
-无
-long
-进程ID或者组ID
-0
-信号值，0表示SIGIO
-0
-操作管道容量	
-F_SETPIPE_SZ
-F_GETPIPE_SZ
-设置由fd指定的管道的容量。/proc/sys/fs/pipe-size-max内核参数指定了fcntl能设置的管道容量的上限
-获取由fd指定的管道的容量
-long
-无
-0
-管道容量
+| --- | --- | --- | --- | --- |
+| 复制文件描述符 | F_DUPFD | 创建一个值大于或等于arg的新文件描述符 | long | 新创建的文件描述符 |
+| | F_DUPFD_CLOEXEC | 与F_DUPFD类似，不过新的文件描述符被设置了close-on-exec标志 | long | 新创建的文件描述符 |
+| 获取和设置文件描述符标志 | F_GETFD | 获取fd的标志(比如close-on-exec) | 无 | fd标志 |
+| | F_SETFD | 设置fd的标志 | long | 0 |
+| 获取和设置文件描述符的状态标志 | F_GETFL | 状态标志包括:O_APPEND,O_CREAT,O_RDONLY,O_WRONLY,O_RDWR | void | fd的状态标志 |
+| | F_SETFL | 设置状态标志，但部分标志不能被修改(如访问模式标志) | long | 0 |
+| 管理信号 | F_GETOWN | 获得SIGIO和SIGURG的宿主进程PID或进程组的组ID | 无 | 进程ID或者组ID |
+| | F_SETOWN | 设置SIGIO和SIGURG的宿主进程PID或进程组的组ID | long | 0 |
+| | F_GETSIG | 获取应用程序被通知fd可读或可写的是哪个信号 | 无 | 信号值，0表示SIGIO |
+| | F_SETSIG | 设置通知应用程序fd可读或可写的是哪个信号 | long | 0 |
+| 操作管道容量 | F_SETPIPE_SZ | 设置由fd指定的管道的容量。/proc/sys/fs/pipe-size-max内核参数指定了fcntl能设置的管道容量的上限 | long | 0 |
+| | F_GETPIPE_SZ | 获取由fd指定的管道的容量 | 无 | 管道容量 |
+
+
+SIGIO和SIGURG这两个信号必须与某个文件描述符相关联才能使用:
+
+- SIGIO：异步IO，当被关联的文件描述符可读或可写时，系统将触发SIGIO信号
+- SIGURG：带外数据到达信号，当被关联的文件描述符(必须为socket)有带外数据到达时，该信号被触发
+
+使用fcntl函数为目标文件描述符指定宿主进程或进程组，被指定的宿主进程或者进程组将捕获这两个信号
+
+## 返回值
+
 fcntl函数成功时返回值如表所示，失败则返回-1并设置errno
+
+## 用法
+
 例：使用fcnt函数将一个文件描述符设置为非阻塞的
+```
 int setnonblocking(int fd)
 {
-    int old_option = fcntl(fd, F_GETFL);
-    int new_option = old_option | O_NONBLOCK;
+    int old_option = fcntl(fd, F_GETFL); //获取文件描述符旧的状态标志
+    int new_option = old_option | O_NONBLOCK; //设置非阻塞状态
     fcntl(fd, F_SETFL, new_option);
-    return old_option;
+    return old_option; //返回旧的状态标志，以便日后恢复
 }
-SIGIO和SIGURG这两个信号必须与某个文件描述符相关联才能使用:
-SIGIO：异步IO，当被关联的文件描述符可读或可写时，系统将触发SIGIO信号
-SIGURG：带外数据到达信号，当被关联的文件描述符(必须为socket)有带外数据到达时，该信号被触发
-使用fcntl函数为目标文件描述符指定宿主进程或进程组，被指定的宿主进程或者进程组将捕获这两个信号
+```
 
 </details>
 
 ### Linux服务器程序规范
 
 <details>
-<summary>日志</summary>
+<summary>日志——syslog、openlog、setlogmask、closelog</summary>
 
 # 日志
 
-Linux系统日志体系图(p115 图7-1 日后添加，暂时用文本简单描述)：
+## Linux系统日志体系图
 
-```
-                    终端输出内核信息
-                           ^
-                           1
-内核  ---printk()-->  内核环状缓存  --->  /proc/kmsg
-                                             l
-                                             V
-用户过程 --syslog()--->  /dev/log  --->  syslogd  ---配置文件-->  /var/log/*
-```
+![Linux系统日志图](doc/linux_sys_log.png)
 
-syslog函数：
+linux系统日志由守护进程syslogd(最新Linux系统一般是rsyslogd)处理，rsyslogd守护进程既能接受用户进程输出的日志，又能接受内核日志。
+
+- 用户进程通过调用syslog函数生成系统日志，该函数将日志输出到/dev/log中，rsyslogd监听此文件以获取用户进程的日志输出
+- 内核日志由printk等函数打印至内核的环状缓存(ring buffer)中，环状缓存去的内容直接映射到/proc/kmsg文件中，rsyslogd通过读取该文件获得内核日志
+
+rsyslogd守护进程接收到用户进程或内核输入的日志后，会将它们输出至特定的日志文件。默认情况下，调试信息保存到/var/log/debug文件，普通信息保存到/var/log/messages中，内核消息则保存到/var/log/kern.log中，rsyslogd的主配置文件是/etc/rsyslog.conf
+
+## 日志相关函数：
+
+### syslog
+
 ```
 #include <syslog.h>
 void syslog(int priority, const char* message, ...);
 ```
 - priority：设施值与日志级别的按位或,设施的默认值为LOG_USER，设施值在大多数情况下都为这一种，日志级别有如下几种情况：
+
   ```
   #include <syslog.h>
   #define LOG_EMERG       0 //系统不可用
@@ -2094,6 +2196,9 @@ void syslog(int priority, const char* message, ...);
   #define LOG_INFO        6 //信息
   #define LOG_DEBUG       7 //调试
   ```
+- message和...参数用于格式化输出，和printf类似
+
+### openlog
 
 openlog函数可以改变syslog的默认输出方式，进一步结构化日志内容：
 
@@ -2112,6 +2217,8 @@ void openlog(const char* ident, int logopt, int facility);
   ```
 - facility：可以用来修改syslog函数中的默认设施值
 
+### setlogmask
+
 setlogmask函数用来设置日志掩码，日志级别大于日志掩码的日志信息会被系统忽略
 
 程序在开发阶段可能需要输出很多调试信息，而发布之后我们又需要将这些调试信息关闭，这时候就需要日志过滤功能
@@ -2122,21 +2229,31 @@ int setlogmask(int maskpri);
 ```
 - maskpri：指定日志掩码值，返回调用进程先前的日志掩码值，该函数始终会成功
 
+### closelog
+
 closelog函数用来关闭日志功能：
+
+```
 #include <syslog.h>
 void closelog();
+```
 
 </details>
 
 <details>
-<summary>用户信息</summary>
+<summary>用户信息——getuid、geteuid、getgid、getegid、setuid、seteuid、setgid、setegid</summary>
 
 # 用户信息
+
+## UID、EUID、GID、EGID
 
 - 真实用户ID(UID):启动程序的用户ID
 - 有效用户ID(EUID):运行程序的用户拥有该程序的有效用户的权限(设置set-user-id标志后为可执行文件所有者ID)
 - 真实组ID(GID):启动程序的用户组ID
 - 有效组ID(EGID):给运行目标程序的组用户提供有效组的权限(设置set-user-id标志后为可执行文件所属组ID)
+
+**对真实用户UID和有效用户EUID的理解**:
+> 一般来说，一个进程拥有两个用户ID：UID和EUID。EUID存在的目的是方便资源访问：它使得运行程序的用户拥有该程序的有效用户的权限。比如su程序，任何用户都可以使用它来修改自己的账户信息，但修改账户时su程序不得不访问/etc/passwd文件，而访问该文件是需要root权限的。而能以普通用户身份启动的su程序能够访问/etc/passwd文件的关键就在于EUID，用ls命令可以查看到，su程序的所有者是root，并且它被设置了`set-user-id`标志。这个标志表示，任何普通用户运行su程序时，其有效用户就是该程序的所有者root。那么，根据有效用户的含义，任何运行su程序的普通用户都能访问/etc/passwd文件。有效用户为root的进程为特权进程(privileged processes)。EGID的含义与EUID的类似：给运行目标程序的组用户提供有效组的权限
 
 ```
 #include <sys/types.h>
@@ -2177,6 +2294,8 @@ userid is 1000, effective userid is 0
 
 从测试来看，进程的UID是启动程序的用户ID，而EUID则是文件所有者(root)的ID
 
+## 用法
+
 许多服务器程序要求以root用户启动，但是却以普通用户身份后台运行，所以需要进行切换用户的动作，例：
 
 ```
@@ -2200,11 +2319,13 @@ static bool switch_to_user(uid_t user_id, gid_t gp_id)
 </details>
 
 <details>
-<summary>进程间关系</summary>
+<summary>进程间关系——getpgid、setpgid、setsid、getsid</summary>
 
 # 进程间关系
 
 ## 进程间关系——进程组
+
+### getpgid
 
 Linux下每个进程都隶属于一个进程组，每个进程除了PID外，还有进程组ID(PGID)
 
@@ -2217,13 +2338,15 @@ getpgid成功时返回进程pid所属进程组的PGID，失败返回-1并设置e
 
 首领进程：每个进程组中其PGID和PID相同的进程。进程组将一直存在，直到其中所有进程都退出或者加入到其他进程组
 
+### setpgid
+
 ```
 #include <unistd.h>
 int setpgid(pid_t pid, pid_t pgid);
 ```
 
 setpgid将PID为pid的进程的PGID设置为pgid
-- 如果pid和pgid相同，则由pid指定的进程讲被设置为进程组首领；
+- 如果pid和pgid相同，则由pid指定的进程将被设置为进程组首领；
 - 如果pid为0，则表示设置当前进程的PGID为pgid；
 - 如果pgid为0，则使用pid作为目标PGID
 
@@ -2243,11 +2366,12 @@ pid_t setsid(void);
 该函数不能由进程组的首领进程调用，否则将产生一个错误，对于非组首领的进程，调用该函数不仅创建新会话，而且有以下额外效果：
 - 调用进程成为会话的首领，此时该进程是新会话的唯一成员
 - 新建一个进程组，其PGID就是调用进程的PID，调用进程成为该组的首领
-- 调用进程讲甩开终端(如果有的话)
+- 调用进程将甩开终端(如果有的话)
 
 setsid函数成功返回新的进程组的PGID，失败返回-1并设置errno
 
 Linux进程并未提供会话ID(SID)的概念，但Linux系统认为它等于会话首领所在的进程组的PGID，并提供了getsid函数获取SID：
+
 ```
 #include <unistd.h>
 pid_t getsid(pid_t pid);
@@ -2267,11 +2391,12 @@ PID     PPID    PGID    SID     COMMAND
 
 这条命令由3个子命令组成(bash, ps, less)，这3个子命令创建了1个会话(SID=1943)，2个进程组(PGID分别为1943和2298).三条命令的关系如下图：
 
+![进程间关系](doc/process_relationship.png)
 
 </details>
 
 <details>
-<summary>系统资源限制</summary>
+<summary>系统资源限制——getrlimit、setrlimit</summary>
 
 # 系统资源限制
 
@@ -2290,41 +2415,43 @@ struct rlimit
 };
 ```
 
-软限制：建议性的、最好不要超越的限制，如果超越的话，系统可能向进程发送信号终止其运行，例：
+- 软限制：建议性的、最好不要超越的限制，如果超越的话，系统可能向进程发送信号终止其运行，例：
 
-    当进程CPU时间超过其软限制时，系统将向进程发送SIGXCPU信号；
+  当进程CPU时间超过其软限制时，系统将向进程发送SIGXCPU信号；
     
-    当文件尺寸超过其软限制时，系统将向进程发送SIGXFSZ信号
+  当文件尺寸超过其软限制时，系统将向进程发送SIGXFSZ信号
     
-硬限制：一般为软限制上限，普通程序可以减小硬限制，只有root用户可以增加硬限制
+- 硬限制：一般为软限制上限，普通程序可以减小硬限制，只有root用户可以增加硬限制
 
-可以使用ulimit命令修改当前shell环境下的资源限制，这种改变只对当前shell启动的后续程序有效
+可以使用`ulimit`命令修改当前shell环境下的资源限制，这种改变只对当前shell启动的后续程序有效
 
 也可以通过修改配置文件来改变资源限制，这种修改是永久的
 
 resource参数指定资源限制类型，下表列举比较重要的资源限制类型：
 
-资源限制类型	含义
-- RLIMIT_AS	进程虚拟内存总量限制，超过该限制将导致某些函数(如mmap)产生ENOMEM错误
-- RLIMIT_CORE	进程核心转储文件(core dump)的大小限制，值为0表示不产生该文件
-- RLIMIT_CPU	进程CPU时间限制(unit:s)
-- RLIMIT_DATA	进程数据段(初始化数据data段，未初始化数据bss段和堆)限制(unit:B)
-- RLIMIT_FSIZE	文件大小限制(unit:字节),超过该限制将导致某些函数(如write)产生EFBIG错误
-- RLIMIT_NOFILE	文件描述符数量限制，超过该限制将导致某些函数(如pipe)产生EMFILE错误
-- RLIMIT_NPROC	用户能创建的进程数限制，超过该限制将导致某些函数(如fork)产生EAGAIN错误
-- RLIMIT_SIGPENDING	用户能够挂起的信号数量限制
-- RLIMIT_STACK	进程栈内存限制，超过该限制将引起SIGSEGV信号
+| 资源限制类型 | 含义 |
+| --- | --- |
+| RLIMIT_AS | 进程虚拟内存总量限制，超过该限制将导致某些函数(如mmap)产生ENOMEM错误 |
+| RLIMIT_CORE | 进程核心转储文件(core dump)的大小限制，值为0表示不产生该文件 |
+| RLIMIT_CPU | 进程CPU时间限制(unit:s) |
+| RLIMIT_DATA | 进程数据段(初始化数据data段，未初始化数据bss段和堆)限制(unit:B) |
+| RLIMIT_FSIZE | 文件大小限制(unit:字节),超过该限制将导致某些函数(如write)产生EFBIG错误 |
+| RLIMIT_NOFILE | 文件描述符数量限制，超过该限制将导致某些函数(如pipe)产生EMFILE错误 |
+| RLIMIT_NPROC | 用户能创建的进程数限制，超过该限制将导致某些函数(如fork)产生EAGAIN错误 |
+| RLIMIT_SIGPENDING | 用户能够挂起的信号数量限制 |
+| RLIMIT_STACK | 进程栈内存限制，超过该限制将引起SIGSEGV信号 |
 
 setrlimit和getrlimit成功时返回0，失败时返回-1并设置errno
 
 </details>
 
 <details>
-<summary>改变工作目录和根目录</summary>
+<summary>改变工作目录和根目录——getcwd、chdir、chroot</summary>
 
 # 改变工作目录和根目录
 
 使用getcwd获取进程当前工作目录，使用chdir改变进程工作目录
+
 ```
 #include <unistd.h>
 char* getcwd(char* buf, size_t size);
@@ -2333,30 +2460,31 @@ int chdir(const char* path);
 
 buf指向的内存用于存储进程当前工作目录的绝对路径名，大小由size参数指定
 
-    如果strlen(buf)+1大于size，则getcwd返回NULL，并设置errno
-    
-    如果buf为NULL并且size非0，则getcwd可能在内部使用malloc动态分配内存，如果是这种情况，必须手动释放buf指向的内存空间
+- 如果strlen(buf)+1大于size，则getcwd返回NULL，并设置errno
+- 如果buf为NULL并且size非0，则getcwd可能在内部使用malloc动态分配内存，如果是这种情况，必须手动释放buf指向的内存空间
 
 getcwd成功返回指向目标存储区的指针，失败返回NULL并设置errno
 
 chdir函数的path指定要切换的目标目录，成功返回0，失败返回-1并设置errno
 
 使用chroot改变进程的根目录：
+
 ```
 #include <unistd.h>
 int chroot(const char* path);
 ```
+
 path指定目标目录，成功返回0，失败返回-1并设置errno
 
 chroot并不改变进程的当前工作目录，所以调用chroot之后，仍然要使用chdir("/")将工作目录切换至新的根目录
 
-改变程序的根目录之后，程序可能无法访问类似/dev的文件或目录，因为这些文件或目录并非处于新的根目录之下，不过好在调用chroot之后，进程原先打开的文件描述符仍然有效，所以我们可以利用这些早先打开的文件描述符来访问调用chroot之后不能直接访问的文件，尤其是一些日志文件
+> 改变程序的根目录之后，程序可能无法访问类似/dev的文件或目录，因为这些文件或目录并非处于新的根目录之下，不过好在调用chroot之后，进程原先打开的文件描述符仍然有效，所以我们可以利用这些早先打开的文件描述符来访问调用chroot之后不能直接访问的文件，尤其是一些日志文件
 此外，只有特权进程才能改变根目录
 
 </details>
 
 <details>
-<summary>服务器程序后台化</summary>
+<summary>服务器程序后台化——daemon</summary>
 
 # 服务程序后台化
 
@@ -2418,27 +2546,31 @@ daemon成功返回0，失败返回-1并设置errno
 ### 高性能服务器程序框架
 
 <details>
-<summary>服务器模型</summary>
+<summary>服务器模型——CS模型、P2P模型</summary>
 
 # 服务器模型
 
-图
-
 服务器的两种模型：
 
-1、C/S模型
+## C/S模型
 
 C/S模型的图示：
 
+![CS模型](doc/cs_model.png)
+
 C/S模型的工作流程：
+
+![TCP服务器客户端流程](doc/tcp_comm.png)
 
 优点：非常适合资源相对集中的场合，而且实现非常简单
 
 缺点：服务器是通信的中心，当访问量过大时，可能所有客户都得到很慢的响应
 
-2、P2P模型
+## P2P模型
 
 P2P模型图示：
+
+![P2P模型](doc/p2p_model.png)
 
 优点：每台机器在消耗服务的同时也给别人提供服务，这样资源能够充分、自由地共享
 
@@ -2447,155 +2579,179 @@ P2P模型图示：
 </details>
 
 <details>
-<summary>服务器编程框架</summary>
+<summary>服务器编程框架——IO处理单元、逻辑单元、网络存储单元、请求队列</summary>
 
 # 服务器编程框架
 
-图
-
 不同种类的服务器其基本框架都一样，基本框架如下图：
 
-上图既能描述一台服务器，也能用来描述一个服务器集群，下表描述服务器基本模块的功能描述
+![服务器基本框架](doc/server_basic.png)
 
-表
+上图既能描述一台服务器，也能用来描述一个服务器集群，下表描述服务器基本模块的功能描述：
 
-模块	单个服务器程序	服务器集群
+| 模块 | 单个服务器程序 | 服务器集群 |
+| --- | --- | --- |
+| I/O处理单元 | 处理客户连接，读写网络数据 | 作为接入服务器，实现负载均衡 |
+| 逻辑单元 | 业务进程或线程 | 逻辑服务器 |
+| 网络存储单元 | 本地数据库、文件和缓存 | 数据库服务器 |
+| 请求队列 | 各单元之间的通信方式 | 各服务器之间的永久TCP连接 |
 
-I/O处理单元	处理客户连接，读写网络数据	作为接入服务器，实现负载均衡
-逻辑单元	业务进程或线程	逻辑服务器
-网络存储单元	本地数据库、文件和缓存	数据库服务器
-请求队列	各单元之间的通信方式	各服务器之间的永久TCP连接
+- I/O处理单元：
 
-I/O处理单元：服务器管理客户连接的模块。它通常完成的工作是：等待并接受新的客户连接，接收客户数据，将服务器响应数据返回给客户端。但是数据的收发不一定在I/O处理单元中执行，也有可能在逻辑单元中执行，具体在何处执行取决于事件处理模式
-             对于一个服务器集群来说，I/O处理单元是一个专门的接入服务器。它实现负载均衡，从所有逻辑服务器中选取负荷最小的一台来为新客户服务
+    服务器管理客户连接的模块。它通常完成的工作是：等待并接受新的客户连接，接收客户数据，将服务器响应数据返回给客户端。但是数据的收发不一定在I/O处理单元中执行，也有可能在逻辑单元中执行，具体在何处执行取决于事件处理模式
 
-逻辑单元：通常是一个进程或者线程。它分析并处理客户数据，然后将结果传递给I/O处理单元或者直接发送给客户端
-          对服务器集群来说，一个逻辑单元就是一台逻辑服务器。服务器通常拥有多个逻辑单元，以实现对多个客户任务的并行处理
+    对于一个服务器集群来说，I/O处理单元是一个专门的接入服务器。它实现负载均衡，从所有逻辑服务器中选取负荷最小的一台来为新客户服务
 
-网络存储单元：网络存储单元可以是数据库、缓存和文件，甚至是一台独立的服务器。但它不是必须的，比如ssh、telnet等登录服务就不需要这个单元
+- 逻辑单元：
 
-请求队列：各单元之间的通信方式的抽象。I/O处理单元接收到客户请求时，需要以某种方式通知一个逻辑单元来处理请求。同样，多个逻辑单元同时访问一个存储单元时，也需要采用某种机制来协调处理竞态条件。请求队列通常被视为池的一部分
-          对服务器集群来说，请求队列是各台服务器之间预先建立起来的、静态的、永久的TCP连接。这种TCP连接能提高服务器之间交换数据的效率，因为它避免了动态建立TCP连接导致的额外的系统开销
+    通常是一个进程或者线程。它分析并处理客户数据，然后将结果传递给I/O处理单元或者直接发送给客户端
+
+    对服务器集群来说，一个逻辑单元就是一台逻辑服务器。服务器通常拥有多个逻辑单元，以实现对多个客户任务的并行处理
+
+- 网络存储单元：
+
+    网络存储单元可以是数据库、缓存和文件，甚至是一台独立的服务器。但它不是必须的，比如ssh、telnet等登录服务就不需要这个单元
+
+- 请求队列：
+
+    各单元之间的通信方式的抽象。I/O处理单元接收到客户请求时，需要以某种方式通知一个逻辑单元来处理请求。同样，多个逻辑单元同时访问一个存储单元时，也需要采用某种机制来协调处理竞态条件。请求队列通常被视为池的一部分
+
+    对服务器集群来说，请求队列是各台服务器之间预先建立起来的、静态的、永久的TCP连接。这种TCP连接能提高服务器之间交换数据的效率，因为它避免了动态建立TCP连接导致的额外的系统开销
 
 </details>
 
 <details>
-<summary>I/O模型</summary>
+<summary>I/O模型——同步IO、异步IO、阻塞IO、非阻塞IO</summary>
 
 # IO模型
 
 - 同步I/O：从理论上讲，阻塞I/O、I/O复用和信号驱动I/O都是同步I/O模型。因为这三种I/O模型中，I/O的读写操作都是在I/O事件发生之后，由应用程序来完成的
     
-  - 阻塞I/O：阻塞的文件描述符为阻塞I/O，socket创建时默认阻塞
-           针对阻塞I/O所执行的系统调用可能会因为无法立即完成而被操作系统挂起，直到等待的事件发生为止。例如：客户端通过connect向服务器发起连接时，connect将首先发送同步报文段给服务器，然后等待服务器返回确认报文段。如果服务器的确认报文段没有立即到达客户端，则connect调用将被挂起，直到客户端收到确认报文段并唤醒connect调用。socket的基础API中，可能被阻塞的系统调用包括accept、send、recv和connect
+  - 阻塞I/O：
+  
+    阻塞的文件描述符为阻塞I/O，socket创建时默认阻塞
 
-  - 非阻塞I/O：非阻塞的文件描述符为非阻塞I/O，通过socket系统调用的第二个参数设为SOCK_NONBLOCK或者通过fcntl系统调用的F_SETFL命令来设置非阻塞
-             针对非阻塞I/O所执行的系统调用则总是立即返回，而不管事件是否已经发生。如果事件没有立即发生，这些系统调用就返回-1，和出错的情况一样。此时我们必须根据errno来区分这两种情况。对accpet、send和recv而言，事件未发生时errno通常被设置成EAGAIN（“再来一次”）或者EWOULDBLOCK（“期望阻塞”）；对connect而言，errno则被设置成EINPROGRESS（“在处理中”）
-             显然，我们只有在事件已经发生的情况下操作非阻塞I/O（读、写等），才能提高程序的效率。因此，非阻塞I/O通常要和其他I/O通知机制一起使用，比如I/O复用和SIGIO信号
+    针对阻塞I/O所执行的系统调用可能会因为无法立即完成而被操作系统挂起，直到等待的事件发生为止。例如：客户端通过connect向服务器发起连接时，connect将首先发送同步报文段给服务器，然后等待服务器返回确认报文段。如果服务器的确认报文段没有立即到达客户端，则connect调用将被挂起，直到客户端收到确认报文段并唤醒connect调用。socket的基础API中，可能被阻塞的系统调用包括accept、send、recv和connect
 
-    - 非阻塞I/O + I/O复用：I/O复用指应用程序通过I/O复用函数向内核注册一组事件，内核通过I/O复用函数把其中就绪的事件通知给应用程序。Linux上常用的I/O复用函数是select、poll、和epoll_wait。I/O复用函数本身是阻塞的，它们能提高程序效率的原因在于它们具有同时监听多个I/O事件的能力
+  - 非阻塞I/O：
 
-    - 非阻塞I/O + SIGIO信号：SIGIO信号可以报告I/O事件。使用fcntl函数为一个目标文件描述符制定宿主进程，被制定的宿主进程将捕获到SIGIO信号。这样，当目标文件描述符上有事件发生时，SIGIO信号的信号处理函数将被触发，我们就可以在该信号处理函数中对目标文件描述符执行非阻塞I/O操作了
+    非阻塞的文件描述符为非阻塞I/O，通过socket系统调用的第二个参数设为SOCK_NONBLOCK或者通过fcntl系统调用的F_SETFL命令来设置非阻塞
 
-- 异步I/O：真正的异步I/O，用户可以直接对I/O执行读写操作，这些操作告诉内核用户读写缓冲区的位置，以及I/O操作完成之后内核通知应用程序的方式。异步I/O的读写操作总是立即返回，而不论I/O是否是阻塞的，因为真正的读写操作已经由内核接管。可以这样理解：同步I/O模型向应用程序通知I/O就绪事件，应用程序根据用户编写代码执行I/O操作（将数据从内核缓冲区读入用户缓冲区，或将数据从用户缓冲区写入内核缓冲区），而异步I/O模型则由内核来执行I/O操作（数据在内核缓冲区和用户缓冲区之间的移动是由内核在“后台完成的”）
-         Linux中，aio.h头文件中定义的函数提供了对异步I/O的支持
-         
-表
-         
+    针对非阻塞I/O所执行的系统调用则总是立即返回，而不管事件是否已经发生。如果事件没有立即发生，这些系统调用就返回-1，和出错的情况一样。此时我们必须根据errno来区分这两种情况。对accpet、send和recv而言，事件未发生时errno通常被设置成EAGAIN（“再来一次”）或者EWOULDBLOCK（“期望阻塞”）；对connect而言，errno则被设置成EINPROGRESS（“在处理中”）
+
+    显然，我们只有在事件已经发生的情况下操作非阻塞I/O（读、写等），才能提高程序的效率。因此，非阻塞I/O通常要和其他I/O通知机制一起使用，比如I/O复用和SIGIO信号
+
+    - 非阻塞I/O + I/O复用：
+    
+        I/O复用指应用程序通过I/O复用函数向内核注册一组事件，内核通过I/O复用函数把其中就绪的事件通知给应用程序。Linux上常用的I/O复用函数是select、poll、和epoll_wait。I/O复用函数本身是阻塞的，它们能提高程序效率的原因在于它们具有同时监听多个I/O事件的能力
+
+    - 非阻塞I/O + SIGIO信号：
+
+        SIGIO信号可以报告I/O事件。使用fcntl函数为一个目标文件描述符制定宿主进程，被制定的宿主进程将捕获到SIGIO信号。这样，当目标文件描述符上有事件发生时，SIGIO信号的信号处理函数将被触发，我们就可以在该信号处理函数中对目标文件描述符执行非阻塞I/O操作了
+
+- 异步I/O：
+
+    真正的异步I/O，用户可以直接对I/O执行读写操作，这些操作告诉内核用户读写缓冲区的位置，以及I/O操作完成之后内核通知应用程序的方式。异步I/O的读写操作总是立即返回，而不论I/O是否是阻塞的，因为真正的读写操作已经由内核接管。可以这样理解：
+
+    > 同步I/O模型向应用程序通知I/O就绪事件，应用程序根据用户编写代码执行I/O操作（将数据从内核缓冲区读入用户缓冲区，或将数据从用户缓冲区写入内核缓冲区），而异步I/O模型则由内核来执行I/O操作（数据在内核缓冲区和用户缓冲区之间的移动是由内核在“后台完成的”）
+
+    Linux中，aio.h头文件中定义的函数提供了对异步I/O的支持
+
 下表展示了几种I/O模型的差异对比：
 
-I/O模型	读写操作和阻塞阶段
-阻塞I/O	程序阻塞于读写函数
-I/O复用	程序阻塞于I/O复用系统调用，但可同时监听多个I/O事件，对I/O本身的读写操作时非阻塞的
-SIGIO信号	信号触发读写就绪事件，用户程序执行读写操作，程序没有阻塞阶段
-异步I/O	内核执行读写操作并触发读写完成事件，程序没有阻塞阶段
+| I/O模型 | 读写操作和阻塞阶段 |
+| --- | --- |
+| 阻塞I/O | 程序阻塞于读写函数 |
+| I/O复用 | 程序阻塞于I/O复用系统调用，但可同时监听多个I/O事件，对I/O本身的读写操作时非阻塞的 |
+| SIGIO信号 | 信号触发读写就绪事件，用户程序执行读写操作，程序没有阻塞阶段 |
+| 异步I/O | 内核执行读写操作并触发读写完成事件，程序没有阻塞阶段 |
 
 </details>
 
 <details>
-<summary>两种高效的事件处理模式</summary>
+<summary>两种高效的事件处理模式——Reactor模式和Proactor模式</summary>
 
 # 两种高效的事件处理模式——Reactor模式和Proactor模式
-
-图
-
 
 服务器程序通常需要处理三类事件：I/O事件、信号和定时事件，后续将依次具体讨论这3种类型的事件，从整体上来说有两种高效的事件处理模式：Reactor和Proactor
 
 一般来说，同步I/O模型常用于实现Reactor模式，异步I/O模型用于实现Proactor模式，不过我们可以通过使用同步I/O方式模拟出Proactor模式
 
-1、Reactor模式
+## Reactor模式
 
 Reactor：要求主线程(I/O处理单元)只负责监听文件描述符上是否有事件发生，有的话立即通知工作线程(逻辑单元)处理，除此之外，主线程不做任何其他实质性工作，读写数据，接收新连接，以及处理客户请求均在工作线程中完成
 
 使用同步I/O模型(epoll_wait为例)实现Reactor模式的工作流程如下：
 
-- 1、主线程往epoll内核事件表中注册socket上的读就绪事件
-- 2、主线程调用epoll_wait等待socket上有数据可读
-- 3、当socket上有数据可读时，epoll_wait通知主线程，主线程则将socket可读事件放入请求队列
-- 4、睡眠在请求队列上的某个工作线程被唤醒，它从socket读取数据，并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件
-- 5、主线程调用epoll_wait等待socket可写
-- 6、当socket可写时，epoll_wait通知主线程，主线程将socket可写事件放入请求队列
-- 7、睡眠在请求队列上的某个工作线程被唤醒，它往socket上写入服务器处理客户请求的结果
+- 1. 主线程往epoll内核事件表中注册socket上的读就绪事件
+- 2. 主线程调用epoll_wait等待socket上有数据可读
+- 3. 当socket上有数据可读时，epoll_wait通知主线程，主线程则将socket可读事件放入请求队列
+- 4. 睡眠在请求队列上的某个工作线程被唤醒，它从socket读取数据，并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件
+- 5. 主线程调用epoll_wait等待socket可写
+- 6. 当socket可写时，epoll_wait通知主线程，主线程将socket可写事件放入请求队列
+- 7. 睡眠在请求队列上的某个工作线程被唤醒，它往socket上写入服务器处理客户请求的结果
 
 Reactor的工作流程如下图：
 
+![Reactor模式](doc/reactor.png)
 
 上图中，工作线程从请求队列中取出事件后，将根据事件的类型来决定如果处理它：
-    
-    对于可读事件，执行读数据和处理请求的操作
-    
-    对于可写事件，执行写数据操作
+
+- 对于可读事件，执行读数据和处理请求的操作
+- 对于可写事件，执行写数据操作
 
 因此，在图示的Reactor模式中，没有必要区分“读工作线程”和“写工作线程”
 
-2、Proactor模式
+## Proactor模式
 
 与Reactor模式不同，Proactor模式将所有I/O操作都交给主线程和内核来处理，工作线程仅仅负责业务逻辑
 
 使用异步I/O模型(aio_read和aio_write为例)实现的Proactor模式的工作流程是：
 
-- 1、主线程调用aio_read函数向内核注册socket上的读完成事件，并告诉内核用户读缓冲区的位置，以及读操作完成时如何通知应用程序(以信号为例，sigevent)
-- 2、主线程继续处理其他逻辑
-- 3、当socket上的数据被读入用户缓冲区后，内核将向应用程序发送一个信号，以通知应用程序数据已经可用
-- 4、应用程序预先定义好的信号处理函数选择一个工作线程来处理客户请求。工作线程处理完客户请求之后，调用aio_write函数向内核注册socket上的写完成事件，并告诉内核用户写缓冲区的位置，以及写操作完成时如何通知应用程序(信号为例)
-- 5、主线程继续处理其他逻辑
-- 6、当用户缓冲区的数据被写入socket之后，内核将向应用程序发送一个信号，以通知应用程序已经发送完毕
-- 7、应用程序预先定义好的信号处理函数选择一个工作线程来做善后处理，比如决定是否关闭socket
+- 1. 主线程调用aio_read函数向内核注册socket上的读完成事件，并告诉内核用户读缓冲区的位置，以及读操作完成时如何通知应用程序(以信号为例，sigevent)
+- 2. 主线程继续处理其他逻辑
+- 3. 当socket上的数据被读入用户缓冲区后，内核将向应用程序发送一个信号，以通知应用程序数据已经可用
+- 4. 应用程序预先定义好的信号处理函数选择一个工作线程来处理客户请求。工作线程处理完客户请求之后，调用aio_write函数向内核注册socket上的写完成事件，并告诉内核用户写缓冲区的位置，以及写操作完成时如何通知应用程序(信号为例)
+- 5. 主线程继续处理其他逻辑
+- 6. 当用户缓冲区的数据被写入socket之后，内核将向应用程序发送一个信号，以通知应用程序已经发送完毕
+- 7. 应用程序预先定义好的信号处理函数选择一个工作线程来做善后处理，比如决定是否关闭socket
 
 Proactor模式的工作流程如下图：
 
+![Proactor模式](doc/proactor.png)
+
 连接socket上的读写事件是通过aio_read/aio_write向内核注册的，因此内核将通过信号来向应用程序报告连接socket上的读写事件。所以主线程中的epoll_wait调用仅能用来检测监听socket上的连接请求事件，而不能用来检测连接socket上的读写事件
 
-3、模拟Proactor模式
+## 模拟Proactor模式
 
 可以使用同步I/O方式模拟出Proactor模式。其原理是：主线程执行数据读写操作，读写完成之后，主线程向工作线程通知这一“完成事件”。那么从工作线程的角度来看，它们就直接获得了数据读写的结果，接下来要做的只是对读写的结果进行逻辑处理。
 
 使用同步I/O模型(epoll_wait为例)模拟出的Proactor模式的工作流程如下：
 
-- 1、主线程往epoll内核事件表中注册socket上的读就绪事件
-- 2、主线程调用epoll_wait等待socket上有数据可读
-- 3、当socket有数据可读时，epoll_wait通知主线程。主线程从socket循环读取数据，直到没有更多数据可读，然后将读取到的数据封装成一个请求对象并插入到请求队列
-- 4、睡眠在请求队列上的某个工作线程被唤醒，它获得请求对象并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件
-- 5、主线程调用epoll_wait等待socket可写
-- 6、当socket可写时，epoll_wait通知主线程，主线程往socket上写入服务器处理客户请求的结果
+- 1. 主线程往epoll内核事件表中注册socket上的读就绪事件
+- 2. 主线程调用epoll_wait等待socket上有数据可读
+- 3. 当socket有数据可读时，epoll_wait通知主线程。主线程从socket循环读取数据，直到没有更多数据可读，然后将读取到的数据封装成一个请求对象并插入到请求队列
+- 4. 睡眠在请求队列上的某个工作线程被唤醒，它获得请求对象并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件
+- 5. 主线程调用epoll_wait等待socket可写
+- 6. 当socket可写时，epoll_wait通知主线程，主线程往socket上写入服务器处理客户请求的结果
 
 同步I/O模型模拟出的Proactor模式工作流程如下图：
 
+![同步IO模拟Proactor模式](sync_io_proactor.png)
 
 </details>
 
 <details>
-<summary>两种高效的并发模式</summary>
+<summary>两种高效的并发模式——半同步半异步模式、领导者追随者模式</summary>
 
 # 两种高效的并发模式
 
 两种高效的并发模式：
-计算密集型程序：并发编程没有优势，反而由于任务的切换使效率降低
-I/O密集型程序：在CPU阻塞于I/O操作时转移到其他线程使得CPU利用率显著提高
-服务器的两种主要并发编程模式：半同步半异步(half-sync/half-async)模式和领导者/追随者(Leader/Follower)模式
 
-图
+- 计算密集型程序：并发编程没有优势，反而由于任务的切换使效率降低
+- I/O密集型程序：在CPU阻塞于I/O操作时转移到其他线程使得CPU利用率显著提高
+
+服务器的两种主要并发编程模式： `半同步半异步(half-sync/half-async)模式` 和 `领导者/追随者(Leader/Follower)模式`
 
 ## 半同步/半异步模式
 
@@ -2605,55 +2761,94 @@ I/O密集型程序：在CPU阻塞于I/O操作时转移到其他线程使得CPU�
 
 下图分别展示了同步读操作和异步读操作
 
+![同步读和异步读](doc/sync_async_read.png)
+
 按照同步方式运行的线程成为同步线程，按照异步方式运行的线程称为异步线程。
 
-异步线程：执行效率高，实时性强，编写相对复杂，难于调试和拓展
-同步线程：效率较低，实时性较差，但逻辑简单易编写
-半同步半异步：既拥有较好的实时性，又能同时处理多个客户请求
+- 异步线程：执行效率高，实时性强，编写相对复杂，难于调试和拓展
+- 同步线程：效率较低，实时性较差，但逻辑简单易编写
+- 半同步半异步：既拥有较好的实时性，又能同时处理多个客户请求
+
 在半同步半异步模型中，同步线程用于处理客户逻辑，相当于逻辑单元；异步线程用于处理IO事件，相当于IO处理单元
-过程：异步线程监听到客户请求后，就将其封装成请求对象并插入请求队列中，请求队列将通知某个工作在同步模式的工作线程来读取并处理该请求对象。具体选择哪个工作线程来为新的客户请求服务取决于请求队列的设计(比如最简单的轮流选取工作线程的Round Robin算法，或条件变量，或信号量来随机选择)
+
+过程：
+
+> 异步线程监听到客户请求后，就将其封装成请求对象并插入请求队列中，请求队列将通知某个工作在同步模式的工作线程来读取并处理该请求对象。具体选择哪个工作线程来为新的客户请求服务取决于请求队列的设计(比如最简单的轮流选取工作线程的Round Robin算法，或条件变量，或信号量来随机选择)
+
 下图展示了半同步半异步的工作流程：
 
+![半同步半异步模式工作流程](doc/halfsync_halfrect.png)
 
-1.1 半同步/半反应堆(half-sync/half-reactive)模式
+### 半同步/半反应堆(half-sync/half-reactive)模式
+
 半同步半反应堆模式是半同步半异步模式的一种变形，主要过程如下：
-过程：异步线程只有一个，由主线程来充当。它负责监听所有socket上的事件。如果监听socket上有可读事件发生，即有新的连接请求到来，主线程就接受之以得到新的连接socket，然后往epoll内核时间表中注册该socket上的读写事件。如果连接socket上有读写事件发生，即有新的客户请求到来或有数据要发送至客户端，主线程就将该连接socket插入请求队列中，所有工作线程都睡眠在请求队列上，当有任务到来时，它们将通过竞争(比如申请互斥锁)获得任务的接管权，这种竞争机制使得只有空闲的工作线程才有机会处理新任务，这是很合理的。
 
-上图中，主线程插入请求队列中的任务是就绪的连接socket。这说明该图所示的半同步/半反应堆模式采用的事件处理模式是Reactor模式：他要求工作线程自己从socket上读取客户请求和往socket写入服务器应答。这就是该模式的名称中"half-reactive"的含义。实际上，半同步/半反应堆模式也可以使用模拟的Proactor事件处理模式，即由主线程来完成数据的读写。在这种情况下，主线程一般会将应用程序数据、任务类型等信息封装为一个任务对象，然后将其插入请求队列。工作流程从请求队列中取得任务对象之后，即可直接处理之，而无需执行读写操作。
+![半同步半反应堆模式](doc/halfsync_halfrect.png)
+
+过程：
+
+> 异步线程只有一个，由主线程来充当。它负责监听所有socket上的事件。如果监听socket上有可读事件发生，即有新的连接请求到来，主线程就接受之以得到新的连接socket，然后往epoll内核时间表中注册该socket上的读写事件。如果连接socket上有读写事件发生，即有新的客户请求到来或有数据要发送至客户端，主线程就将该连接socket插入请求队列中，所有工作线程都睡眠在请求队列上，当有任务到来时，它们将通过竞争(比如申请互斥锁)获得任务的接管权，这种竞争机制使得只有空闲的工作线程才有机会处理新任务，这是很合理的。
+
+上图中，主线程插入请求队列中的任务是就绪的连接socket。这说明该图所示的半同步/半反应堆模式采用的事件处理模式是Reactor模式：他要求工作线程自己从socket上读取客户请求和往socket写入服务器应答。这就是该模式的名称中"half-reactive"的含义。
+
+实际上，半同步/半反应堆模式也可以使用模拟的Proactor事件处理模式，即由主线程来完成数据的读写。在这种情况下，主线程一般会将应用程序数据、任务类型等信息封装为一个任务对象，然后将其插入请求队列。工作流程从请求队列中取得任务对象之后，即可直接处理之，而无需执行读写操作。
 
 半同步/半反应堆模式有如下缺点：
-1、主线程和工作线程共享请求队列。主线程往请求队列中添加任务，或者工作线程从请求队列中取出任务，都需要对请求队列加锁保护，从而白白耗费CPU时间
-2、每个工作线程在同一时间只能处理一个客户请求。如果客户数量较多，而工作线程较少，则请求队列中将堆积很多任务对象，客户端的响应速度将会越来越慢，如果通过增加工作线程来解决这一问题，则工作线程的切换也将耗费大量CPU事件。
+
+- 1. 主线程和工作线程共享请求队列。主线程往请求队列中添加任务，或者工作线程从请求队列中取出任务，都需要对请求队列加锁保护，从而白白耗费CPU时间
+
+- 2. 每个工作线程在同一时间只能处理一个客户请求。如果客户数量较多，而工作线程较少，则请求队列中将堆积很多任务对象，客户端的响应速度将会越来越慢，如果通过增加工作线程来解决这一问题，则工作线程的切换也将耗费大量CPU事件。
+
+### 高效的半同步半异步模式
 
 下面有一种相对高效的半同步/半异步模式，它的每个工作线程都能同时处理多个客户连接：
+
 下图展示了其工作流程：
 
-过程：主线程只管理监听socket，连接socket由工作线程来管理。当有新的连接到来时，主线程就接受之并将新返回的连接socket派发给某个工作线程，此后该新socket上的任何I/O操作都由被选中的工作流程来处理，知道客户关闭连接。主线程向工作线程派发socket的最简单的方式，是往它和工作线程之间的管道里写数据。工作线程检测到管道上有数据可读时，就分析是否是一个新的客户连接请求到来。如果是，则把该新socket上的读写事件注册到自己的epoll内核事件表中。
-由此可见，每个线程(主线程和工作线程)都维持自己的事件循环，它们各自独立地监听不同的事件，因此在这种高效的半同步/半异步模式中，每个线程都工作在异步模式，所以他们并非严格意义上的半同步/半异步模式。
+![高效的半同步半异步模式](doc/higheffe_halfsync_halfasync.png)
 
+过程：
+
+> 主线程只管理监听socket，连接socket由工作线程来管理。当有新的连接到来时，主线程就接受之并将新返回的连接socket派发给某个工作线程，此后该新socket上的任何I/O操作都由被选中的工作流程来处理，知道客户关闭连接。主线程向工作线程派发socket的最简单的方式，是往它和工作线程之间的管道里写数据。工作线程检测到管道上有数据可读时，就分析是否是一个新的客户连接请求到来。如果是，则把该新socket上的读写事件注册到自己的epoll内核事件表中。
+
+> 由此可见，每个线程(主线程和工作线程)都维持自己的事件循环，它们各自独立地监听不同的事件，因此在这种高效的半同步/半异步模式中，每个线程都工作在异步模式，所以他们并非严格意义上的半同步/半异步模式。
 
 ## 领导者/追随者模式
 
 领导者/追随者模式是多个工作线程轮流获得事件源集合，轮流监听、分发并处理事件的一种模式。在任意时间点，程序都仅有一个领导者线程，它负责监听I/O事件。而其他线程则都是追随者，他们休眠在线程池中等待成为新的领导者。当前的领导者如果检测到I/O事件，首先要从线程池中推选出来新的领导者线程，然后处理I/O事件。此时，新的领导者等待新的I/O事件，而原来的领导者则处理I/O事件，二者实现了并发。
-领导者/追随者模式包含一下几个组件：句柄集(HandleSet)、线程集(ThreadSet)、事件处理器(EventHandler)和具体的事件处理器(ConcreteEventHandler)。他们的关系如下图所示:
 
-1、句柄集：
+领导者/追随者模式包含一下几个组件：`句柄集(HandleSet)`、`线程集(ThreadSet)`、`事件处理器(EventHandler)`和`具体的事件处理器(ConcreteEventHandler)`。他们的关系如下图所示:
+
+![领导者追随者模式](doc/director_follower_model.png)
+
+### 句柄集：
+
 句柄表示I/O资源，Linux下为文件描述符。句柄集管理众多文件描述符，并将就绪的事件通知到领导者线程。领导者则调用绑定到句柄Handle上的事件处理器来处理事件。通过句柄集中的register_handler方法为Handler绑定事件处理器
 
-2、线程集:
+### 线程集:
+
 所有工作线程(领导者线程和追随者线程)的管理者，负责各线程间的同步，以及新领导者线程的推选。线程集中的线程有三种状态：
-(1)Leader:领导者身份，负责等待句柄集上的I/O事件
-(2)Processing:正在处理事件，领导者检测到I/O事件后，将转移到Processing状态来处理该事件，并调用promote_new_leader方法推选新的领导者；也可以制定其他追随者来处理事件(Event Handoff),此时领导者的地位不变。当处于Processing状态的线程处理完事件之后，如果当前线程集中没有领导这，则它将成为新的领导者，否则它就直接转变为追随者
-(3)Follower:线程当前处于追随者身份，通过调用线程集的join方法等待成为新的领导者，也可能被当前的领导者指定来处理新的任务
+
+- 1. Leader:领导者身份，负责等待句柄集上的I/O事件
+- 2. Processing:正在处理事件，领导者检测到I/O事件后，将转移到Processing状态来处理该事件，并调用promote_new_leader方法推选新的领导者；也可以制定其他追随者来处理事件(Event Handoff),此时领导者的地位不变。当处于Processing状态的线程处理完事件之后，如果当前线程集中没有领导这，则它将成为新的领导者，否则它就直接转变为追随者
+- 3. Follower:线程当前处于追随者身份，通过调用线程集的join方法等待成为新的领导者，也可能被当前的领导者指定来处理新的任务
+
 下图展示这三种状态之间的转换关系:
+
+![领导者追随者模式的状态转移](doc/director_follower_model_stat_switch.png)
 
 需要注意的是，领导者线程推选新的领导者和追随者等待成为新领导者这两个操作都将修改进程集，因此线程集提供一个成员Synchronizer来同步这两个操作，以避免竞态条件
 
-3、事件处理器和具体的事件处理器：
+### 事件处理器和具体的事件处理器：
+
 事件处理器通常包含一个或多个回调函数handle_event。事件处理器与句柄绑定，领导者处理句柄上到达的事件时调用该事件处理器，一系列事件处理器通常继承于一个事件处理器基类，他们通过实现基类的handle_event方法来处理特定任务
+
 领导者/追随者模式的工作流程如下图：
 
+![领导者追随者模式工作流程](doc/director_follower_model_workflow.png)
+
 优点：领导者线程自己监听I/O事件并处理客户请求，所有不需要线程间进行通信，无需像半同步半异步那样在线程之间同步对请求队列的访问
+
 缺点：仅支持一个事件源集合，因此无法实现像高效的半同步半异步模式那样每个工作线程管理多个客户连接
 
 </details>
@@ -2663,8 +2858,9 @@ I/O密集型程序：在CPU阻塞于I/O操作时转移到其他线程使得CPU�
 
 # 有限状态机
 
-有效状态机：
-逻辑单元内部通常会使用到一种高效的编程方式：有限状态机(finite state machine)，有限状态机分成两种：状态独立的有限状态机和带状态转移的有限状态机
+逻辑单元内部通常会使用到一种高效的编程方式：有限状态机(finite state machine)，有限状态机分成两种：`状态独立的有限状态机` 和 `带状态转移的有限状态机`
+
+```
 //状态独立的有限状态机
 STATE_MACHINE( Package _pack )
 {
@@ -2679,6 +2875,9 @@ STATE_MACHINE( Package _pack )
             break;
     }
 }
+```
+
+```
 //带状态转移的有限状态机
 STATE_MACHINE()
 {
@@ -2699,29 +2898,345 @@ STATE_MACHINE()
         }
     }
 }
+```
+
+## 应用实例
+
 状态机经常被用来解析HTTP请求
+
+> HTTP请求的读取和分析。很多网络协议，包括TCP协议和IP协议，都在其头部中提供头部长度字段。程序根据该字段的值就可以知道是否接收到一个完整的协议头部。但HTTP协议并未提供这样的头部长度字段，导致其头部长度变化很大。根据协议规定，我们判断HTTP头部结束的依据是遇到一个空行，该空行仅包含一对回车换行符(`<CR><LF>`)。如果一次读操作没有读入HTTP请求的整个头部，即没有遇到空行，那么我们必须等待客户继续写数据并再次读入。因此，我们每完成一个读操作，就要分析新读入的数据中是否有空行。不过在寻找空行的过程中，我们可以同时完成对整个HTTP请求头部的分析，以提高解析HTTP请求的效率
+
+下面示例代码使用主从两个有限状态机实现了最简单的HTTP请求的读取和分析
+```
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+
+#define BUFFER_SIZE 4096  //读缓冲区大小
+
+//主状态机的两种可能状态，分别表示：当前正在分析请求行，当前正在分析头部字段
+enum CHECK_STATE { 
+    CHECK_STATE_REQUESTLINE = 0, 
+    CHECK_STATE_HEADER 
+};
+
+//从状态机的三种可能状态，即行的读取状态，分别表示：读取到一个完整的行、行出错和行数据尚且不完整
+enum LINE_STATUS {
+    LINE_OK = 0,
+    LINE_BAD,
+    LINE_OPEN
+};
+
+/*
+服务器处理HTTP请求的结果：
+    NO_REQUEST 表示请求不完整，需要继续读取客户数据；
+    GET_REQUEST 表示获得了一个完整的客户请求；
+    BAD_REQUEST 表示客户请求有语法错误；
+    FORBIDDEN_REQUEST 表示客户对资源没有足够的访问权限；
+    INTERNAL_ERROR 表示服务器内部错误；
+    CLOSED_CONNECTION 表示客户端已经关闭连接了
+*/
+enum HTTP_CODE {
+    NO_REQUEST,
+    GET_REQUEST,
+    BAD_REQUEST,
+    FORBIDDEN_REQUEST,
+    INTERNAL_ERROR,
+    CLOSED_CONNECTION
+};
+
+//为了简化问题，我们没有给客户端发送一个完整的HTTP应答报文，而只是根据服务器的处理结果发送如下成功或失败信息
+static const char* szret[] = {"I get a correct result\n", "Something wrong\n"};
+
+//从状态机，用于解析出一行内容
+LINE_STATUS parse_line(char* buffer, int& checked_index, int& read_index)
+{
+    char temp;
+    //checked_index指向buffer(应用程序的读缓冲区)中当前正在分析的字节，
+    //read_index指向buffer中客户数据的尾部的下一字节。
+    //buffer中第0~checked_index字节都已分析完毕，第checked_index-(read_index-1)字节由下面的循环挨个分析
+    for (; checked_index < read_index; ++checked_index)
+    {
+        //获得当前要分析的字节
+        temp = buffer[checked_index];
+        //如果当前的字节是"\r"，即回车符，则说明可能读取到一个完整的行
+        if (temp == '\r')
+        {
+            //如果"\r"字符碰巧是目前buffer中的最后一个已经被读入的客户数据，
+            //那么这次分析没有读取到一个完整的行，返回LINE_OPEN以表示还需要继续读取客户数据才能进一步分析
+            if ((checked_index+1) == read_index)
+            {
+                return LINE_OPEN;
+            }
+            //如果下一个字符是"\n"，则说明我们成功读取到一个完整的行
+            else if (buffer[checked_index-1] == '\n')
+            {
+                buffer[checked_index++] = '\0';
+                buffer[checked_index++] = '\0';
+                return LINE_OK;
+            }
+            //否则的话，说明客户发送的HTTP请求存在语法问题
+            return LINE_BAD;
+        }
+        //如果当前的字节是"\n"，即换行符，则也说明可能读取到一个完整的行
+        else if (temp == '\n')
+        {
+            if ((checked_index > 1) && buffer[checked_index-1] == '\r')
+            {
+                buffer[checked_index-1] = '\0';
+                buffer[checked_index++] = '\0';
+                return LINE_OK;
+            }
+            return LINE_BAD;
+        }
+    }
+    //如果所有内容都分析完毕也没有遇到"\r"字符，则返回LINE_OPEN，表示还需要继续读取客户数据才能进一步分析
+    return LINE_OPEN;
+}
+
+//分析请求行
+HTTP_CODE parse_requestline(char* temp, CHECK_STATE& checkstate)
+{
+    char* url = strpbrk(temp, " \t");
+    //如果请求行中没有空白字符或"\t"字符，则HTTP请求必有问题
+    if (!url)
+    {
+        return BAD_REQUEST;
+    }
+    *url++ = '\0';
+
+    char* method = temp;
+    if (strcasecmp(method, "GET") == 0)  //仅支持GET方法
+    {
+        printf("The reque method is GET\n");
+    }
+    else 
+    {
+        return BAD_REQUEST;
+    }
+
+    url += strspn(url, " \t");
+    char* version = strpbrk(url, " \t");
+    if (!version)
+    {
+        return BAD_REQUEST;
+    }
+    *version++ = '\0';
+    version += strspn(version, " \t");
+    //仅支持HTTP/1.1
+    if (strcasecmp(version, "HTTP/1.1") != 0)
+    {
+        return BAD_REQUEST;
+    }
+    //检查URL是否合法
+    if (strncasecmp(url, "http://", 7) == 0)
+    {
+        url += 7;
+        url = strchr(url, '/');
+    }
+    if (!url || url[0] != '/')
+    {
+        return BAD_REQUEST;
+    }
+    printf("The request URL is: %s\n", url);
+    //HTTP请求行处理完毕，状态转移到头部字段的分析
+    checkstate = CHECK_STATE_HEADER;
+    return NO_REQUEST;
+}
+
+//分析头部字段
+HTTP_CODE parse_header(char* temp)
+{
+    //遇到一个空行，说明我们得到了一个正确的HTTP请求
+    if (temp[0] == '\0')
+    {
+        return GET_REQUEST;
+    }
+    else if (strncasecmp(temp, "Host:", 5) == 0) //处理"HOST"头部字段
+    {
+        temp += 5;
+        temp += strspn(temp, " \t");
+        printf("the request host is: %s\n", temp);
+    }
+    else //其他头部字段都不处理
+    {
+        printf("I can not handle this header\n");
+    }
+    return NO_REQUEST;
+}
+
+//分析HTTP请求的入口函数
+HTTP_CODE parse_content(char* buffer, int& checked_index, CHECK_STATE& checkstate, 
+                        int& read_index, int& start_line)
+{
+    LINE_STATUS linestatus = LINE_OK; //记录当前行的读取状态
+    HTTP_CODE retcode = NO_REQUEST;     //记录HTTP请求的处理结果
+    //主状态机，用于从buffer中取出完整的行
+    while ((linestatus = parse_line(buffer, checked_index, read_index)) == LINE_OK)
+    {
+        char* temp = buffer + start_line;   //start_line是行在buffer中的起始位置
+        start_line = checked_index;
+        //checkstate记录主状态机当前的状态
+        switch (checkstate)
+        {
+            case CHECK_STATE_REQUESTLINE:   //第一个状态，分析请求行
+            {
+                retcode = parse_requestline(temp, checkstate);
+                if (retcode == BAD_REQUEST)
+                {
+                    return BAD_REQUEST;
+                }
+                break;
+            }
+            case CHECK_STATE_HEADER:        //第二个状态，分析头部字段
+            {
+                retcode = parse_header(temp);
+                if (retcode == BAD_REQUEST)
+                {
+                    return BAD_REQUEST;
+                }
+                else if (retcode == GET_REQUEST)
+                {
+                    return GET_REQUEST;
+                }
+                break;
+            }
+            default:
+            {
+                return INTERNAL_ERROR;
+            }
+        }
+    }
+    //若没有读取到一个完整的行，则表示还需要继续读取客户数据才能进一步分析
+    if (linestatus == LINE_OPEN)
+    {
+        return NO_REQUEST;
+    }
+    else 
+    {
+        return BAD_REQUEST;
+    }
+}
+
+int main(int argc, char* argv[])
+{
+    if (argc <= 2)
+    {
+        printf("usage: %s ip_address port_number\n", basename(argv[0]));
+        return 1;
+    }
+    const char* ip = argv[1];
+    int port = atoi(argv[2]);
+
+    struct sockaddr_in address;
+    bzero(&address, sizeof(address));
+    address.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &address.sin_addr);
+    address.sin_port = htons(port);
+
+    int listenfd = socket(PF_INET, SOCK_STREAM, 0);
+    assert(listenfd >= 0);
+    int ret = bind(listenfd, (struct  sockaddr*)&address, sizeof(address));
+    assert(ret != -1);
+    ret = listen(listenfd, 5);
+    assert(ret != -1);
+    struct sockaddr_in client_address;
+    socklen_t client_addrlength = sizeof(client_address);
+    int fd = accept(listenfd, (struct sockaddr*)&client_address, &client_addrlength);
+
+    if (fd < 0)
+    {
+        printf("errno is: %d\n", errno);
+    }
+    else
+    {
+        char buffer[BUFFER_SIZE];  //读缓冲区
+        memset(buffer, '\0', BUFFER_SIZE);
+        int data_read = 0;
+        int read_index = 0;     //当前已经读取了多少字节的客户数据
+        int checked_index = 0;  //当前已经分析完了多少字节的客户数据
+        int start_line = 0;     //行在buffer中的起始位置
+        //设置主状态机的初始状态
+        CHECK_STATE checkstate = CHECK_STATE_REQUESTLINE;
+        while (1)       //循环读取客户数据并分析之
+        {
+            data_read = recv(fd, buffer + read_index, BUFFER_SIZE-read_index, 0);
+            if (data_read == -1)
+            {
+                printf("reading failed\n");
+                break;
+            }
+            else if (data_read == 0)
+            {
+                printf("remote client has closed the connection\n");
+                break;
+            }
+            read_index += data_read;
+            //分析目前已经获得的所有客户数据
+            HTTP_CODE result = parse_content(buffer, checked_index, checkstate,
+                                                read_index, start_line);
+            if (result == NO_REQUEST)   //尚未得到一个完整的HTTP请求
+            {
+                continue;
+            }
+            else if (result == GET_REQUEST) //得到一个完整的、正确的HTTP请求
+            {
+                send(fd, szret[0], strlen(szret[0]), 0);
+                break;
+            }
+            else
+            {
+                send(fd, szret[1], strlen(szret[1]), 0);
+                break;
+            }
+        }
+        close(fd);
+    }
+    close(listenfd);
+    return 0;
+}
+```
 
 </details>
 
 <details>
-<summary>提高服务器性能的其他建议</summary>
+<summary>提高服务器性能的其他建议——池、数据复制、上下文切换和锁</summary>
 
 # 提高服务器性能的其他建议
 
-1、池：
-内存池：例：socket的接受和发送缓冲
-进程池和线程池：并发编程
-连接池：服务器或者集群的内部永久连接
+## 池：
+
+- 内存池：例：socket的接受和发送缓冲
+
+- 进程池和线程池：并发编程
+
+- 连接池：服务器或者集群的内部永久连接
+
     以数据库连接为例：
+
     通常的做法是逻辑单元每次需要访问数据库的时候，就向数据库程序发起连接，而访问完毕后释放连接；
+
     使用连接池的做法是服务器预先和数据库程序建立的一组连接的集合。当某个逻辑单元需要访问数据库时，它可以直接从连接池中取得一个连接的实体并使用之，待完成数据库的访问之后，逻辑单元再次将该连接返还给连接池.
-2、数据复制
+
+## 数据复制
+
 高性能服务器应该避免不必要的数据复制，可以使用的方法有：
-    零拷贝函数代替普通函数：如零拷贝场景适用下尽量sendfile替代send
-    使用共享内存代替管道或消息队列在两个进程间传递大量数据
-    尽可能使用缓冲区指针传递代替传递整个缓冲区内容
-3、上下文切换和锁
+
+- 零拷贝函数代替普通函数：如零拷贝场景适用下尽量sendfile替代send
+- 使用共享内存代替管道或消息队列在两个进程间传递大量数据
+- 尽可能使用缓冲区指针传递代替传递整个缓冲区内容
+
+## 上下文切换和锁
+
 并发程序必须考虑上下文切换(context switch)问题，即进程切换或线程切换导致的系统开销，过多的进程数将导致上下文切换的开销增大，所以要协调进程数和服务器性能之间的关系
+
 并发程序需要引入锁来对共享资源进行访问保护，锁同时会引起性能底下的问题，所以尽可能避免使用锁，或者保证锁的粒度尽可能的小
 
 </details>
@@ -2729,109 +3244,239 @@ STATE_MACHINE()
 ### IO复用
 
 <details>
-<summary>selete系统调用</summary>
+<summary>selete系统调用——select</summary>
 
 # select
 
-select API
+```
 #include <sys/select.h>
 int select( int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, 
         struct tiemval* timeout );
-1、nfds：指定被监听的文件描述符的总数。它通常被设置为select监听的所有文件描述符的最大值加1，因为文件描述符是从0开始计数的
-2、readfds、writefds和exceptfds：分别为可读、可写和异常事件对应的文件描述符集合。应用程序通过这3个参数传入分别需要监控的文件描述符，select调用返回时，内核将修改它们来通知应用程序哪些文件描述符已经就绪
-fd_set结构体仅包含一个整型数组，该数组的每个元素的每一位(bit)标记一个文件描述符.fd_set能容纳的文件描述符数量由FD_SETSIZE指定，这限制了select能同时处理的文件描述符的总量是有限的
-通过下列宏来对fd_set结构进行操作:
-#include <sys/select.h>
-FD_ZERO( fd_set *fdset );   //清除fdset所有位
-FD_SET( int fd, fd_set *fdset );    //设置fdset的位fd
-FD_CLR( int fd, fd_set *fdset );    //清除fdset的位fd
-int FD_ISSET( int fd, fd_set *fdset );  //测试fdset的位fd是否被设置
-3、timeout：设置select函数的超时返回时间，为timeval类型的指针，函数返回会修改timeout为程序select的等待时间，不过并不能完全信任timeout返回的时间，如果调用失败timeout的值将是不确定的
-timeval结构体定义如下：
-struct timeval
-{
-    long tv_sec;    //秒数
-    long tv_usec;   //微秒数
-};
-如果timeout传入select的值为0，则select将立即返回，如果timeout为NULL，则select将一直阻塞直到某个文件描述符就绪
-4、返回值：
+```
+
+## 参数
+
+- nfds：指定被监听的文件描述符的总数。
+
+    它通常被设置为select监听的所有文件描述符的最大值加1，因为文件描述符是从0开始计数的
+
+- readfds、writefds和exceptfds：分别为可读、可写和异常事件对应的文件描述符集合。
+
+    应用程序通过这3个参数传入分别需要监控的文件描述符，select调用返回时，内核将修改它们来通知应用程序哪些文件描述符已经就绪
+
+    fd_set结构体仅包含一个整型数组，该数组的每个元素的每一位(bit)标记一个文件描述符.fd_set能容纳的文件描述符数量由FD_SETSIZE指定，这限制了select能同时处理的文件描述符的总量是有限的
+
+    通过下列宏来对fd_set结构进行操作:
+
+    ```
+    #include <sys/select.h>
+    FD_ZERO( fd_set *fdset );   //清除fdset所有位
+    FD_SET( int fd, fd_set *fdset );    //设置fdset的位fd
+    FD_CLR( int fd, fd_set *fdset );    //清除fdset的位fd
+    int FD_ISSET( int fd, fd_set *fdset );  //测试fdset的位fd是否被设置
+    ```
+
+- timeout：设置select函数的超时返回时间，为timeval类型的指针，函数返回会修改timeout为程序select的等待时间，不过并不能完全信任timeout返回的时间，如果调用失败timeout的值将是不确定的
+
+    timeval结构体定义如下：
+    ```
+    struct timeval
+    {
+        long tv_sec;    //秒数
+        long tv_usec;   //微秒数
+    };
+    ```
+    如果timeout传入select的值为0，则select将立即返回，如果timeout为NULL，则select将一直阻塞直到某个文件描述符就绪
+
+## 返回值：
+
 select成功时返回就绪的文件描述符个数
+
 如果超时时间内没有任何文件描述符就绪，select返回0
+
 select失败时返回-1并设置errno
+
 如果在select等待期间，程序收到信号，则select立即返回-1并设置errno为EINTR
 
-文件描述符就绪条件
+## 文件描述符就绪条件
+
 socket可读：
-(1)socket内核接收缓冲区中的字节数大于或等于其低水位标记SO_RCVLOWAT
-(2)socket通信的对方关闭连接，此时对该socket的读操作将返回0
-(3)监听socket上有新连接请求
-(4)socket上有未处理的错误。此时可以使用getsockopt来读取和清除该错误(带外数据)
+
+- socket内核接收缓冲区中的字节数大于或等于其低水位标记SO_RCVLOWAT
+- socket通信的对方关闭连接，此时对该socket的读操作将返回0
+- 监听socket上有新连接请求
+- socket上有未处理的错误。此时可以使用getsockopt来读取和清除该错误(带外数据)
+
 socket可写：
-(1)socket内核发送缓冲区中的可用字节数大于等于其低水位标记SO_SNDLOWAT
-(2)socket的写操作被关闭，对写操作被关闭的socket执行写操作将触发SIGPIPE信号
-(3)socket使用非阻塞connect连接成功或者失败(超时)之后
-(4)socket上有未处理的错误，此时可以使用getsockopt来读取和清除该错误
+
+- socket内核发送缓冲区中的可用字节数大于等于其低水位标记SO_SNDLOWAT
+- socket的写操作被关闭，对写操作被关闭的socket执行写操作将触发SIGPIPE信号
+- socket使用非阻塞connect连接成功或者失败(超时)之后
+- socket上有未处理的错误，此时可以使用getsockopt来读取和清除该错误
+
 网络程序中，select能处理的异常情况只有一种：socket上接收到带外数据
 
-处理带外数据
+## 处理带外数据
+
 socket上接收到普通数据和带外数据都将使select返回，但socket处于不同的就绪状态：前者处于可读状态，后者处于异常状态
-接收普通数据的主要逻辑：
-if ( FD_ISSET( connfd, &read_fds ) )    //connfd上有可读事件到达
-    recv( connfd, buf, sizeof(buf)-1, 0 );  //普通的recv函数读取数据
-printf( "get normal data is %s", buf );
-接收带外数据的主要逻辑：
-if ( FD_ISSET( connfd, &exception_fds ) )   //connfd上有异常事件到达
-    recv( connfd, buf, sizeof(buf)-1, MSG_OOB ); //带MSG_OOB标志的recv函数读取带外数据
-printf( "get oob data is %s", buf );
+
+### 实例：同时接收普通数据和带外数据
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[])
+{
+    if (argc <= 2)
+    {
+        printf("usage: %s ip_address port_number\n", basename(argv[0]));
+        return 1;
+    }
+    const char* ip = argv[1];
+    int port = atoi(argv[2]);
+
+    int ret = 0;
+    struct sockaddr_in address;
+    bzero(&address, sizeof(address));
+    address.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &address.sin_addr);
+    address.sin_port = htons(port);
+
+    int listenfd = socket(PF_INET, SOCK_STREAM, 0);
+    assert(listenfd >= 0);
+    ret = bind(listenfd, (struct sockaddr*)&address, sizeof(address));
+    assert(ret != -1);
+    ret = listen(listenfd, 5);
+    assert(ret != -1);
+
+    struct sockaddr_in client_address;
+    socklen_t client_addrlength = sizeof(client_address) ;
+    int connfd = accept(listenfd, (struct sockaddr*)&client_address, &client_addrlength);
+    if (connfd < 0)
+    {
+        printf("errno is: %d\n", errno);
+        close(listenfd);
+    }
+
+    char buf[1024];
+    fd_set read_fds;
+    fd_set exception_fds;
+    FD_ZERO(&read_fds);
+    FD_ZERO(&exception_fds);
+
+    while (1)
+    {
+        memset(buf, '\0', sizeof(buf));
+        //每次调用select前都要重新在read_fds和exception_fds中设置文件描述符connfd，
+        //因为事件发生之后，文件描述符集合将被内核修改
+        FD_SET(connfd, &read_fds);
+        FD_SET(connfd, &exception_fds);
+        ret = select(connfd+1, &read_fds, NULL, &exception_fds, NULL);
+        if (ret < 0)
+        {
+            printf("selection failure\n");
+            break;
+        }
+        //对于可读时间，采用普通的recv函数读取数据
+        if (FD_ISSET(connfd, &read_fds))
+        {
+            ret = recv(connfd, buf, sizeof(buf)-1, 0);
+            if (ret <= 0)
+            {
+                break;
+            }
+            printf("get %d bytes of normal data: %s\n", ret, buf);
+        }
+        //对于异常事件，采用带MSG_OOB标志的recv函数读取带外数据
+        else if (FD_ISSET(connfd, &exception_fds))
+        {
+            ret = recv(connfd, buf, sizeof(buf)-1, MSG_OOB);
+            if (ret <= 0)
+            {
+                break;
+            }
+            printf("get %d bytes of oob data: %s\n", ret, buf);
+        }
+    }
+    close(connfd);
+    close(listenfd);
+    return 0;
+}
+```
 
 </details>
 
 <details>
-<summary>poll系统调用</summary>
+<summary>poll系统调用——poll</summary>
 
 # poll
 
-poll API
+```
 #include <poll.h>
 int poll( struct pollfd* fds, nfds_t nfds, int timeout );
-1、fds：pollfd结构体数组，指定所有我们监控的文件描述符上发生的可读、可写和异常事件。pollfd结构体定义如下：
-struct pollfd
-{
-    int fd;     //文件描述符
-    short events;   //注册的事件
-    short revents;  //实际发生的事件，又内核填充
-};
-fd：指定文件描述符
-events：指定poll监听fd上的哪些事件，是一系列事件的按位或
-revents：函数返回时由内核修改，通知fd上实际发生的事件
-poll支持的事件类型如下表：
-事件	描述	是否可作为输入	是否可作为输出
-POLLIN	数据可读(包括普通数据和带外数据)	是	是
-POLLRDNORM	普通数据可读	是	是
-POLLPRI	高优先级数据可读(如TCP带外数据)	是	是
-POLLOUT	数据可写(包括普通数据和带外数据)	是	是
-POLLWRNORM	普通数据可写	是	是
-POLLWRBAND	优先级数据可写	是	是
-POLLRDHUP	TCP连接被对方关闭或者对方关闭写操作，由GNU引入，代码开始处需定义_GNU_SOURCE	是	是
-POLLERR	错误	否	是
-POLLHUP	挂起。比如管道的写端被关闭后，读端描述符将收到POLLHUP事件	否	是
-POLLNVAL	文件描述符没有打开	否	是
+```
 
+## 参数
 
+- fds：pollfd结构体数组，指定所有我们监控的文件描述符上发生的可读、可写和异常事件。
 
-2、nfds：指定被监听事件集合fds的大小，定义如下
-typedef unsigned long int nfds_t
-3、timeout指定poll的超时返回值
-如果timeout为-1，poll永远阻塞直到某个事件发生
-如果timeout为0，poll将立即返回
+    pollfd结构体定义如下：
+    ```
+    struct pollfd
+    {
+        int fd;     //文件描述符
+        short events;   //注册的事件
+        short revents;  //实际发生的事件，又内核填充
+    };
+    ```
+    - fd：指定文件描述符
+    - events：指定poll监听fd上的哪些事件，是一系列事件的按位或
+    - revents：函数返回时由内核修改，通知fd上实际发生的事件
 
-4、返回值
+    poll支持的事件类型如下表：
+    | 事件 | 描述 | 是否可作为输入 | 是否可作为输出 |
+    | --- | --- | --- | --- |
+    | POLLIN | 数据可读(包括普通数据和带外数据) | 是 | 是 |
+    | POLLRDNORM | 普通数据可读 | 是 | 是 |
+    | POLLPRI | 高优先级数据可读(如TCP带外数据) | 是 | 是 |
+    | POLLOUT | 数据可写(包括普通数据和带外数据) | 是 | 是 |
+    | POLLWRNORM | 普通数据可写 | 是 | 是 |
+    | POLLWRBAND | 优先级数据可写 | 是 | 是 |
+    | POLLRDHUP | TCP连接被对方关闭或者对方关闭写操作，由GNU引入，代码开始处需定义_GNU_SOURCE | 是 | 是 |
+    | POLLERR | 错误 | 否 | 是 |
+    | POLLHUP | 挂起。比如管道的写端被关闭后，读端描述符将收到POLLHUP事件 | 否 | 是 |
+    | POLLNVAL | 文件描述符没有打开 | 否 | 是 |
+
+- nfds：指定被监听事件集合fds的大小，定义如下：
+
+    ```
+    typedef unsigned long int nfds_t
+    ```
+
+- timeout指定poll的超时返回值
+
+    如果timeout为-1，poll永远阻塞直到某个事件发生
+
+    如果timeout为0，poll将立即返回
+
+## 返回值
+
 返回值与select相同
 
 </details>
 
 <details>
-<summary>epoll系统调用</summary>
+<summary>epoll系统调用——epoll_create、epoll_ctl、epoll_wait</summary>
 
 # epoll
 

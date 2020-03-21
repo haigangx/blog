@@ -26,9 +26,9 @@
 
 ## Linux
 
-- [linux](linux.md)
+- [linux](linux_base.md)
 
-- [linux后台开发](linux-server-dev.md)
+- [linux后台开发](linux_server_dev.md)
 
 ## Logs
 
