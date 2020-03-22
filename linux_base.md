@@ -93,6 +93,7 @@ superblock
 ## GDB
 
 GDB调试查看[这篇文章](command/gdb.md)
+[GDB调试入门看这篇就够了](https://mp.weixin.qq.com/s/dNZVQGRYLjy6_LcOjXb5xw)
 
 ## strace
 
