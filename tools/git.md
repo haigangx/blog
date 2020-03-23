@@ -4,6 +4,8 @@
 <details>
 <summary>cheatsheet</summary>
 
+![git cheatsheet](doc/git_cheatsheet.png)
+
 | 命令 | 说明 | 示例 |
 | --- | --- | --- |
 | `git init` | 当前文件夹下建立git仓库 |  |

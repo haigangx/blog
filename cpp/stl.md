@@ -34,33 +34,6 @@
 
 # Vector
 
-
-<!-- vim-markdown-toc Marked -->
-
-* [一、Vector基本用法](#一、vector基本用法)
-  * [1. 构造vector](#1.-构造vector)
-  * [2. 赋值操作](#2.-赋值操作)
-  * [3. 增加元素](#3.-增加元素)
-  * [4. 删除元素](#4.-删除元素)
-  * [5. 元素存取](#5.-元素存取)
-  * [6. 元素比较](#6.-元素比较)
-  * [7. 迭代器](#7.-迭代器)
-    * [7.1 迭代器失效问题：](#7.1-迭代器失效问题：)
-  * [8. 其他操作](#8.-其他操作)
-    * [8.1 使用reserve()](#8.1-使用reserve())
-    * [8.2 使用copy函数输出vector](#8.2-使用copy函数输出vector)
-    * [8.3 尽量在末尾增删元素](#8.3-尽量在末尾增删元素)
-    * [8.4 使用swap()缩减容量](#8.4-使用swap()缩减容量)
-* [二、Vector详细解析](#二、vector详细解析)
-  * [1. vector的迭代器](#1.-vector的迭代器)
-  * [2. vector的构造和内存管理：constructor, push_back](#2.-vector的构造和内存管理：constructor,-push_back)
-  * [3. vector的元素操作：pop_back, erase, clear, insert](#3.-vector的元素操作：pop_back,-erase,-clear,-insert)
-* [三、性能分析](#三、性能分析)
-* [四、Vector特殊版本](#四、vector特殊版本)
-  * [1. class vector\<bool>](#1.-class-vector\<bool>)
-
-<!-- vim-markdown-toc -->
-
 - 头文件：`#include <vector>`
 - 定义：
   ```
@@ -128,6 +101,11 @@
   if (pos != c.end()) {
       c.erase(pos);
   }
+  ```
+
+- 删除下标为i的元素
+  ```
+  c.erase( c.begin() + i );
   ```
 
 ### 5. 元素存取

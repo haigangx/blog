@@ -301,6 +301,8 @@ export PS1='[\u@\h \W]\$'
 | `tar cvf archive_name.tar dirname/` | 创建一个新的tar文件 |
 | `tar xvf archive_name.tar` | 解压tar文件 |
 | `tar tvf archive_name.tar` | 查看tar文件 |
+| `tar -xvJf archine_name.tar.xz` | 解压tar.xz文件 |
+| `xz -z test.tar` | 将tar包压缩为xz文件 |
 | `gzip test.txt` | 创建一个*.gz的压缩文件 |
 | `gzip -d test.txt.gz` | 解压*.gz文件 |
 | `gzip -l test.txt.gz` | 显示压缩比率 |
@@ -438,7 +440,6 @@ export PS1='[\u@\h \W]\$'
 | finger {user}       | 显示某用户信息，包括 id, 名字, 登陆状态等 |
 | adduser {user}      | 添加用户 |
 | deluser {user}      | 删除用户 |
-| w                   | 查看谁在线 |
 | su                  | 切换到 root 用户 |
 | su -                | 切换到 root 用户并登陆（执行登陆脚本） |
 | su {user}           | 切换到某用户 |

@@ -3959,8 +3959,6 @@ int main(int argc, char* argv[])
 <details>
 <summary>三组IO复用函数对比——select、poll、epoll对比</summary>
 
-TODO: 完善三组IO复用函数对比
-
 | 系统调用 | select | poll | epoll |
 | --- | --- | --- | --- |
 | 事件集合 | 用户通过3个参数分别传入感兴趣的可读、可写及异常等事件，内核通过对这些参数的在线修改来反馈其中的就绪事件。这使得用户每次调用select都要重置这3个参数 | 统一处理所有事件类型，因此只需一个事件集参数。用户通过pollfd.events传入感兴趣的事件，内核通过修改pollfd.revents反馈其中就绪的事件 | 内核通过一个事件表直接管理用户感兴趣的所有事件。因此每次调用epoll_wait时，无须反复传入用户感兴趣的事件，epoll_wait系统调用的参数events仅用来反馈就绪的事件 |
@@ -3994,99 +3992,121 @@ TODO: 完善三组IO复用函数对比
 ### 信号
 
 <details>
-<summary>linux信号概述</summary>
+<summary>linux信号概述——kill、信号处理方式、信号集</summary>
 
 信号是由用户、系统或者进程发送给目标的信息，以通知目标进程某个状态的改变或系统异常。Linux信号可由如下条件产生：
 
-* 对于前台进程，用户可以通过输入特殊的终端字符来为其发送信号，比如输入Ctrl+C发送中断信号
-* 系统异常。比如浮点异常或非法内存段访问
-* 系统状态变化。比如alarm定时器到期引起的SIGALRM信号
-* 运行kill命令或调用kil函数
+- 对于前台进程，用户可以通过输入特殊的终端字符来为其发送信号，比如输入Ctrl+C发送中断信号
+- 系统异常。比如浮点异常或非法内存段访问
+- 系统状态变化。比如alarm定时器到期引起的SIGALRM信号
+- 运行kill命令或调用kil函数
 
 服务器程序必须处理(或至少忽略)一些常见信号，以免异常终止
 
 ## 发送信号
 
+```
 #include <sys/types.h>
 #include <signal.h>
 int kill( pid_t pid, int sig );
+```
+
+### 参数
 
 pid参数及含义：
 
-pid参数	含义
-pid > 0	发给PID为pid的进程
-pid = 0	发给本进程组内的其他进程
-pid = -1	发送给除init进程外的所有进程，但发送者需要拥有对目标进程发送信号的权限
-pid < -1	发送给组ID为-pid的进程组的所有成员
-Linux定义的信号值都大于0，将sig取0，kill并不发送任何信号但是可以以此来检测目标进程或进程组是否存在，因为kill函数会在信号发送之前进行检查工作，不过这种检测方式并不可靠:
-PID回绕导致被检测的PID并不是我们期望的进程的PID
-这种检测并非原子操作
-kill函数成功返回0，失败返回-1并设置errno
-errno	含义
-EINVAL	无效的信号
-EPERM	该进程没有权限发送信号给任何一个目标进程
-ESRCH	目标进程或进程组不存在
+| pid参数 | 含义 |
+| --- | --- |
+| pid > 0 | 发给PID为pid的进程 |
+| pid = 0 | 发给本进程组内的其他进程 |
+| pid = -1 | 发送给除init进程外的所有进程，但发送者需要拥有对目标进程发送信号的权限 |
+| pid < -1 | 发送给组ID为-pid的进程组的所有成员 |
 
+Linux定义的信号值都大于0，将sig取0，kill并不发送任何信号但是可以以此来检测目标进程或进程组是否存在，因为kill函数会在信号发送之前进行检查工作，不过这种检测方式并不可靠:
+- PID回绕导致被检测的PID并不是我们期望的进程的PID
+- 这种检测并非原子操作
+
+### 返回值
+
+kill函数成功返回0，失败返回-1并设置errno
+
+| errno | 含义 |
+| --- | --- |
+| EINVAL | 无效的信号 |
+| EPERM | 该进程没有权限发送信号给任何一个目标进程 |
+| ESRCH | 目标进程或进程组不存在 |
 
 ## 信号处理方式
 
 信号处理函数原型如下：
+
+```
 #include <signal.h>
 typedef void (*__sighandler_t) ( int );
+```
+
 信号处理函数只带有一个整形参数，该参数用来指示类型。信号处理函数应该是可重入的，否则很容易引发一些竞态条件。所以在信号处理函数中严禁调用一些不安全的函数
-bits/signum.h头文件中定义了信号的两种其他处理方式——SIG_IGN和SIG_DEL:
+
+bits/signum.h头文件中定义了信号的两种其他处理方式—— `SIG_IGN` 和 `SIG_DEL` :
+
+```
 #include <bits/signum.h>
 #define SIG_DFL ((__sighandle_t) 0)
 #define SIG_IGN ((__sighandle_t) 1)
-SIG_IGN：忽略目标信号
-SIG_DFL：使用信号的默认处理方式，默认处理方式有：结束进程(Term)、忽略信号(Ign)、结束进程并生成核心转储文件(Core)、暂停进程(Stop)、继续进程(Cont)
+```
+- SIG_IGN：忽略目标信号
+- SIG_DFL：使用信号的默认处理方式，默认处理方式有：结束进程(Term)、忽略信号(Ign)、结束进程并生成核心转储文件(Core)、暂停进程(Stop)、继续进程(Cont)
 
 ## Linux信号
 
 Linux的可用信号都定义在bits/signum.h头文件中，其中包括标准信号和POSIX实时信号。
+
 标准信号见下表：
-信号	起源	默认行为	含义
-SIGHUP	POSIX	Term	控制终端挂起
-SIGINT	ANSI	Term	键盘输入以中断进程(Ctrl+C)
-SIGQUIT	POSIX	Core	键盘输入使进程退出(Ctrl+\)
-SIGILL	ANSI	Core	非法指令
-SIGTRAP	POSIX	Core	断点陷阱，用于调试
-SIGABRT	ANSI	Core	进程调用abort函数时生成该信号
-SIGIOT	4.2BSD	Core	和SIGABRT相同
-SIGBUS	4.2BSD	Core	总线错误，错误内存访问
-SIGFPE	ANSI	Core	浮点异常
-SIGKILL	POSIX	Term	终止一个进程(不可被捕获或忽略)
-SIGUSR1	POSIX	Term	用户自定义信号之一
-SIGSEGV	ANSI	Core	非法内存段引用
-SIGUSR2	POSIX	Term	用户自定义信号之二
-SIGPIPE	POSIX	Term	往读端被关闭的管道或者socket连接中写数据
-SIGALRM	POSIX	Term	由alarm或setitimer设置的实时闹钟超时引起
-SIGTERM	ANSI	Term	终止进程，kill命令默认发送该信号
-SIGSTKFLT	Linux	Term	早期的Linux使用该信号来报告数学协处理器栈错误
-SIGCLD	System V	Ign	和SIGCHLD相同
-SIGCHLD	POSIX	Ign	子进程状态发生变化(退出或暂停)
-SIGCONT	POSIX	Cont	启动被暂停的进程(Ctrl+Q),如果目标进程未处于暂停状态，则信号被忽略
-SIGSTOP	POSIX	Stop	暂停进程(Ctrl+S)(不可被捕获或忽略)
-SIGTSTP	POSIX	Stop	挂起进程(Ctrl+Z)
-SIGTTIN	POSIX	Stop	后台进程试图从终端读取输入
-SIGTTOU	POSIX	Stop	后台进程试图往终端输出内容
-SIGURG	4.2BSD	Ign	socket连接上接收到紧急数据
-SIGXCPU	4.2BSD	Core	进程的CPU使用时间超过其软限制
-SIGXFSZ	4.2BSD	Core	文件尺寸超过其软限制
-SIGVTALRM	4.2BSD	Term	与SIGALRM类似，不过它只统计本进程用户空间代码的运行时间
-SIGPROF	4.2BSD	Term	与SIGALRM类似，它同时统计用户代码和内核的运行时间
-SIGWINCH	4.3BSD	Ign	终端窗口大小发生变化
-SIGPOLL	System V	Term	与SIGIO类似
-SIGIO	4.2BSD	Term	IO就绪，比如socket上发生可读事件、可写事件。因为TCP服务器可触发SIGIO的条件很多，故而SIGIO无法在TCP服务器中使用。SIGIO信号可用在UDP服务器中，不过也非常少见
-SIGPWR	System V	Term	对于使用UPS(Uninterruptable Power Supply)的系统，当电池电量过低时，SIGPWR信号将被触发
-SIGSYS	POSIX	Core	非法系统调用
-SIGUNUSED	
-Core	保留，通常和SIGSYS效果相同
+
+| 信号 | 起源 | 默认行为 | 含义 |
+| --- | --- | --- | --- |
+| SIGHUP | POSIX | Term | 控制终端挂起 |
+| SIGINT | ANSI | Term | 键盘输入以中断进程(Ctrl+C) |
+| SIGQUIT | POSIX | Core | 键盘输入使进程退出(Ctrl+\\) |
+| SIGILL | ANSI | Core | 非法指令 |
+| SIGTRAP | POSI | Core | 断点陷阱，用于调试 |
+| SIGABRT | ANSI | Core | 进程调用abort函数时生成该信号 |
+| SIGIOT | 4.2BSD | Core | 和SIGABRT相同 |
+| SIGBUS | 4.2BSD | Core | 总线错误，错误内存访问 |
+| SIGFPE | ANSI | Core | 浮点异常 |
+| SIGKILL | POSIX | Term | 终止一个进程(不可被捕获或忽略) |
+| SIGUSR1 | POSIX | Term | 用户自定义信号之一 |
+| SIGSEGV | ANSI | Core | 非法内存段引用 |
+| SIGUSR2 | POSIX | Term | 用户自定义信号之二 |
+| SIGPIPE | POSIX | Term | 往读端被关闭的管道或者socket连接中写数据 |
+| SIGALRM | POSIX | Term | 由alarm或setitimer设置的实时闹钟超时引起 |
+| SIGTERM | ANSI | Term | 终止进程，kill命令默认发送该信号 |
+| SIGSTKFLT | Linux | Term | 早期的Linux使用该信号来报告数学协处理器栈错误 |
+| SIGCLD | System V | Ign | 和SIGCHLD相同 |
+| SIGCHLD | POSIX | Ign | 子进程状态发生变化(退出或暂停) |
+| SIGCONT | POSIX | Cont | 启动被暂停的进程(Ctrl+Q),如果目标进程未处于暂停状态，则信号被忽略 |
+| SIGSTOP | POSIX | Stop | 暂停进程(Ctrl+S)(不可被捕获或忽略) |
+| SIGTSTP | POSIX | Stop | 挂起进程(Ctrl+Z) |
+| SIGTTIN | POSIX | Stop | 后台进程试图从终端读取输入 |
+| SIGTTOU | POSIX | Stop | 后台进程试图往终端输出内容 |
+| SIGURG | 4.2BSD | Ign | socket连接上接收到紧急数据 |
+| SIGXCPU | 4.2BSD | Core | 进程的CPU使用时间超过其软限制 |
+| SIGXFSZ | 4.2BSD | Core | 文件尺寸超过其软限制 |
+| SIGVTALRM | 4.2BSD | Term | 与SIGALRM类似，不过它只统计本进程用户空间代码的运行时间 |
+| SIGPROF | 4.2BSD | Term | 与SIGALRM类似，它同时统计用户代码和内核的运行时间 |
+| SIGWINCH | 4.3BSD | Ign | 终端窗口大小发生变化 |
+| SIGPOLL | System V | Term | 与SIGIO类似 |
+| SIGIO | 4.2BSD | Term | IO就绪，比如socket上发生可读事件、可写事件。因为TCP服务器可触发SIGIO的条件很多，故而SIGIO无法在TCP服务器中使用。SIGIO信号可用在UDP服务器中，不过也非常少见 |
+| SIGPWR | System V | Term | 对于使用UPS(Uninterruptable Power Supply)的系统，当电池电量过低时，SIGPWR信号将被触发 |
+| SIGSYS | POSIX | Core | 非法系统调用 |
+| SIGUNUSED | | Core | 保留，通常和SIGSYS效果相同 |
+
 与网络编程密切相关的几个信号：SIGHUP、SIGPIPE、SIGURG
 
 ## 中断系统调用
 
 如果程序在执行处于阻塞状态的系统调用时接收到信号，并且我们为该信号设置了信号处理函数，则默认情况下系统调用将被中断，并且errno被设置为EINTR。可以使用sigaction函数为信号设置SA_RESTART标志以自动重启被该信号中断的系统调用
+
 对于默认行为是暂停进程的信号(如SIGSTOP、SIGTTIN)，如果没有为它们设置信号处理函数，则他们也可以中断某些系统调用(ex:connect、epoll_wait)。POSIX没有规定这种行为，这是Linux独有的
 
 </details>
@@ -4099,110 +4119,161 @@ Core	保留，通常和SIGSYS效果相同
 ## signal系统调用
 
 为一个信号设置处理函数：
+
+```
 #include <signal.h>
 _sighandler_t signal( int sig, _sighandler_t _handler );
-sig：要捕获的信号类型
-_handler：_sighandler_t类型的函数指针，用于指定信号sig的处理函数
-返回值：前一次调用signal函数时传入的函数指针，或者是信号sig对应的默认处理函数指针SIG_DEF
+```
+
+### 参数
+
+- sig：要捕获的信号类型
+- _handler：_sighandler_t类型的函数指针，用于指定信号sig的处理函数
+
+### 返回值
+
+返回前一次调用signal函数时传入的函数指针，或者是信号sig对应的默认处理函数指针SIG_DEF
+
 signal函数出错时返回SIG_ERR并设置errno
 
-
-# sigaction系统调用
+## sigaction系统调用
 
 设置信号处理函数更健壮的接口：
+
+```
 #include <signal.h>
 int sigaction( int sig, const struct sigaction* act, struct sigaction* oact );
-sig：指定要捕获的信号类型
-act：新的信号处理方式
-oact：先前的信号处理方式
-sigaction结构体类型如下：
-struct sigaction
-{
-#ifndef __USE_POSIX199309
-    union
+```
+
+- sig：指定要捕获的信号类型
+- act：新的信号处理方式
+- oact：先前的信号处理方式
+
+    sigaction结构体类型如下：
+
+    ```
+    struct sigaction
     {
+    #ifndef __USE_POSIX199309
+        union
+        {
+            _sighandler_t sa_handler;
+            void (*sa_sigaction)(int, siginfo_t*, void*);
+        }__sigaction_handler;
+    #define sa_handler  __sigaction_handler.sa_handler
+    #define sa_sigaction __sigaction_handler.sa_sigaction
+    #else
         _sighandler_t sa_handler;
-        void (*sa_sigaction)(int, siginfo_t*, void*);
-    }__sigaction_handler;
-#define sa_handler  __sigaction_handler.sa_handler
-#define sa_sigaction __sigaction_handler.sa_sigaction
-#else
-    _sighandler_t sa_handler;
-#endif
-    _sigset_t sa_mask;
-    int sa_flags;
-    void (*sa_restorer) (void);
-};
-sa_handler：指定信号处理函数
-sa_mask：设置进程的信号掩码(在进程原有信号掩码的基础上增加信号掩码)，这些信号不会发送给进程
-sa_flags：设置程序收到信号时的行为，可取值见下表：
-选项	含义
-SA_NOCLDSTOP	如果sig参数为SIGCHLD，则该标志表示子进程暂时不生成SIGCHLD信号
-SA_NOCLDWAIT	如果sig参数为SIGCHLD，则该标志表示子进程结束不产生僵尸进程
-SA_SIGINFO	使用sa_sigaction作为信号处理函数(而不是sa_handler)
-SA_ONSTACK	调用由sigaltstack函数设置的可选信号栈上的信号处理函数
-SA_RESTART	重新调用被该信号终止的系统调用
-SA_NODEFER	当接收到信号并进入其信号处理函数时，不屏蔽该信号。默认情况下，我们期望进程在处理一个信号时不再接收到同种信号，否则将引起一些竞态条件
-SA_RESETHAND	信号处理函数执行完以后，恢复信号的默认处理方式
-SA_INTERRUPT	 中断系统调用
-SA_NOMASK	同SA_NODEFER
-SA_ONESHOT	同SA_RESETHAND
-SA_STACK	同SA_ONSTACK
-sa_restorer：过时不再使用
+    #endif
+        _sigset_t sa_mask;
+        int sa_flags;
+        void (*sa_restorer) (void);
+    };
+    ```
+
+    - sa_handler：指定信号处理函数
+    - sa_mask：设置进程的信号掩码(在进程原有信号掩码的基础上增加信号掩码)，这些信号不会发送给进程
+    - sa_flags：设置程序收到信号时的行为，可取值见下表：
+
+        | 选项 | 含义 |
+        | SA_NOCLDSTOP | 如果sig参数为SIGCHLD，则该标志表示子进程暂时不生成SIGCHLD信号 |
+        | SA_NOCLDWAIT | 如果sig参数为SIGCHLD，则该标志表示子进程结束不产生僵尸进程 |
+        | SA_SIGINFO | 使用sa_sigaction作为信号处理函数(而不是sa_handler) |
+        | SA_ONSTACK | 调用由sigaltstack函数设置的可选信号栈上的信号处理函数 |
+        | SA_RESTART | 重新调用被该信号终止的系统调用 |
+        | SA_NODEFER | 当接收到信号并进入其信号处理函数时，不屏蔽该信号。默认情况下，我们期望进程在处理一个信号时不再接收到同种信号，否则将引起一些竞态条件 |
+        | SA_RESETHAND | 信号处理函数执行完以后，恢复信号的默认处理方式 |
+        | SA_INTERRUPT | 中断系统调用 |
+        | SA_NOMASK | 同SA_NODEFER |
+        | SA_ONESHOT | 同SA_RESETHAND |
+        | SA_STACK | 同SA_ONSTACK |
+        | sa_restorer | 过时不再使用 |
+
+## 返回值
+
 sigaction成功返回0，失败返回-1并设置errno
 
 </details>
 
 <details>
-<summary>信号集</summary>
+<summary>信号集——信号集操作函数、sigprocmask、sigpending</summary>
 
 # 信号集
 
 ## 信号集函数
 
 Linux使用数据结构sigset_t表示一组信号
+
+```
 #include <bits/sigset.h>
 #define _SIGSET_NWORDS (1024/(8*sizeof(unsigned long int)))
 typedef struct
 {
     unsigned long int __val[_SIGSET_NWORDS];
 }__sigset_t;
+```
+
 sigset_t实际上是一个长整型数组，数组的每个元素的每个位表示一个信号，这种定义方式和文件描述符fd_set类似
+
 信号集操作函数集：
+
+```
 #include <signal.h>
 int sigemptyset(sigset_t* _set);    //清空信号集
 int sigfillset(sigset_t* _set);     //设置信号集所有信号
 int sigaddset(sigset_t* _set, int _signo);  //将信号_signo添加至信号集中
 int sigdelset(sigset_t* _set, int _signo);  //将信号_signo从信号集中删除
 int sigismember(sigset_t* _set, int _signo);    //测试_signo是否在信号集中
+```
 
 ## 进程信号掩码
 
 设置进程信号掩码的两种方式：
-1、利用sigaction结构体的sa_mask成员
-2、sigprocmask函数来设置和查看进程掩码
+
+- 利用sigaction结构体的sa_mask成员
+- sigprocmask函数来设置和查看进程掩码
+
+```
 #include <signal.h>
 int sigprocmask(int _how, _const sigset_t* _set, sigset_t* _oset);
-_set：指定新的信号掩码
-_oset：输出原来的信号掩码(如果不为NULL)
-_how：指定设置进程信号掩码的方式，_how的可能取值如下表：
-_how参数	含义
-SIG_BLOCK	新信号掩码是当前值和_set的并集
-SIG_UNBLOCK	_set指定的信号集将不被屏蔽
-SIG_SETMASK	设置进程信号掩码为_set
+```
+
+### 参数
+
+- _set：指定新的信号掩码
+- _oset：输出原来的信号掩码(如果不为NULL)
+- _how：指定设置进程信号掩码的方式，_how的可能取值如下表：
+
+| _how参数 | 含义 |
+| SIG_BLOCK | 新信号掩码是当前值和_set的并集 |
+| SIG_UNBLOCK | _set指定的信号集将不被屏蔽 |
+| SIG_SETMASK | 设置进程信号掩码为_set |
+
 如果_set为NULL，则进程信号掩码不变，此时我们仍然可以利用_oset参数获得进程当前的信号掩码
+
+### 返回值
+
 sigprocmask：成功返回0，失败返回-1并设置errno
 
 ## 被挂起的信号
 
 设置进程信号掩码后，被屏蔽的信号将不能被进程接收。如果给进程发送一个被屏蔽信号，则操作系统将该信号设置为进程的一个被挂起信号。如果我们取消对被挂起信号的屏蔽，则它能立即被进程接收到
+
 sigpending函数可以获得进程当前被挂起的信号集：
+
+```
 #include <signal.h>
 int sigpending(sigset_t* set);
-set：保存返回的被挂起的信号集，进程即使多次接收到同一个被挂起的信号，sigpending函数也只能反映一次，所以当我们再次使用sigprocmask函数使能接收该挂起的信号时，该信号的处理函数也只能触发一次
+```
+
+- set：保存返回的被挂起的信号集，进程即使多次接收到同一个被挂起的信号，sigpending函数也只能反映一次，所以当我们再次使用sigprocmask函数使能接收该挂起的信号时，该信号的处理函数也只能触发一次
+
+### 返回值
+
 sigpending成功返回0，失败返回-1并设置errno
 
 编程过程中，要始终清楚的直到进程在每个运行时刻的信号掩码
+
 多进程、多线程编程环境中，要以进程、线程为单位来处理信号和信号掩码。不能设想新创建的进程、线程具有和父进程、主线程完全相同的信号特征。比如，fork调用产生的子进程将继承父进程的信号掩码，但具有一个空的挂起信号集
 
 </details>
@@ -4213,34 +4284,51 @@ sigpending成功返回0，失败返回-1并设置errno
 # 统一事件源
 
 信号是一种异步事件：信号处理函数和程序的主循环是两条不同的执行路线。信号处理函数需要尽可能快的执行完毕，以确保信号不被屏蔽太久。
-一种典型的解决方案是：把信号的主要处理逻辑放到程序的主循环中，当信号处理函数被触发时，它只是简单的通知主循环程序接收信号，并把信号值传递给主循环，主循环根据接收到的信号值执行目标信号对应的逻辑代码。信号处理函数通常使用管道来讲信号传递给主循环：信号处理函数往管道的写端写入信号值，主循环通过IO复用系统调用来监听管道的读端文件描述符上的可读事件，然后从管道读端读出该信号值，此即统一事件源
+
+一种典型的解决方案是：
+
+> 把信号的主要处理逻辑放到程序的主循环中，当信号处理函数被触发时，它只是简单的通知主循环程序接收信号，并把信号值传递给主循环，主循环根据接收到的信号值执行目标信号对应的逻辑代码。信号处理函数通常使用管道来讲信号传递给主循环：信号处理函数往管道的写端写入信号值，主循环通过IO复用系统调用来监听管道的读端文件描述符上的可读事件，然后从管道读端读出该信号值，此即统一事件源
+
 很多优秀的IO框架库和后台服务器程序都统一处理信号和IO事件，比如Libevent IO框架库和xinetd超级服务
+
+TODO: 统一事件源示例
+```
+
+```
 
 </details>
 
 <details>
-<summary>网络编程相关信号</summary>
+<summary>网络编程相关信号——SIGHUP、SIGPIPE、SIGURG</summary>
 
 # 网络编程相关信号
 
 ## SIGHUP
 
 当挂起进程的控制终端时，SIGHUP信号将被触发。对于没有控制终端的网络后台程序而言，通常利用SIGHUP信号来强制服务器重新读取配置文件
+
 以xinetd超级服务程序为例：
+
 xinetd程序接收到SIGHUP信号之后将调用hard_reconfig函数，它循环读取/etc/xinetd.d/目录下的每个子配置文件，并检测其变化。如果某个正在运行的子服务的配置文件被修改以停止服务，则xinetd主进程将给该子服务进程发送SIGTERM信号以结束它。如果某个子服务的配置文件被修改以开启服务，则xinetd将创建新socket并将其绑定到该服务对应的端口上。
 
 ## SIGPIPE
 
 默认情况下，往一个读端关闭的管道或者socket连接中写数据将引发SIGPIPE信号，我们需要在代码中捕获并处理该信号，或者至少忽略它，因为程序接收到SIGPIPE信号的默认行为是结束进程，而我们很少希望因为错误的写操作而导致进程退出。
+
 引起SIGPIPE信号的写操作将设置errno为EPIPE
+
 我们可以通过设置send函数的MSG_NOSIGNAL标志来禁止写操作触发SIGPIPE信号，这时应该使用send函数设置的errno来判断管道或socket连接的读端是否关闭
+
 还可以利用IO复用系统调用来检测管道和socket连接的读端是否已经关闭。以poll为例，当管道的读端关闭时，写端文件描述符上的POLLHUP事件将被触发；当socket连接被对方关闭时，socket上的POLLRDHUP事件将被触发
 
 ## SIGURG
 
 Linux下，内核通知应用程序带外数据到达的两种方法：
-1、select等IO复用系统调用在接收到带外数据时返回socket上的异常事件
-2、使用SIGURG信号
+
+- select等IO复用系统调用在接收到带外数据时返回socket上的异常事件
+- 使用SIGURG信号
+
+```
 //为信号设置处理函数
 void addsig(int sig, void (*sig_handler)(int))
 {
@@ -4263,27 +4351,35 @@ void sig_urg(int sig)
 }
 //为SIGURG信号设置处理函数
 addsig(SIGURG, sig_urg);
+```
 
 </details>
 
 ### 定时器
 
 <details>
-<summary>socket选项so_rcvtimeo和so_sndtimeo</summary>
+<summary>socket选项——so_rcvtimeo、so_sndtimeo</summary>
 
 # socket选项的SO_RCVTIMEO和SO_SNDTIMEO
 
 socket选项SO_RCVTIMEO和SO_SNDTIMEO分别用来设置socket接收数据超时时间和发送数据超时时间
+
 这两个选项仅对数据接收和发送相关的socket专用系统调用有效，如send, sendmsg, recv, recvmsg, accpet和connect等API
+
 这两个选项对上述系统调用的影响总结如下表：
-系统调用	有效选项	系统调用超时后的行为
-send	SO_SNDTIMEO	返回-1，设置errno为EAGAIN或EWOULDBLOCK
-sendmsg	SO_SNDTIMEO	返回-1，设置errno为EAGAIN或EWOULDBLOCK
-recv	SO_RCVTIMEO	返回-1，设置errno为EAGAIN或EWOULDBLOCK
-recvmsg	SO_RCVTIMEO	返回-1，设置errno为EAGAIN或EWOULDBLOCK
-accept	SO_RCVTIMEO	返回-1，设置errno为EAGAIN或EWOULDBLOCK
-connect	SO_SNDTIMEO	返回-1，设置errno为EINPROGRESS
+
+| 系统调用 | 有效选项 | 系统调用超时后的行为 |
+| --- | --- | --- |
+| send | SO_SNDTIMEO | 返回-1，设置errno为EAGAIN或EWOULDBLOCK |
+| sendmsg | SO_SNDTIMEO | 返回-1，设置errno为EAGAIN或EWOULDBLOCK |
+| recv | SO_RCVTIMEO | 返回-1，设置errno为EAGAIN或EWOULDBLOCK |
+| recvmsg | SO_RCVTIMEO | 返回-1，设置errno为EAGAIN或EWOULDBLOCK |
+| accept | SO_RCVTIMEO | 返回-1，设置errno为EAGAIN或EWOULDBLOCK |
+| connect | SO_SNDTIMEO | 返回-1，设置errno为EINPROGRESS |
+
 我们可以通过系统调用的返回值及errno来判断超时时间是否已到，进而决定是否开始处理定时任务
+
+```
 int sockfd = socket(PF_INET, SOCK_STREAM, 0);
 struct timeval timeout;
 timeout.tv_sec = time;
@@ -4292,6 +4388,7 @@ socklen_t len = sizeof(timeout);
 ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &timeout, len);
 assert(ret != -1);
 ret = connect(sockfd, (struct sockaddr *)&address, sizeof(address));
+```
 
 </details>
 
@@ -4310,7 +4407,10 @@ ret = connect(sockfd, (struct sockaddr *)&address, sizeof(address));
 # IO复用系统调用的超时参数
 
 Linux下的3组IO复用系统调用都带有超时参数，因此它们不仅能统一处理信号和IO事件，也能统一处理定时事件。但是由于IO复用系统调用可能在超时时间到期之前就返回(有IO事件发生)，所以如果要利用它们来定时，就需要不断更新定时参数以反映剩余的事件
+
 例：利用IO复用系统调用定时
+
+```
 #define TIMEOUT 5000
 
 int timeout = TIMEOUT
@@ -4342,6 +4442,7 @@ while (1)
        
     //....
 }
+```
 
 </details>
 
@@ -4355,18 +4456,25 @@ while (1)
 基于排序链表的定时器存在一个问题：添加定时器的效率偏低。采用事件轮将解决这个问题
 
 上图所示的时间轮内，实线指针指向轮子上的一个槽(slot)，它以恒定的速度顺时针转动，每转动一步就指向下一个槽(虚线指针指向的槽)，每次转动称为一个滴答(tick)。一个滴答的时间称为时间轮的槽间隔si(slot interval)，它实际上就是心博时间。该时间轮共有N个槽，因此它运转一周的时间是N*si。每个槽指向一条定时器链表，每条链表上的定时器具有相同的特征：它们的定时时间相差N*si的整数倍。时间轮正是利用这个关系将定时器散列到不同的链表中。假如现在指针指向槽cs，我们要添加一个定时时间为ti的定时器，则该定时器将被插入槽ts(time slot)对应的链表中:ts = (cs + (ti/si)) % N
+
 基于排序链表的定时器使用唯一的一条链表来管理所有定时器，所以插入操作的效率随着定时器数目的增多而降低。而时间轮使用哈希表的思想，将定时器散列到不同的链表上。这样每条链表上的定时器数目都将明显少于原来的排序链表上的定时器数目，插入操作的效率基本不受定时器数目的影响
+
 对时间轮而言，要提高定时精度，就要使si值足够小；要提高执行效率，则要求N值足够大
+
 上图描述的是一种简单的时间轮，因为只有一个轮子，而复杂的时间轮可能有多个轮子，不同的轮子拥有不同的粒度。相邻的两个轮子，精度高的转一圈，精度低的仅往前移动一槽，就像水表一样
+
 时间轮中添加一个定时器的时间复杂度为O(1)，删除一个定时器的事件复杂度也是O(1)，执行一个定时器的时间复杂度是O(n)，但实际的执行效率要比O(n)好
 
 
 ## 时间堆
 
 定时器的两种设计思路：
-1、以固定的频率调用心博函数tick，并在其中依次检测到期的定时器，然后执行到期定时器上的回调函数
-2、将所有定时器中超时时间最小的定时器的超时值作为心博间隔，这样，当心博函数tick被调用时，超时时间最小的定时器必然到期，就可以在tick函数中处理该定时器，然后再次从剩余定时器中找出超时时间最小的一个，并将这段最小时间设置为下一次心博间隔。
+
+- 以固定的频率调用心博函数tick，并在其中依次检测到期的定时器，然后执行到期定时器上的回调函数
+- 将所有定时器中超时时间最小的定时器的超时值作为心博间隔，这样，当心博函数tick被调用时，超时时间最小的定时器必然到期，就可以在tick函数中处理该定时器，然后再次从剩余定时器中找出超时时间最小的一个，并将这段最小时间设置为下一次心博间隔。
+
 时间堆使用第二种设计思路，采用最小堆为定时器的底层数据结构，最小堆是指每个节点值都小于或等于其子节点的值的完全二叉树，可以使���数组来存储该最小堆
+
 对时间堆而言，添加一个定时器的时间复杂度为O(lgn)，删除一个定时器的时间复杂度为O(1)，执行一个定时器的时间复杂度是O(1)
 
 </details>
@@ -4390,13 +4498,17 @@ while (1)
 # fork系统调用
 
 fork：Linux下创建新进程
+
+```
 #include <sys/types.h>
 #include <unistd.h>
 pid_t fork( void );
-1、fork每次调用返回两次，父进程中返回子进程PID，子进程中返回0，fork调用失败返回-1并设置errno
-2、fork函数复制当前进程，在内核进程表中创建了一个新的进程表项。新的进程表项有很多属性和原进程相同，比如堆指针、栈指针和标志寄存器的值。但也有许多属性被赋予了新的值，比如该进程的PPID被设置成原进程的PID，信号位图被清除(原进程设置的信号处理函数不再对新进程有效)
-3、子进程的代码和父进程的代码相同，同时它还会复制父进程的数据(堆数据、栈数据和静态数据)。数据的复制采用的写时复制(copy on write)，即只有在任一进程(父或子进程)对数据执行了写操作，复制才会发生(先是缺页中断，然后操作系统给子进程分配内存并复制父进程的数据)
-4、父进程中打开的文件描述符默认在子进程中也是打开的，且文件描述符的引用计数加1.不仅如此，父进程的用户根目录、当前工作目录等变量的引用计数均会加1
+```
+
+- fork每次调用返回两次，父进程中返回子进程PID，子进程中返回0，fork调用失败返回-1并设置errno
+- fork函数复制当前进程，在内核进程表中创建了一个新的进程表项。新的进程表项有很多属性和原进程相同，比如堆指针、栈指针和标志寄存器的值。但也有许多属性被赋予了新的值，比如该进程的PPID被设置成原进程的PID，信号位图被清除(原进程设置的信号处理函数不再对新进程有效)
+- 子进程的代码和父进程的代码相同，同时它还会复制父进程的数据(堆数据、栈数据和静态数据)。数据的复制采用的写时复制(copy on write)，即只有在任一进程(父或子进程)对数据执行了写操作，复制才会发生(先是缺页中断，然后操作系统给子进程分配内存并复制父进程的数据)
+- 父进程中打开的文件描述符默认在子进程中也是打开的，且文件描述符的引用计数加1.不仅如此，父进程的用户根目录、当前工作目录等变量的引用计数均会加1
 
 </details>
 
@@ -4406,6 +4518,7 @@ pid_t fork( void );
 # exec系列系统调用
 
 exec系列函数：在子进程中执行其他程序，即替换当前进程映像
+```
 #include <unistd.h>
 extern char** environ;
 
@@ -4415,13 +4528,20 @@ int execle( const char* path, const char* arg, ..., char* const envp[] );
 int execv( const char* path, char* const argv[] );
 int execvp( const char* file, char* const argv[] );
 int execve( const char* path, char* const argv[], char* const envp[] );
-path：可执行文件的完整路径
-file：可执行文件的文件名，具体路径从PATH环境变量中查找
-arg：可变长参数
-argv：参数数组
-envp：新程序的环境变量，如果未设置则采用全局变量environ指定的环境变量
+```
+
+## 参数
+
+- path：可执行文件的完整路径
+- file：可执行文件的文件名，具体路径从PATH环境变量中查找
+- arg：可变长参数
+- argv：参数数组
+- envp：新程序的环境变量，如果未设置则采用全局变量environ指定的环境变量
+
+## 返回值
 
 exec函数如果成功执行，exec调用之后的代码将不会执行，因为此时原程序已经被exec的参数指定的程序完全替换(包括代码和数据)
+
 exec函数出错返回-1并设置errno
 
 exec函数不会关闭原程序打开的文件描述符，除非该文件描述符被设置了SOCK_CLOEXEC属性
