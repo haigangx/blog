@@ -88,6 +88,36 @@ substitute命令允许先查找一段文本，再用另一段文本将其替换�
 ```
 
 </details>
+
+<details><summary>vim寄存器知识</summary>
+
+关于vim寄存器的介绍可以参考这篇教程[vim寄存器完全手册](https://harttle.land/2016/07/25/vim-registers.html)
+
+或者通过 `:help registers` 查看vim寄存器帮助文档，或者查看[网页版](http://vimdoc.sourceforge.net/htmldoc/change.html#registers)
+
+通过下面的命令可以查看所有寄存器中的内容，也可以只查看指定寄存器的内容(将寄存器名称作为参数)：
+
+```
+:reg [register_name]
+```
+
+vim提供10个寄存器：
+
+- 匿名寄存器 ""
+- 编号寄存器 "0 到 "9
+- 小删除寄存器 "-
+- 26个命名寄存器 "a 到 "z
+- 3个只读寄存器 ":, "., "%
+- Buffer交替文件寄存器 "#
+- 表达式寄存器 "=
+- 选区和拖放寄存器 "*, "+, "~
+- 黑洞寄存器 "_
+- 搜索模式寄存器 "/
+
+</details>
+
+## 使用
+
 <details>
 <summary>安装neovim代替vim</summary>
 
@@ -162,7 +192,7 @@ $ touch ~/.config/nvim/init.vim
 </details>
 
 <details>
-<summary>vim访问系统粘贴板?</summary>
+<summary>vim访问系统粘贴板</summary>
 
 [原文](https://www.zhihu.com/question/19863631/answer/89354508)
 
@@ -193,6 +223,28 @@ vim中复制、删除的内容都会被存放到默认(未命名)寄存器中，
 <summary>vim删除字符时不影响粘贴板</summary>
 
 [参考](https://www.jianshu.com/p/b811e660528c)
+
+可以将删除内容放置于黑洞寄存器 `"_` 中，所有拷贝或删除到黑洞寄存器的内容都会消失
+
+可以将如下配置写入 `~/.vimrc` 中：
+
+```
+nnoremap x "_x
+nnoremap X "_X
+nnoremap d "_d
+nnoremap dd "_dd
+nnoremap D "_D
+vnoremap d "_d
+vnoremap dd "_dd
+
+nnoremap <leader>x ""x
+nnoremap <leader>X ""X
+nnoremap <leader>d ""d
+nnoremap <leader>dd ""dd
+nnoremap <leader>D ""D
+vnoremap <leader>d ""d
+vnoremap <leader>dd ""dd
+```
 
 </details>
 

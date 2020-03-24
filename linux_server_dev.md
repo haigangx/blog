@@ -4447,13 +4447,15 @@ while (1)
 </details>
 
 <details>
-<summary>高性能定时器</summary>
+<summary>高性能定时器——时间轮、时间堆</summary>
 
 # 高性能定时器
 
 ## 时间轮
 
 基于排序链表的定时器存在一个问题：添加定时器的效率偏低。采用事件轮将解决这个问题
+
+TODO: 时间轮示意图
 
 上图所示的时间轮内，实线指针指向轮子上的一个槽(slot)，它以恒定的速度顺时针转动，每转动一步就指向下一个槽(虚线指针指向的槽)，每次转动称为一个滴答(tick)。一个滴答的时间称为时间轮的槽间隔si(slot interval)，它实际上就是心博时间。该时间轮共有N个槽，因此它运转一周的时间是N*si。每个槽指向一条定时器链表，每条链表上的定时器具有相同的特征：它们的定时时间相差N*si的整数倍。时间轮正是利用这个关系将定时器散列到不同的链表中。假如现在指针指向槽cs，我们要添加一个定时时间为ti的定时器，则该定时器将被插入槽ts(time slot)对应的链表中:ts = (cs + (ti/si)) % N
 
@@ -4493,7 +4495,7 @@ while (1)
 ### 多进程编程
 
 <details>
-<summary>fork系统调用</summary>
+<summary>fork系统调用——fork</summary>
 
 # fork系统调用
 
@@ -4513,7 +4515,7 @@ pid_t fork( void );
 </details>
 
 <details>
-<summary>exec系列系统调用</summary>
+<summary>exec系列系统调用——execl、execlp、execle、execv、execvp、execve</summary>
 
 # exec系列系统调用
 
@@ -4549,21 +4551,34 @@ exec函数不会关闭原程序打开的文件描述符，除非该文件描述�
 </details>
 
 <details>
-<summary>处理僵尸进程</summary>
+<summary>处理僵尸进程——wait、waitpid</summary>
 
 # 处理僵尸进程
 
 多进程程序中，当子进程结束运行时，内核不会立即释放该进程的进程表表项，以满足父进程后续对该子进程退出信息的查询
+
 子进程进入僵尸态的两种情况：
-1、在子进程结束运行之后，父进程读取其退出状态之前，称该子进程处于僵尸态
-2、父进程结束或者异常终止，而子进程继续运行。此时子进程的PPID将被操作系统设置为1，即init进程。init进程接管了该子进程并等待它结束。在父进程退出之后，子进程退出之前，该子进程处于僵尸态
-僵尸态的子进程将一直占据着内核资源导致资源浪费，所以应该父进程结束前调用wait或者waitpid函数来等待子进程结束并获取子进程的返回信息来避免僵尸进程的产生或者使处于僵��态的子进程立即结束
+
+- 在子进程结束运行之后，父进程读取其退出状态之前，称该子进程处于僵尸态
+- 父进程结束或者异常终止，而子进程继续运行。此时子进程的PPID将被操作系统设置为1，即init进程。init进程接管了该子进程并等待它结束。在父进程退出之后，子进程退出之前，该子进程处于僵尸态
+
+僵尸态的子进程将一直占据着内核资源导致资源浪费，所以应该父进程结束前调用wait或者waitpid函数来等待子进程结束并获取子进程的返回信息来避免僵尸进程的产生或者使处于僵尸态的子进程立即结束
+
+## wait
+
+wait函数将阻塞进程直到该进程的某个子进程结束运行为止
+
+```
 #include <sys/types.h>
 #include <sys/wait.h>
 pid_t wait( int* stat_loc );
-wait函数将阻塞进程直到该进程的某个子进程结束运行为止
-stat_loc：子进程退出状态信息保存到stat_loc所指的内存空间
+```
+
+- stat_loc：子进程退出状态信息保存到stat_loc所指的内存空间
+
+
 sys/wait.h中定义了几个宏来帮助解释子进程的退出状态信息：
+
 宏	含义
 WIFEXITED(stat_val)	如果子进程正常结束，返回非0值
 WEXITSTATUS(stat_val)	如果WIFEXITED非0，返回子进程退出码
@@ -4571,18 +4586,30 @@ WIFSIGNALED(stat_val)	如果子进程因为一个未捕获的信号而终止，�
 WTERMSIG(stat_val)	如果WIFSIGNALED非0，返回一个信号值
 WIFSTOPPED(stat_val)	如果子进程意外终止，返回非0值
 WSTOPSIG(stat_val)	如果WIFSTOPPED非0，返回一个信号值
-返回值：结束运行的子进程的PID，
+
+
+返回值：结束运行的子进程的PID
+
+## waitpid
+
+```
 pid_t waitpid( pid_t pid, int* stat_loc, int options );
-pid参数：
-如果pid > 0，waitpid函数等待pid参数指定的子进程结束
-如果pid == -1，waitpid等价于wait函数，等待任意一个子进程结束
-stat_loc：和wait相同
-options参数：
-如果options取值WNOHANG，waitpid将是非阻塞的：如果pid指定的目标子进程没有结束，则waitpid立即返回0；如果目标子进程正常退出，则返回该子进程PID
+```
+
+- pid参数：
+    - 如果pid > 0，waitpid函数等待pid参数指定的子进程结束
+    - 如果pid == -1，waitpid等价于wait函数，等待任意一个子进程结束
+- stat_loc：和wait相同
+- options参数：
+    如果options取值WNOHANG，waitpid将是非阻塞的：如果pid指定的目标子进程没有结束，则waitpid立即返回0；如果目标子进程正常退出，则返回该子进程PID
+
 返回值：waitpid失败返回-1并设置errno
 
 当一个子进程结束时，会给父进程发送SIGCHLD信号，可以在父进程中捕获SIGCHLD信号并在其信号处理函数中调用waitpid以彻底结束一个子进程来提高代码效率
+
 一个SIGCHLD信号的处理函数典型例子：
+
+```
 static void handle_child( int sig )
 {
     pid_t pid;
@@ -4592,61 +4619,82 @@ static void handle_child( int sig )
         //....  //对结束的子进程的善后处理
     }
 }
+```
 
 </details>
 
 <details>
-<summary>管道</summary>
+<summary>管道——pipe、socketpair、FIFO命令管道</summary>
 
 # 管道
 
 父子进程间管道通信：
-1、pipe管道：
+
+## pipe管道：
+
 管道在父子进程间传递数据利用的是fork之后父子进程中两个管道文件描述符fd[0]和fd[1]都保持打开，父进程和子进程中一个关闭fd[o]，另一个关闭fd[1]，实现父子进程间的单方向数据传输
+
 实际用法参考高级IO函数——pipe函数
-2、socketpair：
+
+## socketpair：
+
 socketpair为父子进程之间创建了一个双向数据传输通道，所创建的管道是全双工管道
+
 具体用法参考高级IO函数——socketpair
 
-普通进程间通信管道：
-3、FIFO命名管道：
-FIFO(First In First Out，先进先出)
+## FIFO命名管道：
+
+普通进程间通信管道：FIFO(First In First Out，先进先出)
 
 </details>
 
 <details>
-<summary>信号量</summary>
+<summary>信号量——semget、setop、semctl</summary>
 
 # 信号量
 
 ## 信号量原语
 
 当多个进程同时访问系统上的某个资源的时候，比如同时写一个数据库的某条记录，或者同时修改某个文件，就需要考虑进程的同步问题，以确保任一时刻只有一个进程可以拥有对资源的独占式访问，通常，程序对共享资源的访问的代码只是很短的一段，但就是这一段代码引发了进程之间的竞态条件，我们称这段代码为关键代码段，或者临界区。对进程同步，也就是确保任一时刻只有一个进程能进入关键代码段
+
 信号量是一种特殊的变量，仅支持P、V操作，假设有信号量SV，则对它的P、V操作含义如下：
-* P(SV)，如果SV的值大于0，就将它减1；如果SV的值为0，则挂其进程的执行
-* V(SV)，如果有其他进程因为等待SV而挂起，则唤醒之；如果没有，则将SV加1
+
+- P(SV)，如果SV的值大于0，就将它减1；如果SV的值为0，则挂其进程的执行
+- V(SV)，如果有其他进程因为等待SV而挂起，则唤醒之；如果没有，则将SV加1
+
 信号量中最常用、最简单的是二进制信号量，它只能取0和1两个值，下图是一个使用二进制信号量同步两个进程，以确保关键代码段独占式访问的例子：
 
 ![使用信号量保护关键代码段](doc/sem_1.png)
 
 上图中，当关键代码段可用时，二进制信号量SV的值为1，进程A和B都有机会进入关键代码段。如果此时进程A执行了P(SV)操作将SV减1，则进程B若再执行P(SV)操作就会被挂起。知道进程A离开关键代码段，并执行V(SV)操作将SV加1，关键代码段才重新变得可用。如果此时进程B因为等待SV而处于挂起状态，则它将被唤醒，并进入关键代码段。同样这时进程A如果再执行P(SV)操作，则也只能被操作系统挂起以等待进程B退出关键代码段
+
 Note:使用一个普通变量来模拟二进制信号量是行不通的，因为所有高级语言都没有一个原子操作可以同时完成如下两步操作：检测变量是否为true/false，如果是则再将它设置为false/true
+
 Linux信号量的API都定义在sys/sem.h头文件中，主要包含3个系统调用：semget、semop和semctl
 
 ## semget系统调用
 
 semget：创建一个新的信号量集或者获取一个已经存在的信号量集
+
+```
 #include <sys/sem.h>
 int semget( key_t key, int num_sems, int sem_flags );
-key：一个键值，用来标识一个全局唯一的信号量集，就像文件名全局唯一地标识一个文件一样。要通过信号量通信的进程需要使用相同的键值来创建/获取该信号量
-num_sems：指定要创建/获取的信号量集中信号量的数目，如果是创建信号量，则该值必须被指定；如果是获取已经存在的信号量，则可以把它设置为0
-sem_flags：
+```
+
+- key：一个键值，用来标识一个全局唯一的信号量集，就像文件名全局唯一地标识一个文件一样。要通过信号量通信的进程需要使用相同的键值来创建/获取该信号量
+- num_sems：指定要创建/获取的信号量集中信号量的数目，如果是创建信号量，则该值必须被指定；如果是获取已经存在的信号量，则可以把它设置为0
+- sem_flags：
     指定一组标志，它低端的9个比特是该信号量的权限，其格式和含义都与系统调用open的mode参数相同
+
     还可以和IPC_CREAT标志做按位"或"运算以创建新的信号量集，即使此时信号量已经存在，semget也不会产生错误
+
     还可以联合使用IPC_CREAT和IPC_EXCL标志来确保创建一组新的、唯一的信号量集，这种情况下，如果信号量集已经存在，则semget返回错误并设置errno为EEXIST，这种创建信号量的行为与用O_CREAT和O_EXCL标志调用open来排他式的打开一个文件相似
+
 semget成功时返回一个正整数值，它是信号量集的标识符；semget失败时返回-1并设置errno
 
 如果semget用于创建信号量，则与之关联的内核数据结构体semid_ds将被创建并初始化。semid_ds结构体的定义如下：
+
+```
 #include <sys/sem.h>
 struct ipc_perm
 {
@@ -4666,38 +4714,52 @@ struct semid_ds
     time_t sem_ctime;               //最后一次调用semctl的时间
                                     //省略其他填充字段
 };
+```
+
 semget对semid_ds结构体的初始化包括：
-* 将sem_perm.cuid和sem_perm.uid设置为调用进程的有效用户ID
-* 将sem_perm.cgid和sem_perm.gid设置为调用进程的有效组ID
-* 将sem_perm.mode的最低9位设置为sem_flags参数的最低9位
-* 将sem_nsems设置为num_sems
-* 将sem_otime设置为0
-* 将sem_ctime设置为系统的当前时间
+
+- 将sem_perm.cuid和sem_perm.uid设置为调用进程的有效用户ID
+- 将sem_perm.cgid和sem_perm.gid设置为调用进程的有效组ID
+- 将sem_perm.mode的最低9位设置为sem_flags参数的最低9位
+- 将sem_nsems设置为num_sems
+- 将sem_otime设置为0
+- 将sem_ctime设置为系统的当前时间
 
 
 ## semop系统调用
 
 semop系统调用改变信号量的值，即执行P、V操作。semop在进行操作时，会操作一下与信号量关联的重要的内核变量：
+
+```
 unsigned short semval;      //信号量的值
 unsigned short semzcnt;     //等待信号量值变为0的进程数量
 unsigned short semncnt;     //等待信号量值增加的进程数量
 pid_t sempid;               //最后一次执行semop操作的进程ID
+```
+
 semop对信号量的操作实际上就是对这些内核变量的操作。semop定义如下：
+
+```
 #include <sys/sem.h>
 int semop( int sem_id, struct sembuf* sem_ops, size_t num_sem_ops );
-sem_id：由semget调用返回的信号量集标识符，用以指定被操作的目标信号量集
-sem_ops：指向一个sembuf结构体类型的数组，sembuf结构体定义如下：
-struct sembuf
-{
-    unsigned short int sem_num;
-    short int sem_op;
-    short int sem_flg;
-};
-sem_num：信号量集中信号量的编号，0表示信号量集中的第一个信号量
-sem_op：指定操作类型，其可选值为正整数、0和负整数，每种类型的操作的行为受到sem_flg成员的影响
-sem_flg：可选值为IPC_NOWAIT和SEM_UNDO
-    IPC_NOWAIT：无论信号量操作是否成功，semop调用都将立即返回，类似于非阻塞IO操作
-    SEM_UNDO：当进程退出时取消正在进行的semop操作
+```
+
+- sem_id：由semget调用返回的信号量集标识符，用以指定被操作的目标信号量集
+- sem_ops：指向一个sembuf结构体类型的数组，sembuf结构体定义如下：
+    ```
+    struct sembuf
+    {
+        unsigned short int sem_num;
+        short int sem_op;
+        short int sem_flg;
+    };
+    ```
+- sem_num：信号量集中信号量的编号，0表示信号量集中的第一个信号量
+- sem_op：指定操作类型，其可选值为正整数、0和负整数，每种类型的操作的行为受到sem_flg成员的影响
+- sem_flg：可选值为IPC_NOWAIT和SEM_UNDO
+    
+    - IPC_NOWAIT：无论信号量操作是否成功，semop调用都将立即返回，类似于非阻塞IO操作
+    - SEM_UNDO：当进程退出时取消正在进行的semop操作
     具体而言，sem_op和sem_flg将按照如下方式来影响semop的行为：
     * 如果sem_op大于0，则semop将被操作的信号量的值semval增加sem_op。该操作要求调用进程对被操作信号量集拥有写权限。若此时sem_flg设置了SEM_UNDO标志，则系统将更新进程的semadj变量(用以跟踪进程对信号量的修改情况)
     * 如果sem_op等于0，表示这是一个"等待0"(wait-for-zero)操作。该操作要求调用进程对被操作信号量集拥有读权限。如果此时信号量的值为0，则调用立即成功返回。如果信号量的值不是0，则semop失败返回或者阻塞进程以等待信号量变为0。这种情况下:
