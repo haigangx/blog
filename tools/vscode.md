@@ -14,6 +14,10 @@
 - Polacode: 代码生成图片
 - Guides：比vscode自带的更好的参考线
 - Regex Previewer：正则结果预览
+- Document this：能够一键给代码中的类、函数加上注释，支持函数声明、函数表达式、箭头函数
+- Code Spell Checker：能实时的识别单词拼写是否有误，并给出提示，不少 bug 都是因为拼写错误导致的
+- Code Runner：支持数十种语言，在不离开代码编辑器的前提下通过命令面板可直接执行代码，并查看输出
+
 
 </details>
 
