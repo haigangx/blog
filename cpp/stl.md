@@ -1,13 +1,12 @@
 ## STL技法
 
-<details>
-<summary>迭代器</summary>
+<details><summary>迭代器</summary>
 </details>
-<details>
-<summary>空间配置器</summary>
+
+<details><summary>空间配置器</summary>
 </details>
-<details>
-<summary>仿函数</summary>
+
+<details><summary>仿函数</summary>
 
 # 仿函数
 
@@ -23,14 +22,12 @@
 | mem_fun_ref(&Person::save) | 用来调用它所作用的元素的某个成员函数 |
 </details>
 
-<details>
-<summary>配接器</summary>
+<details><summary>配接器</summary>
 </details>
 
 ## 序列式容器
 
-<details>
-<summary>vector</summary>
+<details><summary>vector</summary>
 
 # Vector
 
@@ -227,28 +224,22 @@ vector<bool>可以当作动态大小的位域(bitfileld)，可以添加或移除
 | c[idx1] = c[idx2] | 令索引idx1的bit元素值为idx2处的元素值 |
 </details>
 
-<details>
-<summary>list</summary>
+<details><summary>list</summary>
 </details>
 
-<details>
-<summary>deque</summary>
+<details><summary>deque</summary>
 </details>
 
-<details>
-<summary>stack</summary>
+<details><summary>stack</summary>
 </details>
 
-<details>
-<summary>queue</summary>
+<details><summary>queue</summary>
 </details>
 
-<details>
-<summary>heap</summary>
+<details><summary>heap</summary>
 </details>
 
-<details>
-<summary>priority_queue</summary>
+<details><summary>priority_queue</summary>
 
 # 优先队列priority_queue
 
@@ -330,52 +321,24 @@ priority_queue<int, std::deque<int> > deque_heap;
 ```
 </details>
 
-<details>
-<summary>slist</summary>
+<details><summary>slist</summary>
 </details>
 
 ## 关联式容器
 
-<details>
-<summary>RB-Tree</summary>
+<details><summary>RB-Tree</summary>
 </details>
 
-<details>
-<summary>hashtable</summary>
+<details><summary>hashtable</summary>
 </details>
 
-<details>
-<summary>set</summary>
+<details><summary>set</summary>
 </details>
 
-<details>
-<summary>map</summary>
+<details><summary>map</summary>
 
 # STL容器——Map
 
-<!-- vim-markdown-toc Marked -->
-
-* [一、Map的简单用法](#一、map的简单用法)
-  * [1. 构造map](#1.-构造map)
-  * [2. 赋值操作](#2.-赋值操作)
-  * [3. 增加元素](#3.-增加元素)
-  * [4. 删除元素](#4.-删除元素)
-  * [5. 元素查找](#5.-元素查找)
-  * [6. 元素比较](#6.-元素比较)
-  * [7. 迭代器](#7.-迭代器)
-  * [8. 使用下标存取map](#8.-使用下标存取map)
-  * [9. 其他操作](#9.-其他操作)
-* [二、Map详细解析](#二、map详细解析)
-  * [1. Map的元素——pair](#1.-map的元素——pair)
-* [三、性能分析](#三、性能分析)
-* [四、其他Map](#四、其他map)
-  * [1. multimap](#1.-multimap)
-  * [2. unordered_map](#2.-unordered_map)
-  * [3. unordered_multimap](#3.-unordered_multimap)
-  * [4. hash_map](#4.-hash_map)
-  * [5. hash_multimap](#5.-hash_multimap)
-
-<!-- vim-markdown-toc -->
 
 - 头文件：`#include <map>`
 - 定义：
@@ -657,23 +620,9 @@ hash_multimap和unordered_multimap的关系同hash_map与unordered_map的关系�
 
 ## 算法
 
-<details>
-<summary>sort</summary>
+<details><summary>sort</summary>
 
 # sort
-
-<!-- vim-markdown-toc Marked -->
-
-* [一、sort用法：](#一、sort用法：)
-  * [1. 容器成员是基本类型](#1.-容器成员是基本类型)
-  * [2. 容器成员是自定义类时，根据类中某成员变量排序](#2.-容器成员是自定义类时，根据类中某成员变量排序)
-* [二、sort解析：](#二、sort解析：)
-* [三、其他排序算法](#三、其他排序算法)
-  * [1. stable_sort](#1.-stable_sort)
-  * [2. 局部排序partial_sort](#2.-局部排序partial_sort)
-  * [3. nth_element](#3.-nth_element)
-
-<!-- vim-markdown-toc -->
 
 - 头文件：`#include <algorithms>`
 
@@ -755,23 +704,46 @@ void stable_sort(RandomAccessIterator beg, RandomAccessIterator end, BinaryPredi
 
 ## 辅助工具
 
-<details>
-<summary>pair</summary>
+<details><summary>pair</summary>
 
 # pair
+
+[cplusplus](http://www.cplusplus.com/reference/utility/pair/)
+
+pair就是将2个数据组合成一个数据，当需要这样的需求时就可以使用pair
+
+## 定义：
   
-  ```
-  template<class T1, class T2>
-  struct pair {
-      typedef T1 first_type;
-      typedef T2 second_type;
-      T1 first;
-      T2 second;
-      pair() : first(T1()), second(T2()) {}
-      pair(const T1& a, const T2& b) : first(a), second(b) {}
-  };
-  ```
-  
+```
+#include <utility>
+template<class T1, class T2>
+struct pair {
+    typedef T1 first_type;
+    typedef T2 second_type;
+    T1 first;
+    T2 second;
+    pair() : first(T1()), second(T2()) {}
+    pair(const T1& a, const T2& b) : first(a), second(b) {}
+};
+```
+
+```
+template pair make_pair(T1 a, T2 b) {return pair(a, b);}
+```
+
+## 使用
+
+```
+std::pair<int, float> p0();         //默认构造函数
+std::pair<int, float> p1(1, 1.1);   //给定值初始化
+std::pair<int, float> p2(p1);       //拷贝构造函数
+pair<int, float> p3 = make_pair(1, 1.1);  //利用make_pair函数
+
+//使用值
+p3.first = 2;
+p3.second = 2.2;
+```
+
 ## 使用场景：
 
 ### 1. vector中
@@ -784,8 +756,7 @@ void stable_sort(RandomAccessIterator beg, RandomAccessIterator end, BinaryPredi
 
 ## 总结
 
-<details>
-<summary>STL容器迭代器失效总结</summary>
+<details><summary>STL容器迭代器失效总结</summary>
 
 # STL容器迭代器失效问题总结
 
