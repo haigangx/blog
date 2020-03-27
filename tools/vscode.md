@@ -38,7 +38,7 @@
 
 </details>
 
-<details><summary>vscode下快捷键设置以及解决与vim插件按键冲突</summary>
+<details><summary>vscode下vim插件设置</summary>
 
 查看vscode中vim插件官方文档来查看完整自定义按键信息[官方文档](https://github.com/VSCodeVim/Vim)
 
@@ -64,7 +64,14 @@
     }
 }
 
+
 ```
+
+<details><summary>查看vscode当前所有按键绑定</summary>
+
+左下角设置按钮->键盘快捷方式
+
+</details>
 
 
 </details>

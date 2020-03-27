@@ -3,7 +3,7 @@
 [Markdown语法](http://naotu.baidu.com/file/dbb270c5616139e091f0d8b5c383a7ce?token=fa1cde6c866337c4)
 
 
-<details open>
+<details>
 <summary>实现内容折叠</summary>
 
 ```
