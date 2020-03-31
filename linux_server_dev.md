@@ -2075,7 +2075,7 @@ int main(int argc, char* argv[])
     ret = tee(pipefd_stdout[0], pipefd_file[1], 32768, SPLICE_F_NONBLOCK);
     assert(ret != -1);
 
-    //将管道pipefd_file的输出定向到文件描述符filefd上，从而将标准输入的内容写入文件
+    //将管���pipefd_file的输出定向到文件描述符filefd上，从而将标准输入的内容写入文件
     ret = splice(pipefd_file[0], NULL, filefd, NULL, 32768, SPLICE_F_MOVE | SPLICE_F_MORE);
     assert(ret != -1);
 
@@ -4399,9 +4399,9 @@ int main(int argc, char* argv[])
 </details>
 
 <details>
-<summary>IO复用高级应用三：同时处理TCP和UDP服务(缺)</summary>
+<summary>IO复用高级应用三：同时处理TCP和UDP服务</summary>
 
-TODO：同时处理TCP和UDP服务
+目前我们讨论的服务器程序都只监听一个端口。在实际应用中，有不少服务器程序能同时监听多个端口，从bind系统调用的参数来看，一个socket只能与一个socket地址绑定，即一个socket只能用来监听一个端口。因此服务器如果要同时监听多个端口，就必须创建多个socket，并将他们分别绑定到各个端口上。这是可以使用IO复用技术监听多个socket。另外，即使是同一个端口，如果服务器要同时处理该端口上的TCP和UDP请求，也要创建两个不同的socket：一个是流socket，另一个是数据报socket，并将它们都绑定到该端口上
 
 ```
 #include <sys/types.h>
@@ -4619,7 +4619,7 @@ typedef void (*__sighandler_t) ( int );
 
 信号处理函数只带有一个整形参数，该参数用来指示类型。信号处理函数应该是可重入的，否则很容易引发一些竞态条件。所以在信号处理函数中严禁调用一些不安全的函数
 
-bits/signum.h头文件中定义了信号的两种其他处理方式—— `SIG_IGN` 和 `SIG_DEL` :
+bits/signum.h头文件中定义了信号的两种其他处理方式—— `SIG_IGN` 和 `SIG_DFL` :
 
 ```
 #include <bits/signum.h>
@@ -5361,7 +5361,7 @@ int semop( int sem_id, struct sembuf* sem_ops, size_t num_sem_ops );
                   - 被操作信号量所在的信号量集被进程移除，此时semop调用失败返回，errno被设置为EIDRM；
                   - 调用被信号中断，此时semop调用失败返回，errno被设置为EINTR，同时系统将该信号量的semncnt的值减1
 
-- num_sem_ops：指定要指定的操作个数，即sem_ops数组中元素的个数。semop对数组sem_ops中的每个成员按照数组顺序依次执行操作，并且该过程是原子操作，以避免别的进程在同一时刻按照不同的顺序对该信号集中的信号量执行semop操作导致的竞态条件
+- num_sem_ops：指定要指定的操作个数，即sem_ops数组中元素的个数。semop对数组sem_ops中的每个成员按照数组顺序依次执行操作，并且该过程是原子操作，以��免别的进程在同一时刻按照不同的顺序对该信号集中的信号量执行semop操作导致的竞态条件
 
 ### 返回值
 
