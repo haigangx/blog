@@ -254,6 +254,22 @@ export PS1='[\u@\h \W]\$'
 
 </details>
 
+<details><summary>linux磁盘分析和清理</summary>
+
+TODO: linux磁盘分析和清理
+
+[参考](https://blog.csdn.net/weixin_30780649/article/details/95599059)
+
+- 查看磁盘分区信息和分区剩余空间
+  ```
+  df -h
+  ```
+- 查看当前目录所有子目录和文件占用空间
+  ```
+  du -sh *
+  ```
+</details>
+
 ## linux命令
 
 <details>
@@ -1115,6 +1131,8 @@ scp(secure copy)是用于在Linux下进行远程文件拷贝的命令，scp的�
 <summary>ssh</summary>
 
 # ssh
+
+TODO：ssh协议原理和完整连接过程
 
 ## ssh介绍
 
