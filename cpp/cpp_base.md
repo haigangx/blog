@@ -864,8 +864,15 @@ https://en.cppreference.com/w/cpp/thread/mutex
 
 </details>
 
-<details>
-<summary>std::thread</summary>
+<details><summary>std::thread</summary>
+
+</details>
+
+<details><summary>=default和=delete</summary>
+
+[参考1](https://blog.csdn.net/lixiaogang_theanswer/article/details/81090622)
+
+[参考2](https://blog.csdn.net/fengbingchun/article/details/52475155)
 
 </details>
 
