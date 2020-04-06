@@ -740,6 +740,7 @@ sudo service lightdm stop
   ```
 
 </details>
+
 ## Mac
 
 <details>
@@ -1129,6 +1130,7 @@ brew cask install cakebrew
   - [算法可视化VISUALGO](https://visualgo.net/zh)
   - [Data Structure Visualizations](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
   - [Algorithms Visualizer](https://algorithm-visualizer.org/)
+  - [教你如何迅速秒杀掉：99%的海量数据处理面试题](https://blog.csdn.net/v_july_v/article/details/7382693)
 
 - 开发学习经验
 
