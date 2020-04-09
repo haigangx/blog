@@ -110,3 +110,56 @@
 </tr>
 </table>
 
+### Linux
+
+#### 命令
+
+<table>
+<tr>
+    <td><a href="content/linux_base/command/shell_keybind.md">shell快捷键</td>
+    <td><a href="content/linux_base/command/summary.md">常用命令</td>
+    <td><a href="content/linux_base/command/awk.md" title="">awk</td>
+    <td><a href="content/linux_base/command/curl.md" title="">curl</td>
+    <td><a href="content/linux_base/command/find.md" title="">find</td>
+    <td><a href="content/linux_base/command/ifstat.md" title="">ifstat</td>
+    <td><a href="content/linux_base/command/mpstat.md" title="">mpstat</td>
+    <td><a href="content/linux_base/command/nc.md" title="">nc</td>
+    <td><a href="content/linux_base/command/netstat.md" title="">netstat</td>
+    <td><a href="content/linux_base/command/vmstat.md" title="">vmstat</td>
+</tr>
+<tr>
+    <td><a href="content/linux_base/command/top-htop.md" title="">top-htop</td>
+    <td><a href="content/linux_base/command/strace.md" title="">strace</td>
+    <td><a href="content/linux_base/command/ltrace.md" title="">ltrace</td>
+    <td><a href="content/linux_base/command/pstack.md" title="">pstack</td>
+    <td><a href="content/linux_base/command/valgrind.md" title="">valgrind</td>
+    <td><a href="content/linux_base/command/tcpdump.md" title="">tcpdump</td>
+    <td><a href="content/linux_base/command/grep.md" title="">grep</td>
+    <td><a href="content/linux_base/command/tar.md" title="">tar</td>
+    <td><a href="content/linux_base/command/lsof.md" title="">lsof</td>
+    <td><a href="content/linux_base/command/sed.md" title="">sed</td>
+</tr>
+<tr>
+    <td><a href="content/linux_base/command/scp.md" title="">scp</td>
+    <td><a href="content/linux_base/command/ssh.md" title="">ssh</td>
+    <td><a href="content/linux_base/command/telnet.md" title="">telnet</td>
+    <td><a href="content/linux_base/command/gcc.md" title="">gcc</td>
+    <td><a href="content/linux_base/command/wc.md" title="">wc</td>
+    <td><a href="content/linux_base/command/expr.md" title="">expr</td>
+</tr>
+</table>
+
+#### linux基础
+
+<html>
+<table rules="none" style="margin-left: auto; margin-right: auto;">
+<tr>
+  <td><a href="">linux文件系统详解</a></td>
+  <td><a href="">进程和线程的区别</a></td>
+</tr>
+<tr>
+  <td><a href="">linux中的零拷贝技术</a></td>
+  <td><a href="">linux后台任务的运行关闭查看</a></td>
+</tr>
+</table>
+</html>
