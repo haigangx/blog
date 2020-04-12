@@ -76,10 +76,10 @@
 <tr>
     <td>字符串排序</td>
     <td>
-        <li><a href="">键索引计数法</a></li>
-        <li><a href="">低位优先的字符串排序</a></li>
-        <li><a href="">高位优先的字符串排序</a></li>
-        <li><a href="">三向字符串快速排序</a></li>
+        <li><a href="content/algorithms/字符串排序-键索引计数法.md">键索引计数法</a></li>
+        <li><a href="content/algorithms/字符串排序-低位优先的字符串排序.md">低位优先的字符串排序</a></li>
+        <li><a href="content/algorithms/字符串排序-高位优先的字符串排序.md">高位优先的字符串排序</a></li>
+        <li><a href="content/algorithms/字符串排序-三向字符串快速排序.md">三向字符串快速排序</a></li>
     </td>
     <td>数组</td>
     <td>
@@ -88,8 +88,8 @@
 <tr>
     <td>字符串查找</td>
     <td>
-        <li><a href="">单词查找树(字典树)</a></li>
-        <li><a href="">三向单词查找树</a></li>
+        <li><a href="content/algorithms/字符串查找-单词查找树.md">单词查找树(字典树)</a></li>
+        <li><a href="content/algorithms/字符串查找-三向单词查找树.md">三向单词查找树</a></li>
     </td>
     <td>链表</td>
     <td>
@@ -98,10 +98,10 @@
 <tr>
     <td>子字符串查找</td>
     <td>
-        <li><a href="">暴力字符串查找</a></li>
-        <li><a href="">KMP算法</a></li>
-        <li><a href="">Boyer-Moore字符串查找</a></li>
-        <li><a href="">Rabin-Karp字符串查找</a></li>
+        <li><a href="content/algorithms/子字符串查找-暴力子字符串查找算法.md">暴力字符串查找</a></li>
+        <li><a href="content/algorithms/子字符串查找-KMP算法.md">KMP算法</a></li>
+        <li><a href="content/algorithms/子字符串查找-Boyer_Moore字符串查找算法.md">Boyer-Moore字符串查找</a></li>
+        <li><a href="content/algorithms/子字符串查找-Rabin_Karp指纹字符串查找算法.md">Rabin-Karp字符串查找</a></li>
     </td>
     <td>栈</td>
     <td>
@@ -133,15 +133,15 @@
 </tr>
 <tr>
     <td>
-        <li><a href="">二叉树</a></li>
-        <li><a href="">2-3查找树</a></li>
-        <li><a href="">字典树</a></li>
-        <li><a href="">AVL树</a></li>
-        <li><a href="">红黑树</a></li>
-        <li><a href="">散列表</a></li>
-        <li><a href="">哈希表</a></li>
-        <li><a href="">跳跃表</a></li>
-        <li><a href="">哈希树</a></li>
+        <li><a href="content/algorithms/二叉树.md">二叉树</a></li>
+        <li><a href="content/algorithms/2-3查找树.md">2-3查找树</a></li>
+        <li><a href="content/algorithms/字典树.md">字典树</a></li>
+        <li><a href="content/algorithms/AVL树.md">AVL树</a></li>
+        <li><a href="content/algorithms/红黑树.md">红黑树</a></li>
+        <li><a href="content/algorithms/散列表.md">散列表</a></li>
+        <li><a href="content/algorithms/哈希表.md">哈希表</a></li>
+        <li><a href="content/algorithms/跳跃表.md">跳跃表</a></li>
+        <li><a href="content/algorithms/哈希树.md">哈希树</a></li>
     </td>
     <td>
     </td>
@@ -152,23 +152,23 @@
 </tr>
 <tr>
     <td rowspan="2" colspan="2">
-        <li><a href="">冒泡排序</a></li>
-        <li><a href="">选择排序</a></li>
-        <li><a href="">插入排序</a></li>
-        <li><a href="">快速排序</a></li>
-        <li><a href="">堆排序</a></li>
-        <li><a href="">归并排序</a></li>
-        <li><a href="">希尔排序</a></li>
-        <li><a href="">计数排序</a></li>
-        <li><a href="">桶排序</a></li>
-        <li><a href="">基数排序</a></li>
+        <li><a href="content/algorithms/冒泡排序.md">冒泡排序</a></li>
+        <li><a href="content/algorithms/选择排序.md">选择排序</a></li>
+        <li><a href="content/algorithms/插入排序.md">插入排序</a></li>
+        <li><a href="content/algorithms/快速排序.md">快速排序</a></li>
+        <li><a href="content/algorithms/堆排序.md">堆排序</a></li>
+        <li><a href="content/algorithms/归并排序.md">归并排序</a></li>
+        <li><a href="content/algorithms/希尔排序.md">希尔排序</a></li>
+        <li><a href="content/algorithms/计数排序.md">计数排序</a></li>
+        <li><a href="content/algorithms/桶排序.md">桶排序</a></li>
+        <li><a href="content/algorithms/基数排序.md">基数排序</a></li>
     </td>
     <td>
         排列
     </td>
     <td>
-        <li><a href="">全排列</a></li>
-        <li><a href="">子集(幂集)</a></li>
+        <li><a href="content/algorithms/全排列.md">全排列</a></li>
+        <li><a href="content/algorithms/子集.md">子集(幂集)</a></li>
     </td>
 </tr>
 <tr>
@@ -176,11 +176,11 @@
         高级算法
     </td>
     <td>
-        <li><a href="">动态规划</a></li>
-        <li><a href="">贪心算法</a></li>
-        <li><a href="">摊还分析</a></li>
-        <li><a href="">位操作</a></li>
-        <li><a href="">模运算</a></li>
+        <li><a href="content/algorithms/动态规划.md">动态规划</a></li>
+        <li><a href="content/algorithms/贪心算法.md">贪心算法</a></li>
+        <li><a href="content/algorithms/摊还分析.md">摊还分析</a></li>
+        <li><a href="content/algorithms/位操作.md">位操作</a></li>
+        <li><a href="content/algorithms/模运算.md">模运算</a></li>
     </td>
 </tr>
 </table>
