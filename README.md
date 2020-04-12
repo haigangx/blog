@@ -66,6 +66,125 @@
 
 </table>
 
+### 数据结构和算法
+
+<table>
+<tr>
+    <td align="center" colspan="2">字符串</td>
+    <td align="center" colspan="2">数组</td>
+</tr>
+<tr>
+    <td>字符串排序</td>
+    <td>
+        <li><a href="">键索引计数法</a></li>
+        <li><a href="">低位优先的字符串排序</a></li>
+        <li><a href="">高位优先的字符串排序</a></li>
+        <li><a href="">三向字符串快速排序</a></li>
+    </td>
+    <td>数组</td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td>字符串查找</td>
+    <td>
+        <li><a href="">单词查找树(字典树)</a></li>
+        <li><a href="">三向单词查找树</a></li>
+    </td>
+    <td>链表</td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td>子字符串查找</td>
+    <td>
+        <li><a href="">暴力字符串查找</a></li>
+        <li><a href="">KMP算法</a></li>
+        <li><a href="">Boyer-Moore字符串查找</a></li>
+        <li><a href="">Rabin-Karp字符串查找</a></li>
+    </td>
+    <td>栈</td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td>正则表达式</td>
+    <td>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+    </td>
+    <td>队列</td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td>数据压缩</td>
+    <td>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+    </td>
+    <td>堆</td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td align="center" colspan="2">树</td>
+    <td align="center" colspan="2">图</td>
+</tr>
+<tr>
+    <td>
+        <li><a href="">二叉树</a></li>
+        <li><a href="">2-3查找树</a></li>
+        <li><a href="">字典树</a></li>
+        <li><a href="">AVL树</a></li>
+        <li><a href="">红黑树</a></li>
+        <li><a href="">散列表</a></li>
+        <li><a href="">哈希表</a></li>
+        <li><a href="">跳跃表</a></li>
+        <li><a href="">哈希树</a></li>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr>
+    <td align="center" colspan="2">排序算法</td>
+    <td align="center" colspan="2">其他</td>
+</tr>
+<tr>
+    <td rowspan="2" colspan="2">
+        <li><a href="">冒泡排序</a></li>
+        <li><a href="">选择排序</a></li>
+        <li><a href="">插入排序</a></li>
+        <li><a href="">快速排序</a></li>
+        <li><a href="">堆排序</a></li>
+        <li><a href="">归并排序</a></li>
+        <li><a href="">希尔排序</a></li>
+        <li><a href="">计数排序</a></li>
+        <li><a href="">桶排序</a></li>
+        <li><a href="">基数排序</a></li>
+    </td>
+    <td>
+        排列
+    </td>
+    <td>
+        <li><a href="">全排列</a></li>
+        <li><a href="">子集(幂集)</a></li>
+    </td>
+</tr>
+<tr>
+    <td>
+        高级算法
+    </td>
+    <td>
+        <li><a href="">动态规划</a></li>
+        <li><a href="">贪心算法</a></li>
+        <li><a href="">摊还分析</a></li>
+        <li><a href="">位操作</a></li>
+        <li><a href="">模运算</a></li>
+    </td>
+</tr>
+</table>
+
 #### STL
 
 <table>
@@ -358,6 +477,52 @@
   <td><a href="content/tools/vim.md">vim</td>
   <td><a href="content/tools/wireshark.md">WireShark</td>
   <td colspan="4"></td>
+</tr>
+</table>
+
+### log
+
+<table>
+<tr>
+    <td align="center">日常问题</td>
+    <td align="center">Linux</td>
+</tr>
+<tr>
+    <td>
+        <li><a href="content/log/chrome从本地安装插件.md">chrome从本地安装插件</a></li>
+        <li><a href="content/log/刚装完ubuntu需要做的事.md">刚装完ubuntu需要做的事</a></li>
+        <li><a href="content/log/使用apt禁止某些软件更新.md">使用apt禁止某些软件更新</a></li>
+        <li><a href="content/log/cp拷贝隐藏文件.md">cp拷贝隐藏文件</a></li>
+        <li><a href="content/log/黑苹果安装总结.md">黑苹果安装总结</a></li>
+        <li><a href="content/log/书单.md">书单</a></li>
+        <li><a href="content/log/flag.md">flag</a></li>
+        <li><a href="content/log/chrome必备插件.md">chrome必备插件</a></li>
+        <li><a href="content/log/vmware中桥接、NAT、仅主机模式的区别.md">vmware中桥接、NAT、仅主机模式的区别</a></li>
+        <li><a href="content/log/利用硬链接备份配置文件.md">利用硬链接备份配置文件</a></li>
+    </td>
+    <td>
+        <li><a href="content/log/ubuntu安装Albert.md">ubuntu安装Albert</a></li>
+        <li><a href="content/log/ubuntu环境变量查找顺序.md">ubuntu环境变量查找顺序</a></li>
+        <li><a href="content/log/tldr.md">安装tldr终端查看命令用法示例</a></li>
+        <li><a href="content/log/linux历史命令.md">linux历史命令</a></li>
+        <li><a href="content/log/使用trash代替rm.md">使用trash代替rm</a></li>
+        <li><a href="content/log/关闭ubuntu桌面GUI.md">关闭ubuntu桌面GUI</a></li>
+        <li><a href="content/log/代理环境下使用ADD-APT-REPOSITORY添加PPA软件源.md">代理环境下使用ADD-APT-REPOSITORY添加PPA软件源</a></li>
+    </td>
+</tr>
+<tr>
+    <td align="center">Mac</td>
+    <td align="center"></td>
+</tr>
+<tr>
+    <td>
+        <li><a href="content/log/Mac使用心得.md">Mac使用心得</a></li>
+        <li><a href="content/log/Mac安装使用homebrew.md">Mac安装使用homebrew</a></li>
+        <li><a href="content/log/Mac安装gitbook并发布到github.md">Mac安装gitbook并发布到github</a></li>
+        <li><a href="content/log/网络资源.md">网络资源</a></li>
+    </td>
+    <td>
+    </td>
 </tr>
 </table>
 
