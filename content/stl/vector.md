@@ -1,5 +1,26 @@
 # Vector
 
+<!-- TOC -->
+
+- [一、Vector基本用法](#一vector基本用法)
+    - [1. 构造vector](#1-构造vector)
+    - [2. 赋值操作](#2-赋值操作)
+    - [3. 增加元素](#3-增加元素)
+    - [4. 删除元素](#4-删除元素)
+    - [5. 元素存取](#5-元素存取)
+    - [6. 元素比较](#6-元素比较)
+    - [7. 迭代器](#7-迭代器)
+    - [8. 其他操作](#8-其他操作)
+- [二、Vector详细解析](#二vector详细解析)
+    - [1. vector的迭代器](#1-vector的迭代器)
+    - [2. vector的构造和内存管理：constructor, push_back](#2-vector的构造和内存管理constructor-push_back)
+    - [3. vector的元素操作：pop_back, erase, clear, insert](#3-vector的元素操作pop_back-erase-clear-insert)
+- [三、性能分析](#三性能分析)
+- [四、Vector特殊版本](#四vector特殊版本)
+    - [1. class vector\<bool>](#1-class-vector\bool)
+
+<!-- /TOC -->
+
 - 头文件：`#include <vector>`
 - 定义：
   ```
