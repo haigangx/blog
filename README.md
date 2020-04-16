@@ -1,10 +1,9 @@
 #### C++
 
-<table>
-
+<table width="100%">
 <tr>
-  <td align="center">C</td>
-  <td align="center">C++</td>
+  <td align="center" width="50%">C</td>
+  <td align="center" width="50%">C++</td>
 </tr>
 
 <tr>
@@ -53,7 +52,7 @@
 </tr>
 
 <tr>
-    <td align="center" colspan="2">C++重点总结</td>
+    <td align="center" colspan="2" width="100%">C++重点总结</td>
 </tr>
 
 <tr>
@@ -69,9 +68,9 @@
 
 #### STL
 
-<table>
+<table width="100%">
 <tr>
-    <td align="center" colspan="8">STL技法</td>
+    <td align="center" colspan="8" width="50%">STL技法</td>
 </tr>
 <tr>
     <td><a href="content/stl/迭代器.md">迭代器</a></td>
@@ -128,9 +127,9 @@
 
 #### 设计模式
 
-<table>
+<table width="100%">
 <tr>
-    <td><a href="content/design_pattern/singleton.md" title="单例模式[创建型模式]">Singleton</a></td>
+    <td width="20%"><a href="content/design_pattern/singleton.md" title="单例模式[创建型模式]">Singleton</a></td>
     <td><a href="content/design_pattern/factory-method.md" title="工厂方法[创建型模式]">FactoryMethod</a></td>
     <td><a href="content/design_pattern/abstract-factory.md" title="抽象工厂[创建型模式]">AbstractFactory</a></td>
     <td><a href="content/design_pattern/builder.md" title="生成器[创建型模式]">Builder</a></td>
@@ -167,8 +166,8 @@
 
 <table>
 <tr>
-    <td><a href="content/effective_cpp/01.md" title="视C++为一个语言联邦">01：视C++为一个语言联邦</a></td>
-    <td><a href="content/effective_cpp/02.md" title="尽量以const, enum, inline替换#define">02：尽量以const, enum, inline替换#define</a></td>
+    <td width="50%"><a href="content/effective_cpp/01.md" title="视C++为一个语言联邦">01：视C++为一个语言联邦</a></td>
+    <td width="50%"><a href="content/effective_cpp/02.md" title="尽量以const, enum, inline替换#define">02：尽量以const, enum, inline替换#define</a></td>
 </tr>
 <tr>
     <td><a href="content/effective_cpp/03.md" title="尽可能使用const">03：尽可能使用const</a></td>
@@ -286,7 +285,7 @@
 
 <table>
 <tr>
-    <td><a href="content/linux_base/command/shell_keybind.md">shell快捷键</a></td>
+    <td width="10%"><a href="content/linux_base/command/shell_keybind.md">shell快捷键</a></td>
     <td><a href="content/linux_base/command/summary.md">常用命令</a></td>
     <td><a href="content/linux_base/command/awk.md" title="">awk</a></td>
     <td><a href="content/linux_base/command/curl.md" title="">curl</a></td>
@@ -322,16 +321,16 @@
 
 #### linux基础
 
-<table>
+<table width=100%>
 <tr>
-  <td>
+  <td width="50%">
   <li><a href="content/linux_base/linux文件系统详解.md">linux文件系统详解</a></li>
   <li><a href="content/linux_base/进程和线程的区别.md">进程和线程的区别</a></li>
   <li><a href="content/linux_base/linux下调试方法总结.md">linux下调试方法总结</a></li>
   <li><a href="content/linux_base/ubuntu中代理设置总结.md">ubuntu中代理设置总结</a></li>
   <li><a href="content/linux_base/修改bash命令行前缀.md">修改bash命令行前缀</a></li>
   </td>
-  <td>
+  <td width="50%">
   <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
   <li><a href="content/linux_base/linux后台任务的运行关闭查看.md">linux后台任务的运行关闭查看</a></li>
   <li><a href="content/linux_base/linux磁盘分析和清理.md">linux磁盘分析和清理</a></li>
@@ -344,8 +343,8 @@
 
 <table>
 <tr>
-  <td><a href="content/tools/bash.md">Bash</a></td>
-  <td><a href="content/tools/gdb.md">GDB</a></td>
+  <td width="12%"><a href="content/tools/bash.md">Bash</a></td>
+  <td width="12%"><a href="content/tools/gdb.md">GDB</a></td>
   <td><a href="content/tools/Markdown.md">Markdown</a></td>
   <td><a href="content/tools/tmux.md">tmux</a></td>
   <td><a href="content/tools/vscode.md">vscode</a></td>
@@ -506,8 +505,8 @@
 
 <table>
 <tr>
-    <td align="center">日常问题</td>
-    <td align="center">Linux</td>
+    <td align="center" width="50%">日常问题</td>
+    <td align="center" width="50%">Linux</td>
 </tr>
 <tr>
     <td>
