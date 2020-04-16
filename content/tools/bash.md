@@ -853,3 +853,11 @@ shift                     # 参数左移
 
 unset -f myfunc           # 删除函数
 declare -f                # 列出函数定义
+</details>
+
+<details>
+<summary>批量创建文件和重命名</summary>
+
+[批量创建文件并重新命名](https://blog.csdn.net/taiyang1987912/article/details/39934055)
+
+</details>

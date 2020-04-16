@@ -371,6 +371,12 @@ git clone有两种形式：
 
 </details>
 
+<details>
+<summary>解决git错误：error object file is empty</summary>
+
+[解决git错误: error object file is empty , The remote end hung up unexpectedly](https://blog.csdn.net/10km/article/details/83240177)
+
+</details>
 
 <details>
 <summary>网络资源</summary>
