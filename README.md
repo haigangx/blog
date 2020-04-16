@@ -2,8 +2,8 @@
 
 <table width="100%">
 <tr>
-  <td align="center" width="50%">C</td>
-  <td align="center" width="50%">C++</td>
+  <td align="center">C</td>
+  <td align="center">C++</td>
 </tr>
 
 <tr>
@@ -52,7 +52,7 @@
 </tr>
 
 <tr>
-    <td align="center" colspan="2" width="100%">C++重点总结</td>
+    <td align="center" colspan="2" width="50%">C++重点总结</td>
 </tr>
 
 <tr>
