@@ -127,38 +127,38 @@
 
 #### 设计模式
 
-<table width="100%">
+<table>
 <tr>
-    <td width="20%"><a href="content/design_pattern/singleton.md" title="单例模式[创建型模式]">Singleton</a></td>
-    <td><a href="content/design_pattern/factory-method.md" title="工厂方法[创建型模式]">FactoryMethod</a></td>
-    <td><a href="content/design_pattern/abstract-factory.md" title="抽象工厂[创建型模式]">AbstractFactory</a></td>
-    <td><a href="content/design_pattern/builder.md" title="生成器[创建型模式]">Builder</a></td>
-    <td><a href="content/design_pattern/prototype.md" title="原型[创建型模式]">Prototype</a></td>
-    <td><a href="content/design_pattern/adapter.md" title="适配器[结构型模式]">Adapter</a></td>
+    <td width="18%"><a href="content/design_pattern/singleton.md" title="Singleton[创建型模式]">单例模式</a></td>
+    <td width="18%"><a href="content/design_pattern/factory-method.md" title="FactoryMethod[创建型模式]">工厂方法</a></td>
+    <td width="18%"><a href="content/design_pattern/abstract-factory.md" title="AbstractFactory[创建型模式]">抽象工厂</a></td>
+    <td width="18%"><a href="content/design_pattern/builder.md" title="Builder[创建型模式]">生成器</a></td>
+    <td width="18%"><a href="content/design_pattern/prototype.md" title="Prototype[创建型模式]">原型模式</a></td>
+    <td width="18%"><a href="content/design_pattern/adapter.md" title="Adapter[结构型模式]">适配器模式</a></td>
 </tr>
 <tr>
-    <td><a href="content/design_pattern/bridge.md" title="桥接[结构型模式]">Bridge</a></td>
-    <td><a href="content/design_pattern/composite.md" title="组合[结构型模式]">Composite</a></td>
-    <td><a href="content/design_pattern/decorator.md" title="装饰[结构型模式]">Decorator</a></td>
-    <td><a href="content/design_pattern/facade.md" title="外观[结构型模式]">Facade</a></td>
-    <td><a href="content/design_pattern/fly-weight.md" title="享元[结构型模式]">FlyWeight</a></td>
-    <td><a href="content/design_pattern/proxy.md" title="代理[结构型模式]">Proxy</a></td>
+    <td><a href="content/design_pattern/bridge.md" title="Bridge[结构型模式]">桥接模式</a></td>
+    <td><a href="content/design_pattern/composite.md" title="Composite[结构型模式]">组合模式</a></td>
+    <td><a href="content/design_pattern/decorator.md" title="Decorator[结构型模式]">装饰模式</a></td>
+    <td><a href="content/design_pattern/facade.md" title="Facade[结构型模式]">外观模式</a></td>
+    <td><a href="content/design_pattern/fly-weight.md" title="FlyWeight[结构型模式]">享元模式</a></td>
+    <td><a href="content/design_pattern/proxy.md" title="Proxy[结构型模式]">代理模式</a></td>
 </tr>
 <tr>
-    <td><a href="content/design_pattern/chain-of-responsibility.md" title="责任链[行为模式]">ChainOfResponsibility</a></td>
-    <td><a href="content/design_pattern/command.md" title="命令[行为模式]">Command</a></td>
-    <td><a href="content/design_pattern/interpreter.md" title="解释器[行为模式]">Interpreter</a></td>
-    <td><a href="content/design_pattern/iterpreter.md" title="迭代器[行为模式]">Iterator</a></td>
-    <td><a href="content/design_pattern/mediator.md" title="中介者[行为模式]">Mediator</a></td>
-    <td><a href="content/design_pattern/memento.md" title="备忘录[行为模式]">Mementor</a></td>
+    <td><a href="content/design_pattern/chain-of-responsibility.md" title="ChainOfResponsibility[行为模式]">责任链模式</a></td>
+    <td><a href="content/design_pattern/command.md" title="Command[行为模式]">命令模式</a></td>
+    <td><a href="content/design_pattern/interpreter.md" title="Interpreter[行为模式]">解释器模式</a></td>
+    <td><a href="content/design_pattern/iterpreter.md" title="Iterator[行为模式]">迭代器模式</a></td>
+    <td><a href="content/design_pattern/mediator.md" title="Mediator[行为模式]">中介者模式</a></td>
+    <td><a href="content/design_pattern/memento.md" title="Mementor[行为模式]">备忘录模式</a></td>
 </tr>
 <tr>
-    <td><a href="content/design_pattern/observer.md" title="观察者[行为模式]">Observer</a></td>
-    <td><a href="content/design_pattern/state.md" title="状态[行为模式]">State</a></td>
-    <td><a href="content/design_pattern/strategy.md" title="策略[行为模式]">Strategy</a></td>
-    <td><a href="content/design_pattern/template-method.md" title="模板方法[行为模式]">Strategy</a></td>
-    <td><a href="content/design_pattern/visitor.md" title="访问者[行为模式]">Visitor</a></td>
-    <td colspan="1"></td>
+    <td><a href="content/design_pattern/observer.md" title="Observer[行为模式]">观察者模式</a></td>
+    <td><a href="content/design_pattern/state.md" title="State[行为模式]">状态模式</a></td>
+    <td><a href="content/design_pattern/strategy.md" title="Strategy[行为模式]">策略模式</a></td>
+    <td><a href="content/design_pattern/template-method.md" title="Strategy[行为模式]">模板方法</a></td>
+    <td><a href="content/design_pattern/visitor.md" title="Visitor[行为模式]">访问者模式</a></td>
+    <td><a href="https://design-patterns.readthedocs.io/zh_CN/latest/creational_patterns/creational.html"">网络资源</a></td>
 </tr>
 </table>
 
