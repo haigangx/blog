@@ -384,5 +384,6 @@ git clone有两种形式：
 - [Pro Git](https://www.progit.cn/)
 - [git奇技淫巧](https://github.com/521xueweihan/git-tips)
 - [优雅的提交你的Git Commit Message](https://juejin.im/post/5afc5242f265da0b7f44bee4)
+- [版本管理三国志](https://www.cnblogs.com/vamei/archive/2013/02/21/2918069.html)
 
 </details>
