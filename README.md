@@ -12,6 +12,7 @@
     <li><a href="content/cpp_base/c/C语言switch-case语句中定义变量问题.md">switch-case中定义变量</a></li>
     <li><a href="content/cpp_base/c/可变参函数.md">可变参函数</a></li>
     <li><a href="content/cpp_base/c/宏中使用do-while0语句的好处.md">宏中使用do-while(0)的好处</a></li>
+    <li><a href="content/cpp_base/c/struct的内存对齐.md">struct的内存对齐</a></li>
   </td>
   <td>
     <li><a href="content/cpp_base/cpp/extern关键字.md">extern关键字</a></li>
