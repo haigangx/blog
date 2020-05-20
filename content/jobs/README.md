@@ -12,6 +12,8 @@
 - [malloc-free和new-delete的区别](malloc-free和new-delete区别.md)
 - [C++ STL里面vector的实现机制](vector实现机制.md)
 
+## 
+
 ## 操作系统
 
 - [请问死锁的条件是什么？以及如何处理死锁问题？](死锁的产生和处理.md)
@@ -26,3 +28,8 @@
 ## Linux
 
 - [Bash Shell常用经典脚本整理](bash_shell)
+
+## Redis
+
+## MySql
+
