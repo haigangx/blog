@@ -243,7 +243,7 @@ ssh一般在做隧道与端口转发时，一般还有其它参数配合。
 
 一般做隧道和端口转发时，使用`-f`、`-T`、`-N`、`-n`、`-C`选项：
 ```
-ssh -fTNnC -D user@host
+ssh -fTNnC -D 7001 user@host
 ```
 
 
