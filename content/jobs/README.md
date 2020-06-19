@@ -11,6 +11,7 @@
 - [C++中虚函数的实现机制](cpp虚函数实现机制.md)
 - [malloc-free和new-delete的区别](malloc-free和new-delete区别.md)
 - [C++ STL里面vector的实现机制](vector实现机制.md)
+- [为什么说C++的四种命名类型转换比旧式转换更安全](为什么说cpp四种命名类型转换比旧式转换更安全.md)
 
 ## 
 
