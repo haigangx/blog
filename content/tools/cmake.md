@@ -1,3 +1,5 @@
 # CMake
 
-[超详细的cmake教程](https://blog.csdn.net/zhuiyunzhugang/article/details/88142908)
+[CMake入门实战](https://www.hahack.com/codes/cmake/)
+
+
