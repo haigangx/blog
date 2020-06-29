@@ -366,6 +366,17 @@
 
 <table>
 <tr>
+    <td>Linux系统编程前置知识</td>
+    <td>
+        <li><a href="content/linux_server_dev/.md">Linux文件系统</a></li>
+    </td>
+    <td>Linux系统编程部分</td>
+    <td>
+        <li><a href="content/linux_server_dev/.md">文件打开关闭open/close</a></li>
+        <li><a href="content/linux_server_dev/文件打开关闭openclose.md">文件读写read/write</a></li>
+    </td>
+</tr>
+<tr>
     <td>Linux网络<br>基础API</td>
     <td>
         <li><a href="content/linux_server_dev/主机字节序和网络字节序.md">主机字节序和网络字节序</a></li>

@@ -1,8 +1,24 @@
 # epoll
 
-## 1. 内核事件表：epoll_create函数
+<!-- TOC -->
 
-epoll为Linux独有的I/O复用函数，epoll通过内核事件表记录用户关心的文件描述符的事件，内核外通过一个额外的文件描述符来唯一识别内核中的事件表
+- [一、内核事件表：epoll_create 函数](#一内核事件表epoll_create-函数)
+- [二、epoll_ctl函数](#二epoll_ctl函数)
+    - [1. 参数](#1-参数)
+    - [2. 返回值](#2-返回值)
+- [三、epoll_wait函数](#三epoll_wait函数)
+    - [1. 参数](#1-参数-1)
+    - [2. poll 和 epoll 在使用的不同](#2-poll-和-epoll-在使用的不同)
+- [四、epoll 的两种工作模式：LT 和 ET 模式](#四epoll-的两种工作模式lt-和-et-模式)
+    - [1. LT和ET工作方式差异](#1-lt和et工作方式差异)
+    - [2. 测试](#2-测试)
+- [五、89EPOLLONESHOT事件](#五89epolloneshot事件)
+
+<!-- /TOC -->
+
+## 一、内核事件表：epoll_create 函数
+
+epoll 为 Linux 独有的 I/O 复用函数，epoll 通过内核事件表记录用户关心的文件描述符的事件，内核外通过一个额外的文件描述符来唯一识别内核中的事件表
 
 ```
 #include <sys/epoll.h>
@@ -11,15 +27,15 @@ int epoll_create( int size )   //创建内核事件表，返回内核事件表�
 
 - size：现在不起作用，只是给内核一个提示，告诉它事件表需要多大
 
-## 2. epoll_ctl函数
+## 二、epoll_ctl函数
 
-epoll_ctl函数用来操作epoll中的内核事件表
+epoll_ctl 函数用来操作 epoll 中的内核事件表
 
 ```
 int epoll_ctl( int epfd, int op, int fd, struct epoll_event *event );
 ```
 
-### 参数
+### 1. 参数
 
 - epfd：指向内核事件表的文件描述符
 - fd：要操作的文件描述符
@@ -29,7 +45,7 @@ int epoll_ctl( int epfd, int op, int fd, struct epoll_event *event );
   - EPOLL_CTL_MOD：修改fd上的注册事件
   - EPOLL_CTL_DEL：删除fd上的注册事件
   
-- event：指定事件类型，为epoll_event结构，其定义如下：
+- event：指定事件类型，为 epoll_event 结构，其定义如下：
   
   ```
   struct epoll_event
@@ -42,11 +58,11 @@ int epoll_ctl( int epfd, int op, int fd, struct epoll_event *event );
 
   - events：
 
-      epoll事件，支持的事件类型和poll基本相同，表示epoll事件类型的宏是在poll对应的宏前加上E
+      epoll 事件，支持的事件类型和 poll 基本相同，表示 epoll 事件类型的宏是在 poll 对应的宏前加上 E_
 
-      但是epoll有额外的两个事件类型EPOLLET和EPOLLONESHOT，epoll的高效运作需要这两个宏
+      但是 epoll 有额外的两个事件类型 EPOLLET 和 EPOLLONESHOT，epoll 的高效运作需要这两个宏
 
-  - data：存储用户数据，epoll_data_t定义如下：
+  - data：存储用户数据，epoll_data_t 定义如下：
 
     ```
     typedef union epoll_data
@@ -58,31 +74,31 @@ int epoll_ctl( int epfd, int op, int fd, struct epoll_event *event );
     }epoll_data_t;
     ```
 
-    epoll_data_t为联合体，最常使用的为fd，还可以使用ptr指向事件处理器或者用户数据
+    epoll_data_t 为联合体，最常使用的为 fd，还可以使用 ptr 指向事件处理器或者用户数据
   
-### 返回值
+### 2. 返回值
 
-epoll_ctl成功时返回0，失败返回-1并设置errno
+epoll_ctl 成功时返回 0，失败返回 -1 并设置 rrno
 
-## 3. epoll_wait函数
+## 三、epoll_wait函数
 
-epoll_wait函数如果检测到事件，就将所有就绪的事件从内核事件表(epfd指向)中复制到它的第二个参数events数组中，这个数据只用于输出epoll_wait检测到的就绪事件，而不像select和poll的数组参数那样既用于传入用户注册的事件，又用于输出内核检测到的就绪事件，极大的提到了应用程序索引就绪文件描述符的效率
+epoll_wait 函数如果检测到事件，就将所有就绪的事件从内核事件表( epfd 指向)中复制到它的第二个参数 events 数组中，这个数据只用于输出 epoll_wait 检测到的就绪事件，而不像 select 和 poll 的数组参数那样既用于传入用户注册的事件，又用于输出内核检测到的就绪事件，极大的提到了应用程序索引就绪文件描述符的效率
 
 ```
 int epoll_wait( int epfd, struct epoll_event* events, int maxevents, int timeout ); 
 ```
 
-### 参数
+### 1. 参数
 
-- maxevents：指定最多监听的事件个数，必须大于0
-- timeout：和poll的timeout参数相同
+- maxevents：指定最多监听的事件个数，必须大于 0
+- timeout：和 poll 的 timeout 参数相同
 
-返回值：成功返回就绪的文件描述个数，失败返回-1并设置errno
+返回值：成功返回就绪的文件描述个数，失败返回 -1 并设置 errno
 
 
-### poll和epoll在使用的不同
+### 2. poll 和 epoll 在使用的不同
 
-- 索引poll返回的就绪文件描述符：
+- 寻找 poll 返回的就绪文件描述符：
 
   ```
   int ret = poll( fds, MAX_EVENT_NUMBER, -1 );
@@ -96,30 +112,30 @@ int epoll_wait( int epfd, struct epoll_event* events, int maxevents, int timeout
   }
   ```
 
-- 索引epoll返回的就绪文件描述符：
+- 寻找 epoll 返回的就绪文件描述符：
 
   ```
   int ret = epoll_wait( epollfd, events, MAX_EVENT_NUMBER, -1 );
-  //仅遍历秀徐的ret个文件描述符
+  //仅遍历就绪的 ret 个文件描述符
   for ( int i = 0; i < ret; i++ )
   {
       int sockfd = event[i].data.fd;
   }
   ```
 
-## 4. epoll的两种工作模式：LT和ET模式
+## 四、epoll 的两种工作模式：LT 和 ET 模式
 
 - LT(Level Trigger，电平触发)模式：默认的工作模式，相当于一个高效的poll。
   
-  当epoll_wait检测到其上有事件发生并将此事件通知应用程序后，应用程序可以不立即处理事件，这样当应用程序下次调用epoll_wait时，epoll_wait还会再次向应用程序通告此事件，知道该事件被处理
+  当 epoll_wait 检测到其上有事件发生并将此事件通知应用程序后，应用程序可以不立即处理事件，这样当应用程序下次调用 epoll_wait 时，epoll_wait 还会再次向应用程序通告此事件，知道该事件被处理
 
-- ET(Edge Trigger，边沿触发)模式：epoll的更高效工作模式。
+- ET(Edge Trigger，边沿触发)模式：epoll 的更高效工作模式。
   
-  当epoll_wait检测到其上有事件发生并将此事件通知应用程序后，应用程序必须立即处理该事件，因为后续的epoll_wait调用将不再向应用程序通知这一事件，ET模式很大程度降低了同一个epoll事件被重复触发的次数，所以效率比LT模式高。
+  当 epoll_wait 检测到其上有事件发生并将此事件通知应用程序后，应用程序必须立即处理该事件，因为后续的 epoll_wait 调用将不再向应用程序通知这一事件，ET 模式很大程度降低了同一个 epoll 事件被重复触发的次数，所以效率比 LT 模式高。
   
-  使用ET模式的文件描述符都应该是非阻塞的，如果文件描述符是阻塞的，那么读或写操作将会因为没有后续的事件而一直处于阻塞状态
+  使用 ET 模式的文件描述符都应该是非阻塞的，如果文件描述符是阻塞的，那么读或写操作将会因为没有后续的事件而一直处于阻塞状态
 
-### LT和ET工作方式差异
+### 1. LT和ET工作方式差异
 
 ```
 #include <sys/types.h>
@@ -291,15 +307,14 @@ int main(int argc, char* argv[])
 }
 ```
 
-测试：
+### 2. 测试
 
 可以使用telnet连接到这个服务器程序上并一次传输超过10字节(BUFFER_SIZE大小)的数据，然后比较LT模式和ET模式的异同
 
-注意：
 
-> 每个使用ET模式的文件描述符都应该是非阻塞的。如果文件描述符是阻塞的，那么读或写操作将会因为没有后续的事件而一直处于阻塞状态(饥渴状态)
+> **Note！** 每个使用ET模式的文件描述符都应该是非阻塞的。如果文件描述符是阻塞的，那么读或写操作将会因为没有后续的事件而一直处于阻塞状态(饥渴状态)
 
-## 5. EPOLLONESHOT事件
+## 五、89EPOLLONESHOT事件
 
 **如果使用ET模式，一个socket上的某个事件还是可能被触发多次**：
 

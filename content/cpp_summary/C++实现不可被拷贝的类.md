@@ -1,5 +1,21 @@
 # C++实现不可被拷贝的类
 
+<!-- TOC -->
+
+- [一、为什么需要noncopyable？](#一为什么需要noncopyable)
+- [二、自定义noncopyable类](#二自定义noncopyable类)
+- [三、boost::noncopyable](#三boostnoncopyable)
+
+<!-- /TOC -->
+
+TODO:整理
+
+## 一、为什么需要noncopyable？
+## 二、自定义noncopyable类
+## 三、boost::noncopyable
+
+参考《boost程序库完全开发指南》
+
 在C++中，类的拷贝主要是通过拷贝构造函数和赋值函数，再者就是为拷贝专门实现的成员方法
 
 由于拷贝构造函数和赋值函数在用户没有提供的情况下由C++编译器自动生成，而且是public成员，因此默认的C++类都有拷贝功能

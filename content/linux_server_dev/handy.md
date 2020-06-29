@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [0. 目标(6.15)](#0-目标615)
+- [1. noncopyable](#1-noncopyable)
 - [1. EventsImp](#1-eventsimp)
 - [2. PollerBase](#2-pollerbase)
 - [3. Channel](#3-channel)
@@ -27,6 +28,10 @@
 [项目地址](https://github.com/yedf/handy)
 
 Handy是一个简洁高效的C++11网络库，支持linux与mac平台，使用异步IO模型
+
+## 1. noncopyable
+
+handy中大部分的类都继承于 `noncopyable` ，关于该类的具体请参考： [noncopyable](../cpp_summary/C++实现不可被拷贝的类.md)
 
 ## 1. EventsImp 
 
