@@ -61,6 +61,8 @@
     <li><a href="content/cpp_summary/C++实现不可被拷贝的类.md">C++实现不可被拷贝的类</a></li>
     <li><a href="content/cpp_summary/C++编译器为一个空类做了哪些事.md">C++编译器为一个空类做了哪些事</a></li>
     <li><a href="content/cpp_summary/正确编写operator_equal.md">正确编写operator=</a></li>
+    <li><a href="content/cpp_summary/PIMPL.md">C++之PIMPL技法</a></li>
+    <li><a href="content/cpp_summary/RAII.md">C++之RAII技法</a></li>
   </td>
 </tr>
 
@@ -370,6 +372,8 @@
     <td>
         <li><a href="content/linux_server_dev/ARP协议工作原理.md">ARP协议工作原理</a></li>
         <li><a href="content/linux_server_dev/DNS工作原理.md">DNS工作原理</a></li>
+        <li><a href="content/linux_server_dev/IP协议.md">IP协议</li>
+        <li><a href="content/linux_server_dev/IP协议.md">IP协议</li>
     </td>
 </tr>
 <tr>
