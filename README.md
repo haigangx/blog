@@ -284,6 +284,20 @@
 
 ### Linux
 
+### 操作系统知识
+
+<table width=100%>
+<tr>
+  <td width="50%">
+  <li><a href="content/operating_systems/内存管理.md">内存管理</a></li>
+  </td>
+  <td width="50%">
+  <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
+  </td>
+</tr>
+</table>
+
+
 #### 命令
 
 <table>
@@ -382,7 +396,7 @@
     <td>Linux系统编程前置知识</td>
     <td>
         <li><a href="content/linux_server_dev/Linux文件系统.md">Linux文件系统</a></li>
-        <li><a href="content/linux_server_dev/.md">用户空间和内核空间</a></li>
+        <li><a href="content/linux_server_dev/Linux用户空间和内核空间.md">用户空间和内核空间</a></li>
     </td>
     <td>Linux系统编程部分</td>
     <td>
