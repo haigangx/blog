@@ -1,5 +1,7 @@
 ## 语法
 
+TODO: shell中简化的正则表达式 glob
+
 <details>
 <summary>变量</summary>
 

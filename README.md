@@ -290,6 +290,7 @@
 <tr>
   <td width="50%">
   <li><a href="content/operating_systems/内存管理.md">内存管理</a></li>
+  <li><a href="content/operating_systems/链接装载库.md">链接、装载和库</a></li>
   </td>
   <td width="50%">
   <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
@@ -332,7 +333,7 @@
     <td><a href="content/linux_base/command/gcc.md" title="">gcc</a></td>
     <td><a href="content/linux_base/command/wc.md" title="">wc</a></td>
     <td><a href="content/linux_base/command/expr.md" title="">expr</a></td>
-    <td colspan="1"></td>
+    <td><a href="content/linux_base/command/objdump.md" title="">objdump</a></td>
 </tr>
 </table>
 
