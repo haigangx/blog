@@ -76,6 +76,14 @@
     - [5. Pull Requests](#5-pull-requests)
 - [其他](#其他)
     - [1. CI/CD](#1-cicd)
+    - [2. 其他](#2-其他)
+        - [2.1 命令速查](#21-命令速查)
+        - [2.2 生成SSH秘钥](#22-生成ssh秘钥)
+        - [2.3 Git解决每次提交都需要输入用户名和密码](#23-git解决每次提交都需要输入用户名和密码)
+        - [2.4 为git设置代理](#24-为git设置代理)
+        - [2.5 GitHub中修改用户名和仓库名，本地需要做哪些修改？](#25-github中修改用户名和仓库名本地需要做哪些修改)
+        - [2.6 解决git错误：error object file is empty](#26-解决git错误error-object-file-is-empty)
+        - [2.7 网络资源](#27-网络资源)
 
 <!-- /TOC -->
 
@@ -1770,6 +1778,147 @@ $ git branch -d server
 ## 其他
 
 ### 1. CI/CD
+
+### 2. 其他
+
+#### 2.1 命令速查
+
+![git cheatsheet](doc/git_cheatsheet.png)
+
+| 命令 | 说明 | 示例 |
+| --- | --- | --- |
+| `git push my-remote my-branch` | 推送提交到远程仓库 |
+| `git pull my-remote my-branch` | 
+| `git diff --cached` | 查看暂存区的修改
+| `git diff branch1` | 对比当前工作目录与branch1
+| `git diff branch1 file1` | 对比当前工作目录中file1与branch1分支中的file1 |
+| `git diff branch1 branch2` | 对比两个分支的差异 |
+| `git remote` | 
+| `git remote -v` |
+| `git remote add my-remote <address>` |
+| `git remote add myrepo /tmp/myrepo` | 为常用远程库起别名 |
+| `git reset file.txt` | 
+| `git branch` | 查看分支列表 |
+| `git branch my-branch` | 创建my-branch分支 | 
+| `git branch -d my-branch` | 删除不再需要的my-branch分支，只能删除已经被当前分支合并的分支 |
+| `git branch -D my-branch` | 强制删除my-branch分支 |
+| `git checkout my-branch` | 切换分支 |
+| `git merge my-branch -m "this is comment"` | 合并分支my-branch到当前分支 |
+| `git log` | 查看提交日志 |
+| `git log -p master..` |
+| `git log --stat` | 查看log时显示每个提交中那些文件修改了多少行内容 |
+| `git log --pretty=oneline` | 按某种格式格式化日志输出，如oneline、short |
+| `git log --graph --pretty=oneline` | 可视化你的提交图 |
+| `git log --pretty=format:'%h : %s' [--topo-order] [--reverse] --graph` |  |
+| `git tag` | 显示所有tags |
+| `git tag -a v1.0 -m 'msg'` | 
+| `git show v1.0` |
+| `git tag --delete v1.0` |
+| `git push --delete my-remote v1.0` |
+| `git push my-remote my-branch v1.0` |
+| `git fetch --tags` |
+| `git stash` | 将所有未commit的修改(包括暂存和未暂存的)都保存起来 |
+| `git stash -u` | 
+| `git stash save "msg"` |
+| `git stash list` |
+| `git stash pop` |
+| `git stash stash@{2}` |
+| `git stash show` | 
+| `git stash apply` |
+| `git stash branch my-branch stash@{1}` |
+| `git stash drop stash@{1}` |
+| `git stash clear` |
+
+
+
+#### 2.2 生成SSH秘钥
+
+```
+ssh-keygen -t rsa -C "754657908@qq.com"
+cat ~/.ssh/id_rsa.pub 配置到 Github
+ssh git@github.com
+```
+
+
+#### 2.3 Git解决每次提交都需要输入用户名和密码
+
+```
+git config --global credential.helper store
+```
+
+
+#### 2.4 为git设置代理
+
+git clone有两种形式：
+
+- HTTP形式：
+  ```
+  git clone https://github.com/owner/git.git
+  ```
+
+- SSH形式：
+  ```
+  git clone git@github.com:owner/git.git
+  ```
+
+两种方式要分别设置代理：
+
+- HTTP形式：
+
+  走HTTP代理：
+  ```
+  git config --global http.proxy "http://127.0.0.1:8080"
+  git config --global https.proxy "http://127.0.0.1:8080"
+  ```
+
+  走sock5代理：
+  ```
+  git config --global http.proxy "socks5://127.0.0.1:1080"
+  git config --global https.proxy "socks5://127.0.0.1:1080"
+  ```
+
+  取消设置：
+  ```
+  git config --global --unset http.proxy
+  git config --global --unset https.proxy
+  ```
+- SSH形式：
+
+  修改`~/.ssh/config`文件(不存在则新建)：
+  ```
+  # 必须是 github.com
+  Host github.com
+    HostName github.com
+    User git
+    # 走 HTTP 代理
+    # ProxyCommand socat - PROXY:127.0.0.1:%h:%p,proxyport=8080
+    # 走 socks5 代理（如 Shadowsocks）
+    # ProxyCommand nc -v -x 127.0.0.1:1080 %h %p
+  ```
+
+#### 2.5 GitHub中修改用户名和仓库名，本地需要做哪些修改？
+
+- 修改用户名
+
+  - 修改`~/.gitconfig`中的name
+  - 修改每个本地仓库下`.git/config`中url的用户名
+
+- 修改仓库名
+
+  - 修改本地仓库文件名
+  - 修改本地仓库下`.git/config`中url为改名后的正确仓库名
+
+#### 2.6 解决git错误：error object file is empty
+
+[解决git错误: error object file is empty , The remote end hung up unexpectedly](https://blog.csdn.net/10km/article/details/83240177)
+
+
+#### 2.7 网络资源
+
+- [Pro Git](https://www.progit.cn/)
+- [git奇技淫巧](https://github.com/521xueweihan/git-tips)
+- [优雅的提交你的Git Commit Message](https://juejin.im/post/5afc5242f265da0b7f44bee4)
+- [版本管理三国志](https://www.cnblogs.com/vamei/archive/2013/02/21/2918069.html)
 
 
 参考：
