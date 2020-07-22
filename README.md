@@ -291,6 +291,9 @@
   <td width="50%">
   <li><a href="content/operating_systems/内存管理.md">内存管理</a></li>
   <li><a href="content/operating_systems/链接装载库.md">链接、装载和库</a></li>
+  <li><a href="content/operating_systems/进程和线程.md">进程和线程</a></li>
+  <li><a href="content/operating_systems/linux文件系统.md">linux文件系统</a></li>
+  <li><a href="content/operating_systems/用户空间和内核空间.md">用户空间和内核空间</a></li>
   </td>
   <td width="50%">
   <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
@@ -342,8 +345,6 @@
 <table width=100%>
 <tr>
   <td width="50%">
-  <li><a href="content/linux_base/linux文件系统详解.md">linux文件系统详解</a></li>
-  <li><a href="content/linux_base/进程和线程的区别.md">进程和线程的区别</a></li>
   <li><a href="content/linux_base/linux下调试方法总结.md">linux下调试方法总结</a></li>
   <li><a href="content/linux_base/ubuntu中代理设置总结.md">ubuntu中代理设置总结</a></li>
   <li><a href="content/linux_base/修改bash命令行前缀.md">修改bash命令行前缀</a></li>
@@ -391,13 +392,6 @@
         <li><a href="content/linux_server_dev/IP协议.md">IP 协议</li>
         <li><a href="content/linux_server_dev/IP协议.md">TCP 协议</li>
         <li><a href="content/linux_server_dev/HTTP协议.md">HTTP 协议</li>
-    </td>
-</tr>
-<tr>
-    <td>Linux系统编程前置知识</td>
-    <td>
-        <li><a href="content/linux_server_dev/Linux文件系统.md">Linux文件系统</a></li>
-        <li><a href="content/linux_server_dev/Linux用户空间和内核空间.md">用户空间和内核空间</a></li>
     </td>
     <td>Linux系统编程部分</td>
     <td>
