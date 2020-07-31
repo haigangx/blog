@@ -293,7 +293,6 @@
   <li><a href="content/operating_systems/进程和线程.md">进程和线程</a></li>
   <li><a href="content/operating_systems/内存管理.md">内存管理</a></li>
   <li><a href="content/operating_systems/linux文件系统.md">linux文件系统</a></li>
-  <li><a href="content/operating_systems/用户空间和内核空间.md">用户空间和内核空间</a></li>
   </td>
   <td width="50%">
   <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
