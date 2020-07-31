@@ -15,6 +15,8 @@
     <li><a href="content/cpp_base/c/struct的内存对齐.md">struct的内存对齐</a></li>
   </td>
   <td>
+    <li><a href="content/cpp_base/cpp/理解C++虚函数.md">理解C++虚函数</a></li>
+    <li><a href="content/cpp_base/cpp/C++对象布局.md">C++对象布局</a></li>
     <li><a href="content/cpp_base/cpp/extern关键字.md">extern关键字</a></li>
     <li><a href="content/cpp_base/cpp/sprintf和snprintf.md">sprintf和snprintf</a></li>
     <li><a href="content/cpp_base/cpp/向上取整floor和向下取整ceil.md">floor和ceil</a></li>
