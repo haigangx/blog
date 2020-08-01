@@ -1,10 +1,37 @@
 # GDBµ÷ÊÔ¹¤¾ß
 
-## 1. ÃüÁîÐÐGDBµ÷ÊÔ
+<!-- TOC -->
+
+- [Ò»¡¢ÃüÁîÐÐGDBµ÷ÊÔ](#Ò»ÃüÁîÐÐgdbµ÷ÊÔ)
+    - [1. ³£ÓÃÃüÁî](#1-³£ÓÃÃüÁî)
+    - [2. gdbµ÷ÊÔ¶à½ø³Ì](#2-gdbµ÷ÊÔ¶à½ø³Ì)
+    - [3. gdbµ÷ÊÔ¶àÏß³Ì](#3-gdbµ÷ÊÔ¶àÏß³Ì)
+    - [4. µ÷ÊÔcore dump](#4-µ÷ÊÔcore-dump)
+        - [4.1 Ôì³Ésegment fault£¬²úÉúcore dumpµÄ¿ÉÄÜÔ­Òò](#41-Ôì³Ésegment-fault²úÉúcore-dumpµÄ¿ÉÄÜÔ­Òò)
+        - [4.2 ÅäÖÃ²Ù×÷ÏµÍ³Ê¹Æä²úÉúcoreÎÄ¼þ](#42-ÅäÖÃ²Ù×÷ÏµÍ³Ê¹Æä²úÉúcoreÎÄ¼þ)
+        - [4.3 ÓÃgdb²é¿´coreÎÄ¼þ](#43-ÓÃgdb²é¿´coreÎÄ¼þ)
+        - [4.4 Ê¹ÓÃcoreÎÄ¼þ¶¨Î»core dumpÎ»ÖÃ](#44-Ê¹ÓÃcoreÎÄ¼þ¶¨Î»core-dumpÎ»ÖÃ)
+    - [5. µ÷ÊÔºê](#5-µ÷ÊÔºê)
+    - [6. Ô´ÎÄ¼þ](#6-Ô´ÎÄ¼þ)
+    - [7. Ìõ¼þ¶Ïµã](#7-Ìõ¼þ¶Ïµã)
+    - [8. ÃüÁîÐÐ²ÎÊý](#8-ÃüÁîÐÐ²ÎÊý)
+    - [9. xÃüÁî](#9-xÃüÁî)
+    - [10. commandÃüÁî](#10-commandÃüÁî)
+    - [11. µ÷ÊÔ½Å±¾](#11-µ÷ÊÔ½Å±¾)
+- [2. Í¼Ïñ½çÃæµ÷ÊÔ](#2-Í¼Ïñ½çÃæµ÷ÊÔ)
+    - [2.1 gdb×Ô´øµÄtui](#21-gdb×Ô´øµÄtui)
+    - [2.2 ÔÚä¯ÀÀÆ÷ÏÔÊ¾µ÷ÊÔ½çÃæ---gdbgui](#22-ÔÚä¯ÀÀÆ÷ÏÔÊ¾µ÷ÊÔ½çÃæ---gdbgui)
+        - [2.2.1 °²×°£º](#221-°²×°)
+        - [2.2.2 Ê¹ÓÃ£º](#222-Ê¹ÓÃ)
+- [3. µ÷ÊÔÃüÁî](#3-µ÷ÊÔÃüÁî)
+
+<!-- /TOC -->
+
+## Ò»¡¢ÃüÁîÐÐGDBµ÷ÊÔ
 
 Ê¹ÓÃgdbµ÷ÊÔ£¬±àÒëÊ±ÒªÓÃ-gÑ¡Ïî£¬²¢Ê¹ÓÃ-O¼¶ÓÅ»¯
 
-### 1.1 ³£ÓÃÃüÁî
+### 1. ³£ÓÃÃüÁî
 
 | ÃüÁî | ¼òÐ´ | ÃüÁîËµÃ÷ |
 | :--- | :--- | :------- |
@@ -35,7 +62,7 @@
 | kill |  | ÖÕÖ¹ÕýÔÚµ÷ÊÔµÄ³ÌÐò |
 
 
-### 1.2 gdbµ÷ÊÔ¶à½ø³Ì
+### 2. gdbµ÷ÊÔ¶à½ø³Ì
 
 1. ÏÈÔËÐÐ·þÎñÆ÷£¬È»ºóÕÒµ½Ä¿±ê×Ó½ø³ÌµÄPID£¬ÔÙ½«Æä¸½¼Ó(attach)µ½gdbµ÷ÊÔÆ÷
   ```
@@ -56,7 +83,7 @@
   - on£º±íÊ¾¶Ï¿ªÁíÒ»¸ö½ø³Ì
   - off£ºgdb½«¿ØÖÆ¸¸½ø³ÌºÍ×Ó½ø³Ì¡£µ±follow-frok-modeÖ¸¶¨µÄ½ø³Ì±»µ÷ÊÔÊ±£¬ÁíÒ»¸ö½ø³Ì´¦ÓÚÔÝÍ£(suspended)×´Ì¬
 
-### 1.3. gdbµ÷ÊÔ¶àÏß³Ì
+### 3. gdbµ÷ÊÔ¶àÏß³Ì
 
 gdbÓÐÒ»×éÃüÁî¿É¸¨Öú¶àÏß³Ì³ÌÐòµÄµ÷ÊÔ£º
 
@@ -73,11 +100,11 @@ gdbÓÐÒ»×éÃüÁî¿É¸¨Öú¶àÏß³Ì³ÌÐòµÄµ÷ÊÔ£º
 
 µ÷ÊÔ½ø³Ì³ØºÍÏß³Ì³Ø³ÌÐòÊ±£º¿ÉÒÔÏÈ½«³ØÖÐµÄ½ø³Ì¸öÊý»òÏß³Ì¸öÊý¼õÉÙÖÁ1£¬ÒÔ¹Û²ì³ÌÐòÂß¼­ÊÇ·ñÕýÈ·£¬È»ºóÖð²½Ôö¼Ó½ø³ÌºÍÏß³ÌµÄÊýÁ¿£¬ÒÔµ÷ÊÔ½ø³Ì»òÏß³ÌµÄÍ¬²½ÊÇ·ñÕýÈ·
 
-### 1.4. µ÷ÊÔcore dump
+### 4. µ÷ÊÔcore dump
 
 core dumpÓÖ½ÐºËÐÄ×ª´¢, µ±³ÌÐòÔËÐÐ¹ý³ÌÖÐ·¢ÉúÒì³£, ³ÌÐòÒì³£ÍË³öÊ±, ÓÉ²Ù×÷ÏµÍ³°Ñ³ÌÐòµ±Ç°µÄÄÚ´æ×´¿ö´æ´¢ÔÚÒ»¸öcoreÎÄ¼þÖÐ, ½Ðcore dump. (linuxÖÐÈç¹ûÄÚ´æÔ½½ç»áÊÕµ½SIGSEGVÐÅºÅ£¬È»ºó¾Í»ácore dump)
 
-#### 1.4.1 Ôì³Ésegment fault£¬²úÉúcore dumpµÄ¿ÉÄÜÔ­Òò
+#### 4.1 Ôì³Ésegment fault£¬²úÉúcore dumpµÄ¿ÉÄÜÔ­Òò
 
 - ÄÚ´æ·ÃÎÊÔ½½ç
 
@@ -99,7 +126,7 @@ core dumpÓÖ½ÐºËÐÄ×ª´¢, µ±³ÌÐòÔËÐÐ¹ý³ÌÖÐ·¢ÉúÒì³£, ³ÌÐòÒì³£ÍË³öÊ±, ÓÉ²Ù×÷ÏµÍ³°Ñ³ÌÐ
 
 - ¶ÑÕ»Òç³ö.²»ÒªÊ¹ÓÃ´óµÄ¾Ö²¿±äÁ¿£¨ÒòÎª¾Ö²¿±äÁ¿¶¼·ÖÅäÔÚÕ»ÉÏ£©£¬ÕâÑùÈÝÒ×Ôì³É¶ÑÕ»Òç³ö£¬ÆÆ»µÏµÍ³µÄÕ»ºÍ¶Ñ½á¹¹£¬µ¼ÖÂ³öÏÖÄªÃûÆäÃîµÄ´íÎó¡£
 
-#### 1.4.2 ÅäÖÃ²Ù×÷ÏµÍ³Ê¹Æä²úÉúcoreÎÄ¼þ
+#### 4.2 ÅäÖÃ²Ù×÷ÏµÍ³Ê¹Æä²úÉúcoreÎÄ¼þ
 
 Ê×ÏÈÍ¨¹ýulimitÃüÁî²é¿´Ò»ÏÂÏµÍ³ÊÇ·ñÅäÖÃÖ§³ÖÁËdump coreµÄ¹¦ÄÜ¡£Í¨¹ýulimit -c»òulimit -a£¬¿ÉÒÔ²é¿´core file´óÐ¡µÄÅäÖÃÇé¿ö£¬Èç¹ûÎª0£¬Ôò±íÊ¾ÏµÍ³¹Ø±ÕÁËdump core¡£¿ÉÒÔÍ¨¹ýulimit -c unlimitedÀ´´ò¿ª¡£ **Èô·¢ÉúÁË¶Î´íÎó£¬µ«Ã»ÓÐcore dump£¬¿ÉÄÜÊÇÓÉÓÚÏµÍ³½ûÖ¹coreÎÄ¼þµÄÉú³É¡£**
 
@@ -125,7 +152,7 @@ data seg size           (kbytes, -d) unlimited
 file size               (blocks, -f) unlimited
 ```
 
-#### 1.4.3 ÓÃgdb²é¿´coreÎÄ¼þ
+#### 4.3 ÓÃgdb²é¿´coreÎÄ¼þ
 
 ·¢Éúcore dumpÖ®ºó, ÓÃgdb½øÐÐ²é¿´coreÎÄ¼þµÄÄÚÈÝ, ÒÔ¶¨Î»ÎÄ¼þÖÐÒý·¢core dumpµÄÐÐ.
 
@@ -139,47 +166,47 @@ gdb [exec file]  \[ core file]
 gdb ./test test.core
 ```
 
-#### 1.4.4 Ê¹ÓÃcoreÎÄ¼þ¶¨Î»core dumpÎ»ÖÃ
+#### 4.4 Ê¹ÓÃcoreÎÄ¼þ¶¨Î»core dumpÎ»ÖÃ
 
 ÏÈÊ¹ÓÃÃüÁî gdb [exec file]  \[ core file]²é¿´coreÎÄ¼þ£¬È»ºóÊäÈëwhereÃüÁî£¬gdb¾Í»áÊä³öcoredumpµÄÎ»ÖÃ¡£
 
 
-### 1.5. µ÷ÊÔºê
+### 5. µ÷ÊÔºê
 
 µ÷ÊÔºêÐèÒªgccÔÚ±àÒëÊ±¼ÓÉÏ`-ggdb3`²ÎÊý£¬È»ºó¿ÉÒÔÊ¹ÓÃÏÂÃæµÄgdbºêµ÷ÊÔÃüÁîÀ´²é¿´ºê£º
 
 - info macro£º²é¿´Õâ¸öºêÔÚÄÄÐ©ÎÄ¼þ±»ÒýÓÃ£¬ÒÔ¼°ºê¶¨ÒåÊÇÊ²Ã´ÑùµÄ
 - macro£º²é¿´ºêÕ¹¿ªµÄÑù×Ó
 
-### 1.6. Ô´ÎÄ¼þ
+### 6. Ô´ÎÄ¼þ
 
 ÓÐÊ±ºòÊ¹ÓÃgdbµ÷ÊÔÌáÊ¾ÕÒ²»µ½Ô´ÎÄ¼þ£¬ÕâÊ±ºòÐèÒª×¢ÒâÁ½µã£º
 
 - ±àÒëÊ±ÊÇ·ñ¼Ó-g²ÎÊýÒÔ¼°±£»¤debugÐÅÏ¢
 - Ô´ÂëÂ·¾¶ÊÇ·ñÉèÖÃÕýÈ·£¬¿ÉÒÔÊ¹ÓÃgdbµÄ`directory`ÃüÁîÀ´ÉèÖÃÔ´ÎÄ¼þµÄÄ¿Â¼
 
-### 1.7. Ìõ¼þ¶Ïµã
+### 7. Ìõ¼þ¶Ïµã
 
 ```
 break [where] if [condition]
 ```
 
-### 1.8. ÃüÁîÐÐ²ÎÊý
+### 8. ÃüÁîÐÐ²ÎÊý
 
 Èç¹ûµ÷ÊÔµÄ³ÌÐòÔËÐÐÊ±ÐèÒªÃüÁîÐÐ²ÎÊý£¬ÓÐÁ½ÖÖ·½·¨ÉèÖÃ£º
 
 - gdbÃüÁîÐÐµÄ`-args`²ÎÊý
 - gdb»·¾³ÖÐ`set args`ÃüÁî
 
-### 1.9. xÃüÁî
+### 9. xÃüÁî
 
 ÎÞÐè±äÁ¿Ãû²é¿´ÄÚ´æ
 
-### 1.10. commandÃüÁî
+### 10. commandÃüÁî
 
 commandÃüÁî¿ÉÒÔ½«Ò»×égdbÃüÁî´ò°ü£¬µ±¶Ïµãµ½´ïÊ±£¬×Ô¶¯Ö´ÐÐcommand´ò°üµÄgdbÃüÁî
 
-### 1.11. µ÷ÊÔ½Å±¾
+### 11. µ÷ÊÔ½Å±¾
 
 ÓÅµã£º
 

@@ -394,11 +394,15 @@
         <li><a href="content/linux_server_dev/IP协议.md">TCP 协议</li>
         <li><a href="content/linux_server_dev/HTTP协议.md">HTTP 协议</li>
     </td>
-    <td>Linux系统编程部分</td>
+    <td>Linux文件目录基础操作</td>
     <td>
-        <li><a href="content/linux_server_dev/.md">文件打开关闭open/close</a></li>
-        <li><a href="content/linux_server_dev/文件打开关闭openclose.md">文件读写read/write</a></li>
-    </td>
+        <li><a href="content/linux_server_dev/文件打开关闭openclose.md">文件打开关闭 open/close</a></li>
+        <li><a href="content/linux_server_dev/文件读写readwrite.md">文件读写 read/write</a></li>
+        <li><a href="content/linux_server_dev/文件定位lseek.md">文件读写 lseek</a></li>
+        <li><a href="content/linux_server_dev/获取文件信息stat.md">获取文件信息 stat</a></li>
+        <li><a href="content/linux_server_dev/文件权限设置chmodchown.md">文件权限设置 chmod/chown</a></li>
+        <li><a href="content/linux_server_dev/文件链接link.md">文件链接 link</a></li>
+        <li><a href="content/linux_server_dev/目录操作.md">目录操作</a></li>
 </tr>
 <tr>
     <td>Linux网络<br>基础API</td>
