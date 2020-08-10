@@ -396,10 +396,10 @@
     </td>
     <td>Linux</td>
     <td>
-        <li><a href="content/linux_server_dev/文件操作总结.md">文件操作总结</a></li>
-        <li><a href="content/linux_server_dev/进程模型.md">进程模型</a></li>
+        <li><a href="content/linux_server_dev/文件操作总结.md">文件操作</a></li>
+        <li><a href="content/linux_server_dev/进程模型.md">进程</a></li>
         <li><a href="content/linux_server_dev/信号.md">信号</a></li>
-        <li><a href="content/linux_server_dev/线程模型.md">线程模型</a></li>
+        <li><a href="content/linux_server_dev/线程模型.md">线程</a></li>
         <li><a href="content/linux_server_dev/进程间通信.md">进程间通信</a></li>
         <li><a href="content/linux_server_dev/网络编程.md">网络编程</a></li>
 </tr>
