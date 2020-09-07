@@ -44,6 +44,8 @@
         - [拥塞避免](#拥塞避免)
         - [拥塞发生](#拥塞发生)
         - [快速恢复](#快速恢复)
+- [十一、TCP 问题](#十一tcp-问题)
+    - [未完待续](#未完待续)
 
 <!-- /TOC -->
 
@@ -862,9 +864,17 @@ TCP Tahoe 是早期的算法，所以没有快速恢复算法，而Reno算法有
 
  如图所示，第五个包发生了丢失，所以导致接收方接收到三次重复 ACK，也就是ACK5。所以将 ssthresh 设置当当时 cwnd 的一半，也就是 6/2 = 3，cwnd 设置为 3 + 3 = 6。然后重传第五个包。当收到新的 ACK 时，也就是 ACK11，则退出快速恢复阶段，将 cwnd 重新设置为当前的 ssthresh，也就是 3，然后进入拥塞避免算法阶段
 
+## 十一、TCP 问题
+
+### 未完待续
+
+
 
 参考：
 
 - 《Linux高性能服务器编程》
 - [TCP 拥塞控制算法](https://segmentfault.com/a/1190000018360050)
 - [万字长文｜全(小区局域)网最强 TCP/IP 拥塞控制总结](https://baijiahao.baidu.com/s?id=1668851725425101977&wfr=spider&for=pc)
+- [什么是TCP粘包？怎么解决这个问题](https://blog.csdn.net/weixin_41047704/article/details/85340311)
+- [从 TCP 三次握手说起：浅析TCP协议中的疑难杂症 ( 1 )](https://cloud.tencent.com/developer/article/1004327)
+- [从 TCP 三次握手说起：浅析TCP协议中的疑难杂症 ( 2 )](https://cloud.tencent.com/developer/article/1004336)

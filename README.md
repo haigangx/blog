@@ -391,7 +391,8 @@
         <li><a href="content/linux_server_dev/DNS工作原理.md">DNS 工作原理</a></li>
         <li><a href="content/linux_server_dev/ICMP协议.md">ICMP 协议</a></li>
         <li><a href="content/linux_server_dev/IP协议.md">IP 协议</li>
-        <li><a href="content/linux_server_dev/IP协议.md">TCP 协议</li>
+        <li><a href="content/linux_server_dev/TCP协议.md">TCP 协议</li>
+        <li><a href="content/linux_server_dev/UDP协议.md">UDP 协议</li>
         <li><a href="content/linux_server_dev/HTTP协议.md">HTTP 协议</li>
     </td>
     <td>Linux</td>
@@ -426,13 +427,11 @@
     </td>
     <td>
         <li><a href="content/linux_server_dev/pipe函数.md">pipe函数</a></li>
-        <li><a href="content/linux_server_dev/dup和dup2.md">dup和dup2</a></li>
         <li><a href="content/linux_server_dev/readv和writev.md">readv和writev</a></li>
         <li><a href="content/linux_server_dev/sendfile函数.md">sendfile函数</a></li>
         <li><a href="content/linux_server_dev/mmap和munmap.md">mmap和munmap</a></li>
         <li><a href="content/linux_server_dev/splice函数.md">splice函数</a></li>
         <li><a href="content/linux_server_dev/tee函数.md">tee函数</a></li>
-        <li><a href="content/linux_server_dev/fcntl函数.md">fcntl函数</a></li>
     </td>
 </tr>
 <tr>
