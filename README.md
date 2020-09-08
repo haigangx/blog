@@ -65,224 +65,14 @@
     <li><a href="content/cpp_summary/正确编写operator_equal.md">正确编写operator=</a></li>
     <li><a href="content/cpp_summary/PIMPL.md">C++之PIMPL技法</a></li>
     <li><a href="content/cpp_summary/RAII.md">C++之RAII技法</a></li>
+    <li><a href="content/effective_cpp/effective_cpp.md">《Effective C++》总结</a></li>
+    <li><a href="content/design_pattern/design_pattern.md">设计模式总结</a></li>
+    <li><a href="content/stl/stl.md">STL总结</a></li>
   </td>
 </tr>
 
 </table>
 
-
-#### STL
-
-<table width="100%">
-<tr>
-    <td align="center" colspan="8" width="50%">STL技法</td>
-</tr>
-<tr>
-    <td><a href="content/stl/迭代器.md">迭代器</a></td>
-    <td><a href="content/stl/空间配置器.md">空间配置器</a></td>
-    <td><a href="content/stl/仿函数.md">仿函数</a></td>
-    <td><a href="content/stl/配接器.md">配接器</a></td>
-    <td colspan="4"></td>
-</tr>
-<tr>
-    <td align="center" colspan="8">序列式容器</td>
-</tr>
-<tr>
-    <td><a href="content/stl/vector.md">vector</a></td>
-    <td><a href="content/stl/list.md">list</a></td>
-    <td><a href="content/stl/deque.md">deque</a></td>
-    <td><a href="content/stl/stack.md">stack</a></td>
-    <td><a href="content/stl/queue.md">queue</a></td>
-    <td><a href="content/stl/heap.md">heap</a></td>
-    <td><a href="content/stl/priority_queue.md">priority_queue</a></td>
-    <td><a href="content/stl/slist.md">slist</a></td>
-</tr>
-<tr>
-    <td align="center" colspan="8">关联式容器</td>
-</tr>
-<tr>
-    <td><a href="content/stl/RB-Tree.md">RB-Tree</a></td>
-    <td><a href="content/stl/hashtable.md">hashtable</a></td>
-    <td><a href="content/stl/set.md">set</a></td>
-    <td><a href="content/stl/map.md">map</a></td>
-    <td colspan="4"></td>
-</tr>
-<tr>
-    <td align="center" colspan="8">算法</td>
-</tr>
-<tr>
-    <td><a href="content/stl/sort.md">sort</a></td>
-    <td colspan="7"></td>
-</tr>
-<tr>
-    <td align="center" colspan="8">辅助工具</td>
-</tr>
-<tr>
-    <td><a href="content/stl/pair.md">pair</a></td>
-    <td colspan="7"></td>
-</tr>
-<tr>
-    <td align="center" colspan="8">总结</td>
-</tr>
-<tr>
-    <td colspan="2"><a href="content/stl/迭代器失效.md">迭代器失效总结</a></td>
-    <td colspan="6"></td>
-</tr>
-</table>
-
-#### 设计模式
-
-<table>
-<tr>
-    <td width="18%"><a href="content/design_pattern/singleton.md" title="Singleton[创建型模式]">单例模式</a></td>
-    <td width="18%"><a href="content/design_pattern/factory-method.md" title="FactoryMethod[创建型模式]">工厂方法</a></td>
-    <td width="18%"><a href="content/design_pattern/abstract-factory.md" title="AbstractFactory[创建型模式]">抽象工厂</a></td>
-    <td width="18%"><a href="content/design_pattern/builder.md" title="Builder[创建型模式]">生成器</a></td>
-    <td width="18%"><a href="content/design_pattern/prototype.md" title="Prototype[创建型模式]">原型模式</a></td>
-    <td width="18%"><a href="content/design_pattern/adapter.md" title="Adapter[结构型模式]">适配器模式</a></td>
-</tr>
-<tr>
-    <td><a href="content/design_pattern/bridge.md" title="Bridge[结构型模式]">桥接模式</a></td>
-    <td><a href="content/design_pattern/composite.md" title="Composite[结构型模式]">组合模式</a></td>
-    <td><a href="content/design_pattern/decorator.md" title="Decorator[结构型模式]">装饰模式</a></td>
-    <td><a href="content/design_pattern/facade.md" title="Facade[结构型模式]">外观模式</a></td>
-    <td><a href="content/design_pattern/fly-weight.md" title="FlyWeight[结构型模式]">享元模式</a></td>
-    <td><a href="content/design_pattern/proxy.md" title="Proxy[结构型模式]">代理模式</a></td>
-</tr>
-<tr>
-    <td><a href="content/design_pattern/chain-of-responsibility.md" title="ChainOfResponsibility[行为模式]">责任链模式</a></td>
-    <td><a href="content/design_pattern/command.md" title="Command[行为模式]">命令模式</a></td>
-    <td><a href="content/design_pattern/interpreter.md" title="Interpreter[行为模式]">解释器模式</a></td>
-    <td><a href="content/design_pattern/iterpreter.md" title="Iterator[行为模式]">迭代器模式</a></td>
-    <td><a href="content/design_pattern/mediator.md" title="Mediator[行为模式]">中介者模式</a></td>
-    <td><a href="content/design_pattern/memento.md" title="Mementor[行为模式]">备忘录模式</a></td>
-</tr>
-<tr>
-    <td><a href="content/design_pattern/observer.md" title="Observer[行为模式]">观察者模式</a></td>
-    <td><a href="content/design_pattern/state.md" title="State[行为模式]">状态模式</a></td>
-    <td><a href="content/design_pattern/strategy.md" title="Strategy[行为模式]">策略模式</a></td>
-    <td><a href="content/design_pattern/template-method.md" title="Strategy[行为模式]">模板方法</a></td>
-    <td><a href="content/design_pattern/visitor.md" title="Visitor[行为模式]">访问者模式</a></td>
-    <td><a href="https://design-patterns.readthedocs.io/zh_CN/latest/creational_patterns/creational.html"">网络资源</a></td>
-</tr>
-</table>
-
-#### 《Effective C++》
-
-<table>
-<tr>
-    <td width="50%"><a href="content/effective_cpp/01.md" title="视C++为一个语言联邦">01：视C++为一个语言联邦</a></td>
-    <td width="50%"><a href="content/effective_cpp/02.md" title="尽量以const, enum, inline替换#define">02：尽量以const, enum, inline替换#define</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/03.md" title="尽可能使用const">03：尽可能使用const</a></td>
-    <td><a href="content/effective_cpp/04.md" title="确定对象被使用前已被初始化">04：确定对象被使用前已被初始化</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/05.md" title="">05：了解C++默默编写并调用哪些函数</a></td>
-    <td><a href="content/effective_cpp/06.md" title="">06：若不想使用编译器自动生成的函数，就该明确拒绝</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/07.md" title="">07：为多态基类声明virtual析构函数</a></td>
-    <td><a href="content/effective_cpp/08.md" title="">08：别让异常逃离析构函数</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/09.md" title="">09：绝不在构造和析构过程中调用virtual函数</a></td>
-    <td><a href="content/effective_cpp/10.md" title="">10：令operator=返回一个reference to *this</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/11.md" title="">11：在operator=中处理自我赋值</a></td>
-    <td><a href="content/effective_cpp/12.md" title="">12：复制对象时勿忘其每一个成分</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/13.md" title="">13：以对象管理资源</a></td>
-    <td><a href="content/effective_cpp/14.md" title="">14：在资源管理类中小心copying行为</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/15.md" title="">15：在资源管理类中提供对原始资源的访问</a></td>
-    <td><a href="content/effective_cpp/16.md" title="">16：成对使用new和delete时要采取相同形式</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/17.md" title="">17：以独立语句将newed对象置入智能指针</a></td>
-    <td><a href="content/effective_cpp/18.md" title="">18：让接口容易被正确使用，不易被误用</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/19.md" title="">19：设计class犹如设计type</a></td>
-    <td><a href="content/effective_cpp/20.md" title="">20：宁以pass-by-reference-to-const替换pass-by-value</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/21.md" title="">21：必须返回对象时，别妄想返回其reference</a></td>
-    <td><a href="content/effective_cpp/22.md" title="">22：将成员变量声明为private</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/23.md" title="">23：宁以non-member、non-friend替换member函数</a></td>
-    <td><a href="content/effective_cpp/24.md" title="">24：若所有参数皆需类型转换，请为此采用non-member函数</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/25.md" title="">25：考虑写出一个不抛异常的swap函数</a></td>
-    <td><a href="content/effective_cpp/26.md" title="">26：尽可能延后变量定义式的出现时间</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/27.md" title="">27：尽量少做转型动作</a></td>
-    <td><a href="content/effective_cpp/28.md" title="">28：避免返回handles指向对象内部成分</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/29.md" title="">29：为异常安全而努力是值得的</a></td>
-    <td><a href="content/effective_cpp/30.md" title="">30：透彻了解inlining的里里外外</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/31.md" title="">31：将文件间的编译依存关系降至最低</a></td>
-    <td><a href="content/effective_cpp/32.md" title="">32：确定你的public继承塑膜出is-a关系</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/33.md" title="">33：避免遮掩继承而来的名称</a></td>
-    <td><a href="content/effective_cpp/34.md" title="">34：区分接口继承和实现继承</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/35.md" title="">35：考虑virtual函数以外的其他选择</a></td>
-    <td><a href="content/effective_cpp/36.md" title="">36：绝不重新定义继承而来的non-virtual函数</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/37.md" title="">37：绝不重新定义继承而来的缺省参数值</a></td>
-    <td><a href="content/effective_cpp/38.md" title="">38：通过复合塑膜出has-a或"根据某物实现出"</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/39.md" title="">39：明智而审慎的使用private继承</a></td>
-    <td><a href="content/effective_cpp/40.md" title="">40：明智而审慎的使用多重继承</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/41.md" title="">41：了解隐式接口和编译器多态</a></td>
-    <td><a href="content/effective_cpp/42.md" title="">42：了解typename的双重意义</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/43.md" title="">43：学习处理模板化基类内的名称</a></td>
-    <td><a href="content/effective_cpp/44.md" title="">44：将与参数无关的代码抽离templates</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/45.md" title="">45；运用成员函数模板接受所有兼容类型</a></td>
-    <td><a href="content/effective_cpp/46.md" title="">46：需要类型转换时请为模板定义非成员函数</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/47.md" title="">47：请使用traits classes表现类型信息</a></td>
-    <td><a href="content/effective_cpp/48.md" title="">48：认识template元编程</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/49.md" title="">49：了解new-handler的行为</a></td>
-    <td><a href="content/effective_cpp/50.md" title="">50：了解new和delete的合理替换时机</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/51.md" title="">51：编写new和delete时固守常规</a></td>
-    <td><a href="content/effective_cpp/52.md" title="">52：写了placement new也要写placement delete</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/53.md" title="">53：不要轻忽编译器的警告</a></td>
-    <td><a href="content/effective_cpp/54.md" title="">54：让自己熟悉包括TR1在内的标准程序库</a></td>
-</tr>
-<tr>
-    <td><a href="content/effective_cpp/55.md" title="">55：让自己熟悉Boost</a></td>
-    <td colspan="1"></td>
-</tr>
-</table>
 
 ### Linux
 
@@ -398,11 +188,15 @@
     <td>Linux</td>
     <td>
         <li><a href="content/linux_server_dev/文件操作总结.md">文件操作</a></li>
-        <li><a href="content/linux_server_dev/进程模型.md">进程</a></li>
         <li><a href="content/linux_server_dev/信号.md">信号</a></li>
+        <li><a href="content/linux_server_dev/进程模型.md">进程</a></li>
         <li><a href="content/linux_server_dev/线程模型.md">线程</a></li>
-        <li><a href="content/linux_server_dev/进程间通信.md">进程间通信</a></li>
         <li><a href="content/linux_server_dev/网络编程.md">网络编程</a></li>
+        <li><a href="content/mysql/MySQL操作.md">MySQL操作</a></li>
+        <li><a href="content/mysql/MySQL原理.md">MySQL原理</a></li>
+        <li><a href="content/redis/Redis操作.md">Redis操作</a></li>
+        <li><a href="content/redis/Redis原理.md">Redis原理</a></li>
+
 </tr>
 <tr>
     <td>Linux网络<br>基础API</td>
@@ -468,9 +262,6 @@
     </td>
     <td>信号</td>
     <td>
-        <li><a href="content/linux_server_dev/linux信号概述.md">linux信号概述</a></li>
-        <li><a href="content/linux_server_dev/信号函数.md">信号函数</a></li>
-        <li><a href="content/linux_server_dev/信号集.md">信号集</a></li>
         <li><a href="content/linux_server_dev/统一事件源.md">统一事件源</a></li>
         <li><a href="content/linux_server_dev/网络编程相关信号.md">网络编程相关信号</a></li>
     </td>
@@ -538,6 +329,13 @@
     </td>
 </tr>
 </table>
+
+### 数据库
+
+- [MySQL操作](content/mysql/MySQL操作.md)
+- [MySQL原理](content/mysql/MySQL原理.md)
+- [Redis操作](content/redis/Redis操作.md)
+- [Redis原理](content/redis/Redis原理.md)
 
 ### log
 

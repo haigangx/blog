@@ -1,14 +1,36 @@
-# 单件模式
+# 设计模式总结
 
 <!-- TOC -->
 
-- [懒汉式：](#懒汉式)
-    - [懒汉式多线程安全改进(双检锁)：](#懒汉式多线程安全改进双检锁)
-- [饿汉式：](#饿汉式)
-- [其他问题](#其他问题)
-    - [单例对象的析构：](#单例对象的析构)
+- [创建型模式](#创建型模式)
+- [1. Abstract Factory](#1-abstract-factory)
+- [2. Builder](#2-builder)
+- [3. Factory Method](#3-factory-method)
+- [4. Prototype](#4-prototype)
+- [5. Singleton](#5-singleton)
+    - [懒汉式：](#懒汉式)
+        - [懒汉式多线程安全改进(双检锁)：](#懒汉式多线程安全改进双检锁)
+    - [饿汉式：](#饿汉式)
+    - [其他问题](#其他问题)
+        - [单例对象的析构：](#单例对象的析构)
+- [结构型模式](#结构型模式)
+- [6. Adapter](#6-adapter)
+- [7. Bridge](#7-bridge)
+- [行为模式](#行为模式)
 
 <!-- /TOC -->
+
+## 创建型模式
+
+## 1. Abstract Factory
+
+## 2. Builder
+
+## 3. Factory Method
+
+## 4. Prototype
+
+## 5. Singleton
 
 保证一个类仅有一个实例，并提供一个访问它的全局访问点
 - 懒汉式：类文件加载的时候已经创建好了对象，如果对象一直没有使用，则类对象浪费空间
@@ -31,7 +53,7 @@ private:
 ```
 
 
-## 懒汉式：
+### 懒汉式：
 ```
 Singleton* Singleton::_instance = NULL;
 Singleton* Singleton::Instance() {
@@ -42,7 +64,7 @@ Singleton* Singleton::Instance() {
 }
 ```
 
-### 懒汉式多线程安全改进(双检锁)：
+#### 懒汉式多线程安全改进(双检锁)：
 ```
 Singleton* Singleton::Instance() {
     if (_instance == NULL) {
@@ -65,7 +87,7 @@ TODO:
 
   参见《程序员的自我修养——编译、连接、库》1.6.2 线程安全：过度优化
 
-## 饿汉式：
+### 饿汉式：
 
 ```
 Singleton* Singleton::_instance = new Singleton();
@@ -74,9 +96,9 @@ Singleton* Singleton::Instance() {
 }
 ```
 
-## 其他问题
+### 其他问题
 
-### 单例对象的析构：
+#### 单例对象的析构：
 * **m_pInstance 指向的空间什么时候释放呢？更严重的问题是，该实例的析构函数什么时候执行？**
 
   如果在类的析构行为中有必须的操作，比如关闭文件，释放外部资源，那么上面的代码无法实现这个要求。我们需要一种方法，正常的删除该实例。
@@ -170,3 +192,11 @@ Singleton* Singleton::Instance() {
   }
   ```
 
+
+## 结构型模式
+
+## 6. Adapter
+
+## 7. Bridge
+
+## 行为模式
