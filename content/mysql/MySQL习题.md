@@ -1,0 +1,3 @@
+- [经典SQL练习题(MySQL版)](https://blog.csdn.net/paul0127/article/details/82529216)
+- [SQL常见的一些面试题(太有用啦)](https://www.cnblogs.com/diffrent/p/8854995.html)
+- [超经典SQL练习题，做完这些你的ＳＱＬ就过关了](https://blog.csdn.net/flycat296/article/details/63681089)
