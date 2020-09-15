@@ -1,175 +1,130 @@
-#### C++
+## C
 
-<table width="100%">
-<tr>
-  <td align="center">C</td>
-  <td align="center">C++</td>
-</tr>
+- [C 的预处理](content/cpp_base/c/C的预处理.md)
+- [switch-case 中定义变量](content/cpp_base/c/C语言switch-case语句中定义变量问题.md)
+- [可变参函数](content/cpp_base/c/可变参函数.md)
+- [宏中使用 do-while-0 的好处](content/cpp_base/c/宏中使用do-while0语句的好处.md)
+- [struct 的内存对齐](content/cpp_base/c/struct的内存对齐.md)
 
-<tr>
-  <td>
-    <li><a href="content/cpp_base/c/C的预处理.md">C的预处理</a></li>
-    <li><a href="content/cpp_base/c/C语言switch-case语句中定义变量问题.md">switch-case中定义变量</a></li>
-    <li><a href="content/cpp_base/c/可变参函数.md">可变参函数</a></li>
-    <li><a href="content/cpp_base/c/宏中使用do-while0语句的好处.md">宏中使用do-while(0)的好处</a></li>
-    <li><a href="content/cpp_base/c/struct的内存对齐.md">struct的内存对齐</a></li>
-  </td>
-  <td>
-    <li><a href="content/cpp_base/cpp/理解C++虚函数.md">理解C++虚函数</a></li>
-    <li><a href="content/cpp_base/cpp/C++对象布局.md">C++对象布局</a></li>
-    <li><a href="content/cpp_base/cpp/extern关键字.md">extern关键字</a></li>
-    <li><a href="content/cpp_base/cpp/sprintf和snprintf.md">sprintf和snprintf</a></li>
-    <li><a href="content/cpp_base/cpp/向上取整floor和向下取整ceil.md">floor和ceil</a></li>
-    <li><a href="content/cpp_base/cpp/移植c和c++.md">移植C和C++</a></li>
-    <li><a href="content/cpp_base/cpp/new和delete.md">new和delete</a></li>
-    <li><a href="content/cpp_base/cpp/to_string函数集.md">to_string函数集</a></li>
-    <li><a href="content/cpp_base/cpp/智能指针.md">智能指针</a></li>
-    <li><a href="content/cpp_base/cpp/nullptr和NULL.md">nullptr和NULL</a></li>
-    <li><a href="content/cpp_base/cpp/函数返回数组指针类型.md">函数返回数组指针类型</a></li>
-    <li><a href="content/cpp_base/cpp/枚举类型前置声明.md">枚举类型前置声明</a></li>
-  </td>
-</tr>
+## C++
 
-<tr>
-  <td align="center">C++11</td>
-  <td align="center">C++11~</td>
-</tr>
+- [理解 C++ 虚函数](content/cpp_base/cpp/理解C++虚函数.md)
+- [C++ 对象布局](content/cpp_base/cpp/C++对象布局.md)
+- [extern 关键字](content/cpp_base/cpp/extern关键字.md)
+- [sprintf 和 snprintf](content/cpp_base/cpp/sprintf和snprintf.md)
+- [floor 和 ceil](content/cpp_base/cpp/向上取整floor和向下取整ceil.md)
+- [移植 C 和 C++](content/cpp_base/cpp/移植c和c++.md)
+- [new 和 delete](content/cpp_base/cpp/new和delete.md)
+- [to_string 函数集](content/cpp_base/cpp/to_string函数集.md)
+- [智能指针](content/cpp_base/cpp/智能指针.md)
+- [nullptr 和 NULL](content/cpp_base/cpp/nullptr和NULL.md)
+- [函数返回数组指针类型](content/cpp_base/cpp/函数返回数组指针类型.md)
+- [枚举类型前置声明](content/cpp_base/cpp/枚举类型前置声明.md)
 
-<tr>
-  <td>
-    <li><a href="content/cpp_base/cpp11/auto类型说明符.md">auto类型说明符</a></li>
-    <li><a href="content/cpp_base/cpp11/std-move函数.md">std::move函数</a></li>
-    <li><a href="content/cpp_base/cpp11/使用using进行别名声明.md">使用using进行别名声明</a></li>
-    <li><a href="content/cpp_base/cpp11/default和delete关键字.md">default和delete关键字</a></li>
-    <li><a href="content/cpp_base/cpp11/std-mutex.md">std::mutex</a></li>
-    <li><a href="content/cpp_base/cpp11/尾置返回类型.md">尾置返回类型</a></li>
-    <li><a href="content/cpp_base/cpp11/lambda表达式.md">lambda表达式</a></li>
-    <li><a href="content/cpp_base/cpp11/std-thread.md">std::thread</a></li>
-    <li><a href="content/cpp_base/cpp11/范围for语句.md">范围for语句</a></li>
-    <li><a href="content/cpp_base/cpp11/Random获取随机值.md">Random获取随机值</a></li>
-    <li><a href="content/cpp_base/cpp11/使用std-unique_lock和std-lock_guard管理std-mutex.md">用std::unique_lock和std::lock_guard管理std::mutex</a></li>
-  </td>
-  <td>
-    <li><a href="content/cpp_base/cpp20/反射.md">反射</a></li>
-  </td>
-</tr>
+## C++11
 
-<tr>
-    <td align="center" colspan="2" width="50%">C++重点总结</td>
-</tr>
+- [auto 类型说明符](content/cpp_base/cpp11/auto类型说明符.md)
+- [std::move 函数](content/cpp_base/cpp11/std-move函数.md)
+- [使用 using 进行别名声明](content/cpp_base/cpp11/使用using进行别名声明.md)
+- [default 和 delete 关键字](content/cpp_base/cpp11/default和delete关键字.md)
+- [std::mutex](content/cpp_base/cpp11/std-mutex.md)
+- [尾置返回类型](content/cpp_base/cpp11/尾置返回类型.md)
+- [lambda 表达式](content/cpp_base/cpp11/lambda表达式.md)
+- [std::thread](content/cpp_base/cpp11/std-thread.md)
+- [范围 for 语句](content/cpp_base/cpp11/范围for语句.md)
+- [Random 获取随机值](content/cpp_base/cpp11/Random获取随机值.md)
+- [用 std::unique_lock 和 std::lock_guard 管理 std::mutex](content/cpp_base/cpp11/使用std-unique_lock和std-lock_guard管理std-mutex.md)
 
-<tr>
-  <td colspan="2">
-    <li><a href="content/cpp_summary/C++实现不可被拷贝的类.md">C++实现不可被拷贝的类</a></li>
-    <li><a href="content/cpp_summary/C++编译器为一个空类做了哪些事.md">C++编译器为一个空类做了哪些事</a></li>
-    <li><a href="content/cpp_summary/正确编写operator_equal.md">正确编写operator=</a></li>
-    <li><a href="content/cpp_summary/PIMPL.md">C++之PIMPL技法</a></li>
-    <li><a href="content/cpp_summary/RAII.md">C++之RAII技法</a></li>
-    <li><a href="content/effective_cpp/effective_cpp.md">《Effective C++》总结</a></li>
-    <li><a href="content/design_pattern/design_pattern.md">设计模式总结</a></li>
-    <li><a href="content/stl/stl.md">STL总结</a></li>
-  </td>
-</tr>
+## C++11 后
 
-</table>
+- [反射](content/cpp_base/cpp20/反射.md)
 
+## C++重点总结
 
-### Linux
+- [C++ 实现不可被拷贝的类](content/cpp_summary/C++实现不可被拷贝的类.md)
+- [C++ 编译器为一个空类做了哪些事](content/cpp_summary/C++编译器为一个空类做了哪些事.md)
+- [正确编写 operator=](content/cpp_summary/正确编写operator_equal.md)
+- [C++ 之 PIMPL 技法](content/cpp_summary/PIMPL.md)
+- [C++ 之 RAII 技法](content/cpp_summary/RAII.md)
+- [《Effective C++》总结](content/effective_cpp/effective_cpp.md)
+- [设计模式总结](content/design_pattern/design_pattern.md)
+- [STL 总结](content/stl/stl.md)
+
+## Linux
 
 ### 操作系统知识
 
-<table width=100%>
-<tr>
-  <td width="50%">
-  <li><a href="content/operating_systems/链接装载库.md">链接、装载和库</a></li>
-  <li><a href="content/operating_systems/进程和线程.md">进程和线程</a></li>
-  <li><a href="content/operating_systems/内存管理.md">内存管理</a></li>
-  <li><a href="content/operating_systems/linux文件系统.md">linux文件系统</a></li>
-  </td>
-  <td width="50%">
-  <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
-  </td>
-</tr>
-</table>
+- [链接、装载和库](content/operating_systems/链接装载库.md)
+- [进程和线程](content/operating_systems/进程和线程.md)
+- [内存管理](content/operating_systems/内存管理.md)
+- [linux 文件系统](content/operating_systems/linux文件系统.md)
+- [linux 中的零拷贝技术](content/linux_base/linux中的零拷贝技术.md)
 
+### 命令
 
-#### 命令
+- [shell 快捷键](content/linux_base/command/shell_keybind.md)
+- [常用命令](content/linux_base/command/summary.md)
+- [awk](content/linux_base/command/awk.md)
+- [curl](content/linux_base/command/curl.md)
+- [find](content/linux_base/command/find.md)
+- [ifstat](content/linux_base/command/ifstat.md)
+- [mpstat](content/linux_base/command/mpstat.md)
+- [nc](content/linux_base/command/nc.md)
+- [netstat](content/linux_base/command/netstat.md)
+- [vmstat](content/linux_base/command/vmstat.md)
+- [top-htop](content/linux_base/command/top-htop.md)
+- [strace](content/linux_base/command/strace.md)
+- [ltrace](content/linux_base/command/ltrace.md)
+- [pstack](content/linux_base/command/pstack.md)
+- [valgrind](content/linux_base/command/valgrind.md)
+- [tcpdump](content/linux_base/command/tcpdump.md)
+- [grep](content/linux_base/command/grep.md)
+- [tar](content/linux_base/command/tar.md)
+- [lsof](content/linux_base/command/lsof.md)
+- [sed](content/linux_base/command/sed.md)
+- [scp](content/linux_base/command/scp.md)
+- [ssh](content/linux_base/command/ssh.md)
+- [telnet](content/linux_base/command/telnet.md)
+- [gcc](content/linux_base/command/gcc.md)
+- [wc](content/linux_base/command/wc.md)
+- [expr](content/linux_base/command/expr.md)
+- [objdump](content/linux_base/command/objdump.md)
 
-<table>
-<tr>
-    <td width="10%"><a href="content/linux_base/command/shell_keybind.md">shell快捷键</a></td>
-    <td><a href="content/linux_base/command/summary.md">常用命令</a></td>
-    <td><a href="content/linux_base/command/awk.md" title="">awk</a></td>
-    <td><a href="content/linux_base/command/curl.md" title="">curl</a></td>
-    <td><a href="content/linux_base/command/find.md" title="">find</a></td>
-    <td><a href="content/linux_base/command/ifstat.md" title="">ifstat</a></td>
-    <td><a href="content/linux_base/command/mpstat.md" title="">mpstat</a></td>
-    <td><a href="content/linux_base/command/nc.md" title="">nc</a></td>
-    <td><a href="content/linux_base/command/netstat.md" title="">netstat</a></td>
-</tr>
-<tr>
-    <td><a href="content/linux_base/command/vmstat.md" title="">vmstat</a></td>
-    <td><a href="content/linux_base/command/top-htop.md" title="">top-htop</a></td>
-    <td><a href="content/linux_base/command/strace.md" title="">strace</a></td>
-    <td><a href="content/linux_base/command/ltrace.md" title="">ltrace</a></td>
-    <td><a href="content/linux_base/command/pstack.md" title="">pstack</a></td>
-    <td><a href="content/linux_base/command/valgrind.md" title="">valgrind</a></td>
-    <td><a href="content/linux_base/command/tcpdump.md" title="">tcpdump</a></td>
-    <td><a href="content/linux_base/command/grep.md" title="">grep</a></td>
-    <td><a href="content/linux_base/command/tar.md" title="">tar</a></td>
-</tr>
-<tr>
-    <td><a href="content/linux_base/command/lsof.md" title="">lsof</a></td>
-    <td><a href="content/linux_base/command/sed.md" title="">sed</a></td>
-    <td><a href="content/linux_base/command/scp.md" title="">scp</a></td>
-    <td><a href="content/linux_base/command/ssh.md" title="">ssh</a></td>
-    <td><a href="content/linux_base/command/telnet.md" title="">telnet</a></td>
-    <td><a href="content/linux_base/command/gcc.md" title="">gcc</a></td>
-    <td><a href="content/linux_base/command/wc.md" title="">wc</a></td>
-    <td><a href="content/linux_base/command/expr.md" title="">expr</a></td>
-    <td><a href="content/linux_base/command/objdump.md" title="">objdump</a></td>
-</tr>
-</table>
+### linux基础
 
-#### linux基础
-
-<table width=100%>
-<tr>
-  <td width="50%">
-  <li><a href="content/linux_base/linux下调试方法总结.md">linux下调试方法总结</a></li>
-  <li><a href="content/linux_base/ubuntu中代理设置总结.md">ubuntu中代理设置总结</a></li>
-  <li><a href="content/linux_base/修改bash命令行前缀.md">修改bash命令行前缀</a></li>
-  </td>
-  <td width="50%">
-  <li><a href="content/linux_base/linux中的零拷贝技术.md">linux中的零拷贝技术</a></li>
-  <li><a href="content/linux_base/linux后台任务的运行关闭查看.md">linux后台任务的运行关闭查看</a></li>
-  <li><a href="content/linux_base/linux磁盘分析和清理.md">linux磁盘分析和清理</a></li>
-  <li><a href="content/linux_base/软链接和硬链接.md">软链接和硬链接</a></li>
-  </td>
-</tr>
-</table>
+- [linux 下调试方法总结](content/linux_base/linux下调试方法总结.md)
+- [ubuntu 中代理设置总结](content/linux_base/ubuntu中代理设置总结.md)
+- [修改 bash 命令行前缀](content/linux_base/修改bash命令行前缀.md)
+- [linux 中的零拷贝技术](content/linux_base/linux中的零拷贝技术.md)
+- [linux 后台任务的运行关闭查看](content/linux_base/linux后台任务的运行关闭查看.md)
+- [linux 磁盘分析和清理](content/linux_base/linux磁盘分析和清理.md)
+- [软链接和硬链接](content/linux_base/软链接和硬链接.md)
 
 ### 工具学习
 
-<table>
-<tr>
-  <td width="12%"><a href="content/tools/bash.md">Bash</a></td>
-  <td width="12%"><a href="content/tools/gdb.md">GDB</a></td>
-  <td><a href="content/tools/Markdown.md">Markdown</a></td>
-  <td><a href="content/tools/tmux.md">tmux</a></td>
-  <td><a href="content/tools/vscode.md">vscode</a></td>
-  <td><a href="content/tools/zsh.md">zsh</a></td>
-  <td><a href="content/tools/cmake.md">CMake</a></td>
-  <td><a href="content/tools/docker.md">docker</a></td>
-<tr>
-</tr>
-  <td><a href="content/tools/git.md">Git</a></td>
-  <td><a href="content/tools/regular_expression.md">正则表达式</a></td>
-  <td><a href="content/tools/vim.md">vim</a></td>
-  <td><a href="content/tools/wireshark.md">WireShark</a></td>
-  <td colspan="4"></td>
-</tr>
-</table>
+- [Bash](content/tools/bash.md)
+- [GDB](content/tools/gdb.md)
+- [Markdown](content/tools/Markdown.md)
+- [tmux](content/tools/tmux.md)
+- [vscode](content/tools/vscode.md)
+- [zsh](content/tools/zsh.md)
+- [CMake](content/tools/cmake.md)
+- [docker](content/tools/docker.md)
+- [Git](content/tools/git.md)
+- [正则表达式](content/tools/regular_expression.md)
+- [vim](content/tools/vim.md)
+- [WireShark](content/tools/wireshark.md)
+
+### 数据库
+
+- [MySQL 操作](content/mysql/MySQL操作.md)
+- [MySQL 原理](content/mysql/MySQL原理.md)
+- [Redis 操作](content/redis/Redis操作.md)
+- [Redis 原理](content/redis/Redis原理.md)
+
+### log
+
+- [log](content/log/README.md)
 
 ### Linux服务器开发
 
@@ -192,10 +147,6 @@
         <li><a href="content/linux_server_dev/进程模型.md">进程</a></li>
         <li><a href="content/linux_server_dev/线程模型.md">线程</a></li>
         <li><a href="content/linux_server_dev/网络编程.md">网络编程</a></li>
-        <li><a href="content/mysql/MySQL操作.md">MySQL操作</a></li>
-        <li><a href="content/mysql/MySQL原理.md">MySQL原理</a></li>
-        <li><a href="content/redis/Redis操作.md">Redis操作</a></li>
-        <li><a href="content/redis/Redis原理.md">Redis原理</a></li>
 
 </tr>
 <tr>
@@ -231,12 +182,6 @@
 <tr>
     <td>Linux服务器<br>程序规范</td>
     <td>
-        <li><a href="content/linux_server_dev/日志系统.md">日志</a></li>
-        <li><a href="content/linux_server_dev/用户信息.md">用户信息</a></li>
-        <li><a href="content/linux_server_dev/进程间关系.md">进程间关系</a></li>
-        <li><a href="content/linux_server_dev/系统资源限制.md">系统资源限制</a></li>
-        <li><a href="content/linux_server_dev/改变工作目录和根目录.md">改变工作目录和根目录</a></li>
-        <li><a href="content/linux_server_dev/服务器程序后台化.md">服务器程序后台化</a></li>
     </td>
     <td>高性能服务器<br>程序框架</td>
     <td>
@@ -283,9 +228,6 @@
 <tr>
     <td>多进程编程</td>
     <td>
-        <li><a href="content/linux_server_dev/fork系统调用.md">fork系统调用</a></li>
-        <li><a href="content/linux_server_dev/exec系列系统调用.md">exec系列系统调用</a></li>
-        <li><a href="content/linux_server_dev/处理僵尸进程.md">处理僵尸进程</a></li>
         <li><a href="content/linux_server_dev/管道.md">管道</a></li>
         <li><a href="content/linux_server_dev/信号量.md">信号量</a></li>
         <li><a href="content/linux_server_dev/共享内存.md">共享内存</a></li>
@@ -329,57 +271,3 @@
     </td>
 </tr>
 </table>
-
-### 数据库
-
-- [MySQL操作](content/mysql/MySQL操作.md)
-- [MySQL原理](content/mysql/MySQL原理.md)
-- [Redis操作](content/redis/Redis操作.md)
-- [Redis原理](content/redis/Redis原理.md)
-
-### log
-
-<table>
-<tr>
-    <td align="center" width="50%">日常问题</td>
-    <td align="center" width="50%">Linux</td>
-</tr>
-<tr>
-    <td>
-        <li><a href="content/log/chrome从本地安装插件.md">chrome从本地安装插件</a></li>
-        <li><a href="content/log/刚装完ubuntu需要做的事.md">刚装完ubuntu需要做的事</a></li>
-        <li><a href="content/log/使用apt禁止某些软件更新.md">使用apt禁止某些软件更新</a></li>
-        <li><a href="content/log/cp拷贝隐藏文件.md">cp拷贝隐藏文件</a></li>
-        <li><a href="content/log/黑苹果安装总结.md">黑苹果安装总结</a></li>
-        <li><a href="content/log/书单.md">书单</a></li>
-        <li><a href="content/log/flag.md">flag</a></li>
-        <li><a href="content/log/chrome必备插件.md">chrome必备插件</a></li>
-        <li><a href="content/log/vmware中桥接、NAT、仅主机模式的区别.md">vmware中桥接、NAT、仅主机模式的区别</a></li>
-        <li><a href="content/log/利用硬链接备份配置文件.md">利用硬链接备份配置文件</a></li>
-    </td>
-    <td>
-        <li><a href="content/log/ubuntu安装Albert.md">ubuntu安装Albert</a></li>
-        <li><a href="content/log/ubuntu环境变量查找顺序.md">ubuntu环境变量查找顺序</a></li>
-        <li><a href="content/log/tldr.md">安装tldr终端查看命令用法示例</a></li>
-        <li><a href="content/log/linux历史命令.md">linux历史命令</a></li>
-        <li><a href="content/log/使用trash代替rm.md">使用trash代替rm</a></li>
-        <li><a href="content/log/关闭ubuntu桌面GUI.md">关闭ubuntu桌面GUI</a></li>
-        <li><a href="content/log/代理环境下使用ADD-APT-REPOSITORY添加PPA软件源.md">代理环境下使用ADD-APT-REPOSITORY添加PPA软件源</a></li>
-    </td>
-</tr>
-<tr>
-    <td align="center">Mac</td>
-    <td align="center"></td>
-</tr>
-<tr>
-    <td>
-        <li><a href="content/log/Mac使用心得.md">Mac使用心得</a></li>
-        <li><a href="content/log/Mac安装使用homebrew.md">Mac安装使用homebrew</a></li>
-        <li><a href="content/log/Mac安装gitbook并发布到github.md">Mac安装gitbook并发布到github</a></li>
-        <li><a href="content/log/网络资源.md">网络资源</a></li>
-    </td>
-    <td>
-    </td>
-</tr>
-</table>
-

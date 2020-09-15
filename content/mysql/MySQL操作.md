@@ -64,7 +64,7 @@
         - [8.2 `INNER JOIN` 等值联结（内部联结）](#82-inner-join-等值联结内部联结)
         - [8.3 `OUTER JOIN` 外部联结](#83-outer-join-外部联结)
     - [9. 组合查询](#9-组合查询)
-        - [9.1 使用 `UNION` ����作符连接多条 `SELECT` 语句组合查询](#91-使用-union-����作符连接多条-select-语句组合查询)
+        - [9.1 使用 `UNION` 连接多条 `SELECT` 语句组合查询](#91-使用-union-连接多条-select-语句组合查询)
         - [9.2 `UNION` 组合查询时使用 `` 包含或取消重复的行](#92-union-组合查询时使用--包含或取消重复的行)
         - [9.3 `UNION` 组合查询时使用 `ORDER BY` 对结果排序](#93-union-组合查询时使用-order-by-对结果排序)
     - [10. 全文本搜索](#10-全文本搜索)
@@ -1784,7 +1784,7 @@ mysql> SELECT customers.cust_id, orders.order_num
 
 ### 9. 组合查询
 
-#### 9.1 使用 `UNION` ����作符连接多条 `SELECT` 语句组合查询
+#### 9.1 使用 `UNION` 连接多条 `SELECT` 语句组合查询
 
 可在 `UNION` 操作符来组合数条 SQL 查询，用法是给出每条 SELECT 语句，然后在各条语句之间放上关键字 `UNION`
 
