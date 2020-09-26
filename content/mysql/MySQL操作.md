@@ -1737,6 +1737,33 @@ ON vendors.vend_id = products.vend_id;
 - 可以在联结中使用聚集函数：
 
   ```
+  mysql> SELECT cust_name, cust_id FROM customers;
+  +----------------+---------+
+  | cust_name      | cust_id |
+  +----------------+---------+
+  | Coyote Inc.    |   10001 |
+  | Mouse House    |   10002 |
+  | Wascals        |   10003 |
+  | Yosemite Place |   10004 |
+  | The Fudds      |   10005 |
+  | Pep E. LaPew   |   10007 |
+  | Pep E. LaPew   |   10008 |
+  | M. Martian     |   10009 |
+  +----------------+---------+
+  8 rows in set (0.00 sec)
+
+  mysql> SELECT * FROM orders;
+  +-----------+---------------------+---------+
+  | order_num | order_date          | cust_id |
+  +-----------+---------------------+---------+
+  |     20005 | 2005-09-01 00:00:00 |   10001 |
+  |     20006 | 2005-09-12 00:00:00 |   10003 |
+  |     20007 | 2005-09-30 00:00:00 |   10004 |
+  |     20008 | 2005-10-03 00:00:00 |   10005 |
+  |     20009 | 2005-10-08 00:00:00 |   10001 |
+  +-----------+---------------------+---------+
+  5 rows in set (0.00 sec)
+
   mysql> SELECT customers.cust_name,
       ->        customers.cust_id,
       ->        COUNT(orders.order_num) AS num_ord
