@@ -4,8 +4,8 @@
 - [switch-case 中定义变量](content/cpp_base/c/C语言switch-case语句中定义变量问题.md)
 - [可变参函数](content/cpp_base/c/可变参函数.md)
 - [宏中使用 do-while-0 的好处](content/cpp_base/c/宏中使用do-while0语句的好处.md)
-- [struct 的内存对齐](content/cpp_base/c/struct的内存对齐.md)
-- [柔性数组]()
+- [内存对齐](content/cpp_base/c/内存对齐.md)
+- [柔性数组](content/cpp_base/c/柔性数组.md)
 
 ## C++
 
@@ -117,17 +117,6 @@
 - [vim](content/tools/vim.md)
 - [WireShark](content/tools/wireshark.md)
 
-### 网络
-
-- [ARP 协议工作原理](content/linux_server_dev/ARP协议工作原理.md)
-- [DNS 工作原理](content/linux_server_dev/DNS工作原理.md)
-- [ICMP 协议](content/linux_server_dev/ICMP协议.md)
-- [IP 协议](content/linux_server_dev/IP协议.md)
-- [TCP 协议](content/linux_server_dev/TCP协议.md)
-- [UDP 协议](content/linux_server_dev/UDP协议.md)
-- [HTTP 协议](content/linux_server_dev/HTTP协议.md)
-
-
 ### 数据库
 
 - [MySQL 操作](content/mysql/MySQL操作.md)
@@ -143,6 +132,18 @@
 - [进程间通信](content/linux_server_dev/进程间通信.md)
 - [线程](content/linux_server_dev/线程模型.md)
 - [网络编程](content/linux_server_dev/网络编程.md)
+- [服务器设计](content/linux_server_dev/服务器设计.md)
+
+### 网络
+
+- [ARP 协议工作原理](content/linux_server_dev/ARP协议工作原理.md)
+- [DNS 工作原理](content/linux_server_dev/DNS工作原理.md)
+- [ICMP 协议](content/linux_server_dev/ICMP协议.md)
+- [IP 协议](content/linux_server_dev/IP协议.md)
+- [TCP 协议](content/linux_server_dev/TCP协议.md)
+- [UDP 协议](content/linux_server_dev/UDP协议.md)
+- [HTTP 协议](content/linux_server_dev/HTTP协议.md)
+
 
 ### log
 
@@ -157,7 +158,6 @@
         <li><a href="content/linux_server_dev/主机字节序和网络字节序.md">主机字节序和网络字节序</a></li>
         <li><a href="content/linux_server_dev/socket地址结构体.md">socket地址结构体</a></li>
         <li><a href="content/linux_server_dev/ip地址转换函数.md">ip地址转换函数</a></li>
-        <li><a href="content/linux_server_dev/创建socket.md">创建socket</a></li>
         <li><a href="content/linux_server_dev/命名socket.md">命名socket</a></li>
         <li><a href="content/linux_server_dev/监听socket.md">监听socket</a></li>
         <li><a href="content/linux_server_dev/接受连接accept.md">接受连接</a></li>
@@ -230,7 +230,6 @@
 <tr>
     <td>多进程编程</td>
     <td>
-        <li><a href="content/linux_server_dev/管道.md">管道</a></li>
         <li><a href="content/linux_server_dev/信号量.md">信号量</a></li>
         <li><a href="content/linux_server_dev/共享内存.md">共享内存</a></li>
         <li><a href="content/linux_server_dev/消息队列.md">消息队列</a></li>

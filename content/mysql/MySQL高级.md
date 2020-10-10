@@ -1382,10 +1382,6 @@ EXPLAIN SELECT * FROM `test03` WHERE `c1` = 'a1' AND `c4` = 'a4' GROUP BY `c3`,`
 - 字符要加单引号。
 - 一般SQL少用or。
 
-
-
-
-
 ## 11.分析慢SQL的步骤
 
 分析：

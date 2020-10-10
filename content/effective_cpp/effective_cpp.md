@@ -4,25 +4,31 @@
 
 - [一、让自己习惯 C++](#一让自己习惯-c)
 - [条款01：视C++为一个语言联邦](#条款01视c为一个语言联邦)
-- [条款02：尽量以const、enum、inline替换#define](#条款02尽量以constenuminline替换define)
-    - [为什么不使用#define？](#为什么不使用define)
-    - [怎么做？](#怎么做)
-- [条款03：尽可能使用const](#条款03尽可能使用const)
-    - [为什么要尽可能使用const？](#为什么要尽可能使用const)
-    - [怎么做？](#怎么做-1)
-        - [1、const基本用法：](#1const基本用法)
-        - [2、STL:iterator和const_iterator](#2stliterator和const_iterator)
-        - [3、函数返回值尽量声明为const常量，可以在编译阶段发现错误：](#3函数返回值尽量声明为const常量可以在编译阶段发现错误)
-        - [4、const成员函数：](#4const成员函数)
-        - [5、在const和non-const成员函数中避免重复：](#5在const和non-const成员函数中避免重复)
+- [条款02：尽量以 const、enum、inline 替换 #define](#条款02尽量以-constenuminline-替换-define)
+    - [1. 为什么不使用 #define？](#1-为什么不使用-define)
+    - [2. 怎么做？](#2-怎么做)
+- [条款03：尽可能使用 const](#条款03尽可能使用-const)
+    - [1. 为什么要尽可能使用 const？](#1-为什么要尽可能使用-const)
+    - [2. 怎么做？](#2-怎么做-1)
+        - [2.1 const 基本用法](#21-const-基本用法)
+        - [2.2 `STL:iterator` 和 `const_iterator`](#22-stliterator-和-const_iterator)
+        - [2.3 函数返回值尽量声明为 const 常量，可以在编译阶段发现错误](#23-函数返回值尽量声明为-const-常量可以在编译阶段发现错误)
+        - [2.4 const 成员函数：](#24-const-成员函数)
+        - [2.5 在 const 和 non-const 成员函数中避免重复](#25-在-const-和-non-const-成员函数中避免重复)
 - [条款04：确定对象被使用前已被初始化](#条款04确定对象被使用前已被初始化)
+    - [1. 使用类构造函数的初始化列表为类的成员变量进行初始化](#1-使用类构造函数的初始化列表为类的成员变量进行初始化)
+    - [2. 类成员变量初始化次序](#2-类成员变量初始化次序)
+    - [3. “不同编译单元内定义的 non-local static 对象”的初始化次序](#3-不同编译单元内定义的-non-local-static-对象的初始化次序)
+        - [3.1 概念](#31-概念)
+        - [3.2 提出问题](#32-提出问题)
+        - [3.3 解决办法](#33-解决办法)
 - [二、构造/析构/赋值运算](#二构造析构赋值运算)
-- [条款05：了解C++默默编写并调用哪些函数](#条款05了解c默默编写并调用哪些函数)
+- [条款05：了解 C++ 默默编写并调用哪些函数](#条款05了解-c-默默编写并调用哪些函数)
 - [条款06：若不想使用编译器自动生成的函数，就该明确拒绝](#条款06若不想使用编译器自动生成的函数就该明确拒绝)
-- [条款07：为多态基类声明virtual析构函数](#条款07为多态基类声明virtual析构函数)
+- [条款07：为多态基类声明 virtual 析构函数](#条款07为多态基类声明-virtual-析构函数)
 - [条款08：别让异常逃离析构函数](#条款08别让异常逃离析构函数)
     - [为什么说“别让异常逃离析构函数”？](#为什么说别让异常逃离析构函数)
-    - [怎么做？](#怎么做-2)
+    - [怎么做？](#怎么做)
 - [条款09：绝不在构造和析构过程中调用virtual函数](#条款09绝不在构造和析构过程中调用virtual函数)
 - [条款10：令operator=返回一个reference to *this](#条款10令operator返回一个reference-to-this)
 - [条款11：在operator=中处理“自我赋值”](#条款11在operator中处理自我赋值)
@@ -92,56 +98,57 @@
 
 ## 条款01：视C++为一个语言联邦
 
-今天的C++已经是个 **多重泛型编程语言(multiparadigm programming language)** ，一个同时支持 **过程形式(procedural)** 、 **面向对象形式(object-oriented)** 、 **函数形式(functional)** 、 **泛型形式(generic)** 、 **元编程形式(metaprogramming)** 的语言。
+今天的 C++ 已经是个 **多重泛型编程语言(multiparadigm programming language)** ，一个同时支持 **过程形式(procedural)** 、 **面向对象形式(object-oriented)** 、 **函数形式(functional)** 、 **泛型形式(generic)** 、 **元编程形式(metaprogramming)** 的语言
 
-为了理解C++，最简单的办法是**将C++视为一个由相关语言组成的联邦而非单一语言**，在其某个次语言(sublanguage)中，各种守则与通例都倾向于简单、直观易懂，并且容易记住，C++的次语言有四种：
+为了理解 C++，最简单的办法是 **将C++视为一个由相关语言组成的联邦而非单一语言**，在其某个次语言(sublanguage)中，各种守则与通例都倾向于简单、直观易懂，并且容易记住，C++ 的次语言有四种：
 
-1. **C** ：
+1. `C`：
 
-   区块(block)、语句(statements)、预处理(preprocessor)、内置数据类型(built-in data types)、数组(arrays)、指针(pointers)等等来自于C
+   区块 `block`、语句 `statements`、预处理 `preprocessor`、内置数据类型 `built-in data types`、数组 `arrays`、指针 `pointers` 等等来自于 C
 
-2. **Object-Oriented C++** ：
+2. `Object-Oriented C++`：
 
-   classes、封装(encapsulation)、继承(inheritance)、多态(polymorphism)、virtual函数(动态绑定)等等面向对象设计守则
+   `classes`、封装 `encapsulation`、继承 `inheritance`、多态 `polymorphism`、`virtual` 函数(动态绑定)等等面向对象设计守则
 
-3. **Template C++** ：
+3. `Template C++`：
 
-   C++的泛型编程(generic programming)部分，template metaprogramming(TMP, 模板元编程)
+   C++ 的泛型编程 (`generic programming`) 部分，模板元编程 (`TMP, template metaprogramming`)
 
-4. **STL** ：
+4. `STL`：
 
-   STL是个template程序库，拥有容器(containers)、迭代器(iterators)、算法(algorithms)等非常有用的工具
+   STL 是个 template 程序库，拥有容器 `containers`、迭代器 `iterators`、算法 `algorithms` 等非常有用的工具
 
-## 条款02：尽量以const、enum、inline替换#define
+## 条款02：尽量以 const、enum、inline 替换 #define
 
   或者说“尽量以编译器替换预处理器”
   
-### 为什么不使用#define？
+### 1. 为什么不使用 #define？
 
-  - 首先，#define不被视为语言的一部分，当你定义`#define ASPECT_RATIO 1.653`时，ASPECT_RATIO不会被编译器看见，所以也不会进入记号表中，因此当因为此常量得到一个便宜错误时，错误信息中会提及1.653而不是ASPECT_RATIO，在调试时追踪它将会浪费时间
+  - 首先，`#define` 不被视为语言的一部分，当你定义 `#define ASPECT_RATIO 1.653` 时，`ASPECT_RATIO` 不会被编译器看见，所以也不会进入记号表中，因此当因为此常量得到一个编译错误时，错误信息中会提及 1.653 而不是 `ASPECT_RATIO`，在调试时追踪它将会浪费时间
 
-  - 而且，使用#define定义宏时，宏的简单替换原则会导致无法预计的错误
+  - 而且，使用 `#define` 定义宏时，宏的简单替换原则会导致无法预计的错误
 
-### 怎么做？
+### 2. 怎么做？
 
-1. 以const代替#define常量
+1. 以 `const` 代替 `#define` 常量
 
-   - #define PI 3.14  => const double Pi = 3.14;
-   - #define NAME "Scott Metyers" => const char* name = "Scott Metyers";
-   - 
+   - `#define PI 3.14`  => `const double Pi = 3.14`
+
+   - `#define NAME "Scott Metyers"` => `const char* name = "Scott Metyers"`
+
+   - ```c
+     class GamePlayer {
+      private:
+          static const double n;  //声明式
+     }
+     const double GamePlayer::n = 1.35;   //定义式
      ```
-      class GamePlayer {
-       private:
-           static const double n;  //声明式
-      }
-      const double GamePlayer::n = 1.35;   //定义式
-      ```
 
-2. 以enum代替#define
+2. 以 `enum` 代替 `#define`
 
-   enum的行为某方面来说更像#define而不像const
+   `enum` 的行为某方面来说更像 `#define` 而不像 `const`
 
-   ```
+   ```c
    class GamePlayer {
    private:
        enum{ NumTurns = 5 };
@@ -149,95 +156,101 @@
    }
    ```
 
-3. 以inline代替#define宏
+3. 以 `inline` 代替 `#define` 宏
 
     - 宏：
 
        - 优点：看起来像函数，但不会招致函数调用带来的额外开销
        - 缺点：宏的简单替换原则会导致无法预计的错误
       
-    - 以inline函数代替宏更加安全
+    - 以 `inline` 函数代替宏更加安全
 
-## 条款03：尽可能使用const
+## 条款03：尽可能使用 const
 
-### 为什么要尽可能使用const？
-  const允许你对某个对象指定“不该被改动”的约束，编译器会强制实施这个约束，帮助你确保该变量不会被其他代码或程序员改动。
+### 1. 为什么要尽可能使用 const？
 
+const 允许你对某个对象指定 “不该被改动” 的约束，编译器会强制实施这个约束，帮助你确保该变量不会被其他代码或程序员改动
 
-### 怎么做？
+### 2. 怎么做？
 
-#### 1、const基本用法：
+#### 2.1 const 基本用法
 
-    char greeting[] = "Hello"; 
-    char *p = greeting;         //non-const pointer, non-const data
-    const char* p = greeting;   //non-const pointer, const data
-    char* const p = greeting;   //const pointer, non-const data
-    const char* const p = greeting; //const pointer, const data
-
+```c
+char greeting[] = "Hello"; 
+char *p = greeting;         //non-const pointer, non-const data
+const char* p = greeting;   //non-const pointer, const data
+char* const p = greeting;   //const pointer, non-const data
+const char* const p = greeting; //const pointer, const data
+```
     
-**总结** ：const在 * 号左边，表示被指物是常量；const在 * 号右边，表示指针自身是常量
-    
-**Note** ：`const char *`和`char const *`这两种写法意义相同
+- `const` 在 `*` 号 **左边**，表示 **被指物是常量**
+- `const` 在 `*` 号 **右边**，表示 **指针自身是常量**
+- `const char *` 和 `char const *` 这两种写法意义相同
 
 
-#### 2、STL:iterator和const_iterator
+#### 2.2 `STL:iterator` 和 `const_iterator`
     
-* ```
+- ```c
   const std::vector<int>::iterator iter <==> T* const iter   
-  *iter = 10;  //Ok,改变iter所指之物
-  iter++;  //Error，iter本身不可变
+  *iter = 10;     // Ok，改变 iter 所指之物
+  iter++;         // Error，iter 本身不可变
   ```
     
-* ```
+- ```c
   std::vector<int>::const_iterator cIter <==> const T* cIter
-  *cIter = 10;  //Error, *cIter是const
-  cIter++;  //Ok，cIter可变
+  *cIter = 10;    // Error, *cIter 是 const
+  cIter++;        // Ok，cIter 可变
   ```
     
+#### 2.3 函数返回值尽量声明为 const 常量，可以在编译阶段发现错误
+
+例：
+
+```c
+class Rational{...};
+const Rational operator * (const Rational& lhs, const Rational& rhs);
+Rational a, b, c;
+```
+
+如果手误将 `if (a*b == c)` 写成 `if (a*b = c)` ，因为返回值为 const 而无法编译通过
     
-#### 3、函数返回值尽量声明为const常量，可以在编译阶段发现错误：
-  例：
-  
-    class Rational{...};
-    const Rational operator * (const Rational& lhs, const Rational& rhs);
-    Rational a, b, c;
+#### 2.4 const 成员函数：
+
+- class 接口中使用 const 使得接口更容易理解
+
+- const 成员函数可以操作 const 对象，c++ 通过 `reference-to-const` 方式传递对象来改善程序运行效率，运用此技术的前提是有 `const` 成员函数来处理取得的 `const` 对象
     
-  如果手误将if (a*b == c)写成 if (a*b = c) (这样的事情经常发生)，因为返回值为const而无法编译通过
-    
-    
-#### 4、const成员函数：
-- class接口中使用const使得接口更容易理解；
-- const成员函数可以操作const对象，c++通过reference-to-const方式传递对象来改善程序运行效率，运用此技术的前提是有const成员函数来处理取得的const对象
-    
-    **Note:两个成员函数如果只是常量性不同，可以被重载**
+    **注意:两个成员函数如果只是常量性不同，可以被重载**
    
     ```
     class TextBlock{
     public:
-        const char& operator[] (std::size_t position) const //const对象版本的operator[]函数
+        const char& operator[] (std::size_t position) const // const 对象版本的 operator[] 函数
         {return text[position];}
-        char& operator[] (std::size_t position) //非const对象版本的operator[]函数
+
+        char& operator[] (std::size_t position) // 非 const 对象版本的 operator[] 函数
         {return text[position];}
     }
-    void printf(const TextBlock& ctb)   //此处ctb为const
+    void printf(const TextBlock& ctb)   //此处 ctb 为 const
     {
-        std::cout << ctb[0];    //调用const TextBlock::operator[]
-        //ctb[0] = 'x';         //错误，不能对写一个const对象
+        std::cout << ctb[0];    // 调用 const TextBlock::operator[]
+        // ctb[0] = 'x';         // 错误，不能写一个 const 对象
     }     
     ```
     
     const成员函数的两个流行概念：`bitwise constness` 和 `logical constness`
     
-    * **bitwise constness** ：const成员函数必须不更改对象之内任何成员变量(static除外),即是不更改对象内的任何一个bit
+    - `bitwise constness` ：const 成员函数必须不更改对象之内任何成员变量( static 除外),即是不更改对象内的任何一个 bit
         
-        缺点：许多成员函数虽然不十足具备const性质但却能通过bitwise测试，例：
+        缺点：许多成员函数虽然不十足具备 const 性质但却能通过 bitwise 测试，例：
+
         ```
-        char& operator[](std::size_t position) const    //函数内未修改对象的任何non-static成员变量
-        {return pText[position];}                       //但是返回一个成员变量的引用导致外界可能对该对象进行更改
+        char& operator[](std::size_t position) const    //函数内未修改对象的任何 non-static 成员变量
+        { return pText[position]; }                     //但是返回一个成员变量的引用导致外界可能对该对象进行更改
         ```
     
-    * **logical constness**：const成员函数可以修改它所处理的对象内的某些bits，但只有在客户端侦测不出的情况下才能如此
-        此时需要使用mutable(可变的)关键字修饰可以在const函数中修改的成员变量，例：
+    - `logical constness`：const 成员函数可以修改它所处理的对象内的某些 bits，但只有在客户端侦测不出的情况下才能如此
+        此时需要使用 mutable (可变的)关键字修饰可以在 const 函数中修改的成员变量，例：
         
         ```
         class CTextBloxk{
@@ -245,9 +258,10 @@
             std::size_t length() const;
         private:
             char* pText;
-            mutable std::size_t textLength; //这些成员函数可能总是会被更改，即使在const成员函数中
-            mutable bool lengthIsValid; //不加mutable在const成员函数中直接修改会导致编译错误
+            mutable std::size_t textLength; //这些成员函数可能总是会被更改，即使在 const 成员函数中
+            mutable bool lengthIsValid;     //不加 mutable 在 const 成员函数中直接修改会导致编译错误
         };
+
         std::size_t CTextBloxk::length() const{
             if (!lengthIsValid){
                 textLength = std::strlen(pText);
@@ -257,11 +271,12 @@
         }
         ```
     
-    编译器强制实施bitwise constness，但你编写程序时应该尽可能使用logical constness.
+    编译器强制实施 bitwise constness，但你编写程序时应该尽可能使用 logical constness
 
 
-#### 5、在const和non-const成员函数中避免重复：
-当const和non-const成员函数有着实质等价的实现时，令non-const版本调用const版本可避免代码重复，例：
+#### 2.5 在 const 和 non-const 成员函数中避免重复
+
+当 const 和 non-const 成员函数有着实质等价的实现时，令 non-const 版本调用 const 版本可避免代码重复，例：
 
 ```
 class TextBlock {
@@ -270,150 +285,155 @@ const char& operator[](std::size_t position) const
 { ... ... ... return text[position]; }
 };
 char& operator[](std::size_t position){
-    return const_case<char&>(       //将op[]返回值的const移除
-        static_case<const TextBlock&>(*this)    //为*this加上const
-            [position]              //调用const op[]
+    return const_case<char&>(                   //将 op[] 返回值的 const 移除
+        static_case<const TextBlock&>(*this)    //为 *this 加上 const
+            [position]                          //调用 const op[]
         );
 }
 ```
 
-注意必须使用non-const版本调用const版本，而非const版本调用non-const版本，因为const成员函数本身承诺并不会调用任何非const成员函数
+注意必须使用 non-const 版本调用 const 版本，而非 const 版本调用 non-const 版本，因为 const 成员函数本身承诺并不会调用任何非 const 成员函数
 
 ## 条款04：确定对象被使用前已被初始化
 
-c++对于"将对象初始化"这件事上总是反复无常，所以最简单有效的处理办法就是：永远在对象使用之前先将它初始化
+c++ 对于"将对象初始化"这件事上总是反复无常，所以最简单有效的处理办法就是：**永远在对象使用之前先将它初始化**
 
-**1、使用类构造函数的初始化列表为类的成员变量进行初始化**
+### 1. 使用类构造函数的初始化列表为类的成员变量进行初始化
 
 规则：
   - 应该总在初始化列表中列出所有的成员变量
 
-    对于需要使用default构造函数构造成员变量时，可以使用nothing作为初始化实参，例：
+    对于需要使用 default 构造函数构造成员变量时，可以使用 nothing 作为初始化实参，例：
+
     ```
     ABEntry::ABEntry()
-        :theName(), //调用theName的default构造函数
+        :theName(),     //调用 theName 的 default 构造函数
     {}
     ```
-   - 成员是const或者references，必须使用初始化
-   - 在拥有多个构造函数，每个构造函数有自己的成员初值列。
-    这多少会导致一部分重复工作，所以可以适当的在初值列中“遗漏”那些”赋值表现的像初始化一样好“的成员变量，改用他们的赋值操作，并将那些赋值操作移往某个函数(通常是private)中
+
+   - 成员是 const 或者 references，必须使用初始化
+
+   - 在拥有多个构造函数，每个构造函数有自己的成员初值列
+
+     这多少会导致一部分重复工作，所以可以适当的在初值列中“遗漏”那些”赋值表现的像初始化一样好“的成员变量，改用他们的赋值操作，并将那些赋值操作移往某个函数(通常是 private )中
+
+### 2. 类成员变量初始化次序
+
+c++ 有着固定的成员初始化次序：
+
+  - base classes 更早于其 derived classes 被初始化 
+  - class 的成员变量总是以其声明次序被初始化，与成员变量在初值列中出现的顺序无关，所以为了避免误会，当你在成员初值列中条列各个成员时，最好总是以其声明次序为次序
 
 
-**2、类成员变量初始化次序**
+### 3. “不同编译单元内定义的 non-local static 对象”的初始化次序
 
-c++有着固定的成员初始化次序：
-  - base classes更早于其derived classes被初始化 
-  - class的成员变量总是以其声明次序被初始化，与成员变量在初值列中出现的顺序无关，所以为了避免误会，当你在成员初值列中条列各个成员时，最好总是以其声明次序为次序
+#### 3.1 概念
 
-
-**3、“不同编译单元内定义的non-local static 对象”的初始化次序**
-
-**概念：**
-  - **static:**
+- `static`
   
-    static对象，其寿命从被构造出来直到程序结束为止，包括*global对象*、定义于*namespace作用域内的对象*、在class内、函数内、以及在file作用域内*被声明为static的对象*
+  static 对象，其寿命从被构造出来直到程序结束为止，包括 global 对象、定义于 namespace 作用域内的对象、在 class 内、函数内、以及在 file 作用域内被声明为 static 的对象
     
-    已初始化的全局和静态C变量保存在`.data`段，未初始化的全局和静态C变量保存在`.bss`(Batter Save Space)段
+  已初始化的全局和静态C变量保存在 `.data` 段，未初始化的全局和静态C变量保存在 `.bss (Batter Save Space)` 段
     
-  - **local static:**
+- `local static`
   
-    函数内的static对象被称为local static对象，local static对象会在”该函数被调用期间“”首次遇上该对象之定义式“时被初始化
+  函数内的 static 对象被称为 local static 对象，local static 对象会在”该函数被调用期间“”首次遇上该对象之定义式“时被初始化
     
-  - **non-local static:**
+- `non-local static`
   
-    其他不在函数中定义的static对象成为non-local static对象
+  其他不在函数中定义的 static 对象成为 non-local static 对象
     
-  - **编译单元：**
+- `编译单元`
   
-    指产出单一目标文件(single object file)的那些源码，基本上它是单一源码文件加上其所含入的头文件(#include file)
+  指产出单一目标文件( single object file )的那些源码，基本上它是单一源码文件加上其所含入的头文件( #include file )
 
-**提出问题：**
+#### 3.2 提出问题
 
-***如果某编译单元内的某个non-local static对象的初始化动作使用了另一个编译单元内的某个non-local static对象，它所用到的这个对象可能尚未被初始化，因为C++对”定义于不同编译单元内的non-local static对象“的初始化次序并无明确定义所以应该如何保证当前编译单元中的non-local static对象初始化时，所依赖的另一个编译单元的non-local static对象已经被初始化？***
+**问题**：如果某编译单元内的某个 non-local static 对象的初始化动作使用了另一个编译单元内的某个 non-local static 对象，它所用到的这个对象可能尚未被初始化，因为C++对”定义于不同编译单元内的 non-local static 对象“的初始化次序并无明确定义所以应该如何保证当前编译单元中的 non-local static 对象初始化时，所依赖的另一个编译单元的 non-local static 对象已经被初始化？
 
-  举例：
-
-  ```
-  //编译单元A.obj
-  class FileSystem {
-  public:
-      ...
-      std::size_t numDisks() const;
-      ...
-  };
-  extern FileSystem tfs;
-
-  //编译单元B.obj
-  class Directory {
-  public:
-      Directory( params );
-      ...
-  };
-  Directory::Directory( params ) {
-      ...
-      std::size_t disks = tfs.numDisks();
-      ...
-  }
-
-  Directory tempDir( params ); //除非tfs在tempDir之前被初始化，否则tempDir的构造函数会用到未初始化的tfs
-  ```
-    
-**解决办法：** 
-
-**Singleton模式：** 将每个non-local static对象搬到自己的专属函数内(该对象在此函数内被声明为static)。 这些函数返回一个reference指向它所含的对象，然后用户调用这些函数，而不直接指涉这些对象。换句话说：non-local static对象被local static对象替换了
+举例：
 
 ```
-//编译单元A.obj
+//编译单元 A.obj
+class FileSystem {
+public:
+    ...
+    std::size_t numDisks() const;
+    ...
+};
+extern FileSystem tfs;
+
+//编译单元 B.obj
+class Directory {
+public:
+    Directory( params );
+    ...
+};
+Directory::Directory( params ) {
+    ...
+    std::size_t disks = tfs.numDisks();
+    ...
+}
+
+Directory tempDir( params );    //除非 tfs 在 tempDir 之前被初始化，否则 tempDir 的构造函数会用到未初始化的 tfs
+```
+    
+#### 3.3 解决办法
+
+**Singleton 模式：** 将每个 non-local static 对象搬到自己的专属函数内(该对象在此函数内被声明为 static )。 这些函数返回一个 reference 指向它所含的对象，然后用户调用这些函数，而不直接指涉这些对象。换句话说：non-local static 对象被 local static 对象替换了
+
+```
+//编译单元 A.obj
 class FileSystem { ... };
 FileSystem& tfs() {
     static FileSystem fs;
     return fs;
 }
 
-//编译单元B.obj
+//编译单元 B.obj
 class Directory { ... };
 Directory::Directory( params ) {
     ...
     std::size_t disks = tfs().numDisks();
     ...
 }
+
 Directory& tempDir() {
     static Directory td;
     return td;
 } 
 ```
 
-**仍然会存在的问题：**
+**仍然会存在的问题**：“内含static对象”的函数在多线程系统中带有不确定性
 
-”内含static对象“的函数在多线程系统中带有不确定性。
-
-**处理这个麻烦的一种做法是：** 在程序的单线程启动阶段(single-threaded startup portion)手工调用所有(reference-returning)函数，这可以消除与初始化有关的"竞速形势(rate conditions)"
+**处理这个麻烦的一种做法是：** 在程序的单线程启动阶段( single-threaded startup portion )手工调用所有( reference-returning )函数，这可以消除与初始化有关的"竞争条件( rate conditions )"
 
 ## 二、构造/析构/赋值运算
 
-## 条款05：了解C++默默编写并调用哪些函数
+## 条款05：了解 C++ 默默编写并调用哪些函数
 
 > 需要重写
 
-- 写一个空类，如果你自己没声明，编译器就会为这个类声明(只有当这些函数被调用时才创建)一个**copy构造函数**，一个**copy assignment操作符**和一个**析构函数**，此外如果你没有声明任何构造函数，编译器也会为你声明一个**default构造函数**，所有这些函数都是public和inline的。
+- 写一个空类，如果你自己没声明，编译器就会为这个类声明(只有当这些函数被调用时才创建)一个 **copy 构造函数**，一个 **copy assignment 操作符** 和一个 **析构函数**，此外如果你没有声明任何构造函数，编译器也会为你声明一个 **default 构造函数**，所有这些函数都是 public 和 inline 的
 
-- 编译器版本的copy构造函数和copy assignment操作符只是单纯的将来源对象的每一个non-static成员变量拷贝到目标对象
+- 编译器版本的 copy 构造函数和 copy assignment 操作符只是单纯的将来源对象的每一个 non-static 成员变量拷贝到目标对象
 
-- 编译器拒绝为“内含reference成员”和“内含const成员”的classes中声明默认copy assignment操作符，如果需要赋值操作，必须自己定义copy assignment操作符
+- 编译器拒绝为“内含 reference 成员”和“内含 const 成员”的 classes 中声明默认 copy assignment 操作符，如果需要赋值操作，必须自己定义 copy assignment 操作符
 
-- 如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment操作符
+- 如果某个 base classes 将 copy assignment 操作符声明为 private，编译器将拒绝为其 derived classes 生成一个 copy assignment 操作符
 
 ## 条款06：若不想使用编译器自动生成的函数，就该明确拒绝
 
 
-不希望类支持copy构造函数和copy assignment操作符，则可以：
+不希望类支持 copy 构造函数和 copy assignment 操作符，则可以：
 
-- 将copy构造函数和copy assignment声明为私有并且只定义不声明，只定义不声明是为了防止友元函数或者成员函数调用它(调用一个只定义未声明的函数会获得一个链接错误)
+- 将 copy 构造函数和 copy assignment 声明为私有并且只定义不声明，只定义不声明是为了防止友元函数或者成员函数调用它(调用一个只定义未声明的函数会获得一个链接错误)
 
-- 构造一个uncopyable类，然后将你不希望支持copy构造和copy assignment操作符的类继承于uncopyable类
+- 构造一个 uncopyable 类，然后将你不希望支持 copy 构造和 copy assignment 操作符的类继承于 uncopyable 类
 
   **原理：**
-  uncopyable类的copy构造函数和copy assignment操作符声明为私有，编译器在调用一个“编译器版本”的copy构造函数和copy assignment操作符时，会尝试调用其base class的对应函数，这些调用会被拒绝
+
+  uncopyable 类的 copy 构造函数和 copy assignment 操作符声明为私有，编译器在调用一个“编译器版本”的 copy 构造函数和 copy assignment 操作符时，会尝试调用其 base class 的对应函数，这些调用会被拒绝
 
   ```
   class uncopyable {
@@ -425,9 +445,9 @@ Directory& tempDir() {
       uncopyable operator=(const uncopyable&);
   };
   ```
-  参考：Boost库中的noncopyable
+  参考：Boost 库中的 noncopyable
 
-## 条款07：为多态基类声明virtual析构函数
+## 条款07：为多态基类声明 virtual 析构函数
 
 **问题：**
 
@@ -443,20 +463,22 @@ Base *ptk = new Derived();
 delete ptk;
 ```
 
-如上所示，delete ptk会导致程序只调用Base的析构函数，导致Derived部分占用的内存泄漏
+如上所示，delete ptk 会导致程序只调用 Base 的析构函数，导致 Derived 部分占用的内存泄漏
 
 **解决：**
 
-- polymorphic(带多态性质的) base classes应该声明一个virtual析构函数。如果class带有任何virtual函数，它就应该拥有一个virtual析构函数
+- polymorphic (带多态性质的) base classes 应该声明一个 virtual 析构函数。如果 class 带有任何 virtual 函数，它就应该拥有一个 virtual 析构函数
 
-- classes的设计目的如果不是作为base classes使用，或不是为了具备多态性(polymorphically)，就不该声明virtual析构函数
+- classes 的设计目的如果不是作为 base classes 使用，或不是为了具备多态性( polymorphically )，就不该声明 virtual 析构函数
 
-**Note：** 针对上述的第二点，滥用virtual析构函数可能会导致类的size变大，因为使用virtual函数会导致类中多出来虚表和虚指针
+**Note：** 针对上述的第二点，滥用 virtual 析构函数可能会导致类的 size 变大，因为使用 virtual 函数会导致类中多出来虚表和虚指针
 
 **其他：**
 
-- 有时候你希望拥有抽象class，但手上又没有任何pure virtual函数，可以为该抽象class声明一个pure virtual析构函数，但是你同时还必须为这个pure virtual析构函数提供一份定义。
-因为析构函数的运作方式是，最深层派生的那个class其析构函数最先被调用，然后其每一个base class的析构函数被调用。
+- 有时候你希望拥有抽象 class，但手上又没有任何 pure virtual 函数，可以为该抽象 class 声明一个 pure virtual 析构函数，但是你同时还必须为这个 pure virtual 析构函数提供一份定义
+
+  因为析构函数的运作方式是，最深层派生的那个 class 其析构函数最先被调用，然后其每一个 base class 的析构函数被调用
+
   ```
   class AbstractClass {
   public:
@@ -465,7 +487,7 @@ delete ptk;
   AbstractClass::~AbstractClass() {}  //析构函数的定义
   ```
   
-- 当你企图继承所有STL容器如vector, list, set, tr1::unordered_map等或任何其他“带有non-virtual析构函数”的class时，放弃吧，因为当调用析构函数会导致一些不明确的行为。
+- 当你企图继承所有 STL 容器如 vector, list, set, tr1::unordered_map 等或任何其他“带有 non-virtual 析构函数”的 class 时，放弃吧，因为当调用析构函数会导致一些不明确的行为
 
 ## 条款08：别让异常逃离析构函数
 
