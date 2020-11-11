@@ -91,6 +91,7 @@
 - [expr](content/linux_base/command/expr.md)
 - [objdump](content/linux_base/command/objdump.md)
 - [od]()
+- [watch](https://www.cnblogs.com/ftl1012/p/watch.html)
 
 ### linux基础
 
