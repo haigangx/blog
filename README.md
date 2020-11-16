@@ -92,6 +92,7 @@
 - [objdump](content/linux_base/command/objdump.md)
 - [od]()
 - [watch](https://www.cnblogs.com/ftl1012/p/watch.html)
+- [xargs]()
 
 ### linux基础
 
