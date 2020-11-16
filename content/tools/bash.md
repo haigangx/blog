@@ -862,4 +862,8 @@ declare -f                # 列出函数定义
 
 [批量创建文件并重新命名](https://blog.csdn.net/taiyang1987912/article/details/39934055)
 
+## BASH 调试技巧
+
+[BASH调试技巧](https://www.cnblogs.com/wish123/p/5525667.html)
+
 </details>
